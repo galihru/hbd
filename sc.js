@@ -68,8 +68,12 @@ async function generateHtmlAndCommit() {
   fs.writeFileSync(outputPath, htmlContent);
   console.log('Halaman HTML dengan nonce dinamis telah dibuat di:', outputPath);
 
-  // Jalankan perintah git untuk commit dan push
+  // Menetapkan identitas pengguna Git sebelum melakukan commit
   try {
+    await runGitCommand('git config --global user.name "GitHub Actions"');
+    await runGitCommand('git config --global user.email "actions@github.com"');
+
+    // Jalankan perintah git untuk commit dan push
     await runGitCommand('git add index.html');
     await runGitCommand('git commit -m "Update HTML with new nonce at ' + new Date().toISOString() + '"');
     await runGitCommand('git push origin main');
