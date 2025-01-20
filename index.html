@@ -1,48 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selamat Ulang Tahun!</title>
-    <meta name="description" content="Selamat Ulang Tahun!">
-    <meta http-equiv="Content-Security-Policy" content="">
-    <meta name="keywords" content="Selamat Ulang Tahun!">
-    <meta name="author" content="GALIH RIDHO UTOMO">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Selamat Ulang Tahun!">
-    <meta property="og:description" content="Selamat Ulang Tahun!">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://4211421036.github.io/hbd/">
-    <meta property="og:image" content="https://4211421036.github.io/hbd/hbd.jpg">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Selamat Ulang Tahun!">
-    <meta name="twitter:description" content="Selamat Ulang Tahun!">
-    <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">
-    <link rel="icon" href="https://4211421036.github.io/g4lihru/987654567.png" type="image/x-icon">
-</head>
-
-<body>
-    <style>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-lzk3wt8io0o';">
+      <title>Selamat Ulang Tahun!</title>
+    </head>
+    <body>
+      <style>
         body {
-            margin: 0;
-            overflow: hidden;
+          margin: 0;
+          overflow: hidden;
         }
-    </style>
-    <script src="p5.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', (event) => {
-          const nonce = Math.random().toString(36).substring(2, 15); // Membuat nonce acak
-          const scriptTags = document.querySelectorAll('script[src]'); // Ambil semua script tag dengan atribut src
-          scriptTags.forEach(script => {
-            script.setAttribute('nonce', nonce); // Tambahkan nonce ke atribut script
-          });
-    
-          console.log('Nonce yang ditambahkan:', nonce);
-        });
-    </script>
-    <script src="main.js"></script>
-    <script src="firework.js"></script>
-</body>
-
-</html>
+      </style>
+      <script nonce="lzk3wt8io0o">
+        // Skrip ini hanya dijalankan jika nonce sesuai dengan yang ada di CSP
+        console.log('Skrip ini dijalankan dengan nonce:', 'lzk3wt8io0o');
+      </script>
+      <script src="p5.js" nonce="lzk3wt8io0o"></script>
+      <script src="main.js" nonce="lzk3wt8io0o"></script>
+      <script src="firework.js" nonce="lzk3wt8io0o"></script>
+    </body>
+    </html>
+  
