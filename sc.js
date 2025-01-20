@@ -11,15 +11,15 @@ function generateHtml() {
   // Generate nonce untuk setiap elemen
   const nonce = generateNonce();
 
-  // CSP dengan nonce
+  // CSP dengan nonce yang benar
   const cspContent = [
     `style-src 'self' 'unsafe-inline' 'nonce-${nonce}'`,
     "object-src 'none'",
     "base-uri 'self'",
     "img-src 'self' https://4211421036.github.io",
     "default-src 'self' https://4211421036.github.io",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'nonce-${nonce}' https://4211421036.github.io",
-    "style-src 'self' 'unsafe-inline' 'nonce-${nonce}' https://4211421036.github.io",
+    `script-src 'self' 'unsafe-inline' 'unsafe-eval' 'nonce-${nonce}' https://4211421036.github.io`,
+    `style-src 'self' 'unsafe-inline' 'nonce-${nonce}' https://4211421036.github.io`,
     "img-src 'self' data: https://4211421036.github.io",
     "font-src 'self' https://4211421036.github.io",
     "media-src 'self' https://4211421036.github.io",
@@ -76,7 +76,10 @@ function generateHtml() {
     </body>
   </html>`;
 
+  // Tentukan path untuk file HTML yang akan dihasilkan
   const outputPath = path.join(process.cwd(), 'index.html');
+
+  // Simpan HTML ke file
   fs.writeFileSync(outputPath, htmlContent);
   console.log('File HTML telah dibuat di:', outputPath);
 }
