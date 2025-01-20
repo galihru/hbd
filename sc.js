@@ -1,10 +1,19 @@
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
 // Fungsi untuk generate nonce sederhana
 function generateNonce() {
   return Math.random().toString(36).substring(2, 15) + 
          Math.random().toString(36).substring(2, 15);
+}
+
+// Fungsi untuk menghitung hash file untuk SRI
+function generateIntegrityHash(filePath) {
+  const fileBuffer = fs.readFileSync(filePath);
+  const hash = crypto.createHash('sha384');
+  hash.update(fileBuffer);
+  return hash.digest('base64');
 }
 
 function generateHtml() {
@@ -27,8 +36,11 @@ function generateHtml() {
     "worker-src 'self' blob: https://4211421036.github.io"
   ].join('; ');
 
+  // File JavaScript dan CSS yang perlu dihitung integritasnya
+  const jsFiles = ['p5.js', 'main.js', 'firework.js'];
+  const cssFiles = ['style.css'];  // Jika ada file CSS
 
-  const htmlContent = `<!DOCTYPE html>
+  let htmlContent = `<!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="UTF-8">
@@ -54,6 +66,26 @@ function generateHtml() {
       <meta property="og:audio:type" content="audio/mpeg" />
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <title>Selamat Ulang Tahun!</title>
+  `;
+
+  // Menambahkan file CSS dengan atribut integrity dan crossorigin
+  cssFiles.forEach(file => {
+    const integrityHash = generateIntegrityHash(file);
+    htmlContent += `
+        <link rel="stylesheet" href="${file}" integrity="sha384-${integrityHash}" crossorigin="anonymous">
+    `;
+  });
+
+  // Menambahkan file JavaScript dengan atribut integrity dan crossorigin
+  jsFiles.forEach(file => {
+    const integrityHash = generateIntegrityHash(file);
+    htmlContent += `
+        <script src="${file}" integrity="sha384-${integrityHash}" crossorigin="anonymous"></script>
+    `;
+  });
+
+  // Menambahkan style inline dengan nonce
+  htmlContent += `
       <style nonce="${nonce}">
         body {
           margin: 0;
@@ -65,10 +97,6 @@ function generateHtml() {
       <script nonce="${nonce}">
         console.log('Script berjalan dengan nonce: ${nonce}');
       </script>
-      
-      <script nonce="${nonce}" src="p5.js"></script>
-      <script nonce="${nonce}" src="main.js"></script>
-      <script nonce="${nonce}" src="firework.js"></script>
     </body>
   </html>`;
 
