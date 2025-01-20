@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { exec } from 'child_process';
 
 // Fungsi untuk menghasilkan nonce acak
 function generateNonce() {
@@ -87,8 +88,40 @@ function generateHtml() {
   console.log('Halaman HTML dengan nonce dinamis telah dibuat di:', outputPath);
 }
 
+// Fungsi untuk menjalankan perintah Git: commit dan push
+function commitAndPushChanges() {
+  const commitMessage = `Update HTML with new nonce at ${new Date().toISOString()}`;
+
+  exec('git add index.html', (err, stdout, stderr) => {
+    if (err) {
+      console.error(`Error adding changes: ${stderr}`);
+      return;
+    }
+    console.log(stdout);
+
+    exec(`git commit -m "${commitMessage}"`, (err, stdout, stderr) => {
+      if (err) {
+        console.error(`Error committing changes: ${stderr}`);
+        return;
+      }
+      console.log(stdout);
+
+      exec('git push origin main', (err, stdout, stderr) => {
+        if (err) {
+          console.error(`Error pushing changes: ${stderr}`);
+          return;
+        }
+        console.log(stdout);
+      });
+    });
+  });
+}
+
 // Jalankan fungsi untuk menghasilkan HTML pertama kali
 generateHtml();
 
-// Mengupdate halaman setiap detik
-setInterval(generateHtml, 1000);
+// Commit dan Push perubahan setiap detik
+setInterval(() => {
+  generateHtml();  // Memperbarui HTML dengan nonce baru
+  commitAndPushChanges();  // Commit dan Push perubahan ke GitHub
+}, 1000);
