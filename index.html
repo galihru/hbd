@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selamat Ulang Tahun!</title>
     <meta name="description" content="Selamat Ulang Tahun!">
+    <meta http-equiv="Content-Security-Policy" content="">
     <meta name="keywords" content="Selamat Ulang Tahun!">
     <meta name="author" content="GALIH RIDHO UTOMO">
     <meta name="robots" content="index, follow">
@@ -28,51 +29,25 @@
             overflow: hidden;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script>
+    <script src="p5.js"></script>
     <script>
-        // Function to generate hash (SHA-256)
-        function generateHash(str) {
-            return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))
-                .then(hashBuffer => {
-                    const hashArray = Array.from(new Uint8Array(hashBuffer)); // Convert buffer to byte array
-                    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
-                    return hashHex;
-                });
+        function generateRandomNonce() {
+          // Menghasilkan string acak dengan panjang 32 karakter (sesuai dengan rekomendasi)
+          return crypto.getRandomValues(new Uint8Array(32)).toString('base64');
         }
-
-        // Function to generate nonce
-        function generateNonce() {
-            const array = new Uint32Array(10);
-            window.crypto.getRandomValues(array);
-            return array.join('');
-        }
-
-        // Generate hash and nonce
-        async function applyHashAndNonce() {
-            const nonce = generateNonce(); // Generate a nonce
-            const scriptHash = await generateHash("main.js"); // Generate hash for main.js file
-
-            // Add nonce to inline script
-            const inlineScript = document.createElement('script');
-            inlineScript.setAttribute('nonce', nonce);
-
-            // Set integrity for the external script
-            const scriptTag1 = document.createElement('script');
-            scriptTag1.src = "main.js";
-            scriptTag1.integrity = `sha256-${scriptHash}`;
-            scriptTag1.crossOrigin = "anonymous";
-            scriptTag1.setAttribute('nonce', nonce);
-
-            const scriptTag2 = document.createElement('script');
-            scriptTag2.src = "firework.js";
-            scriptTag2.setAttribute('nonce', nonce);
-
-            // Append the scripts to the body
-            document.body.appendChild(scriptTag1);
-            document.body.appendChild(scriptTag2);
-        }
-
-        applyHashAndNonce();
+        
+        // Mendapatkan semua elemen script
+        const scripts = document.querySelectorAll('script');
+        
+        // Iterasi melalui setiap elemen script dan tambahkan atribut nonce
+        scripts.forEach(script => {
+          const nonce = generateRandomNonce();
+          script.setAttribute('nonce', nonce);
+        });
+        
+        // Mengatur CSP dengan nonce yang baru saja dihasilkan
+        const metaCSP = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+        metaCSP.content = `script-src 'nonce-${nonce}';`;
     </script>
     <script src="main.js"></script>
     <script src="firework.js"></script>
