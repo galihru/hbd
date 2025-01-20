@@ -1,22 +1,20 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+name: Deploy Jekyll to GitHub Pages
 
 on:
-  # Runs on pushes targeting the default branch
+  schedule:
+    - cron: '*/5 * * * *'  # This runs every 5 minutes
   push:
-    branches: ["main"]
+    branches:
+      - main
 
-  # Allows you to run this workflow manually from the Actions tab
+  # Allow manual trigger from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -50,4 +48,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}  # Menggunakan token default yang disediakan oleh GitHub
+          github_token: ${{ secrets.GITHUB_TOKEN }}
