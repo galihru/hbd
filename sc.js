@@ -31,7 +31,7 @@ function generateHtml() {
     "style-src 'self' 'unsafe-inline'",
     "object-src 'none'",
     "base-uri 'self'",
-    "img-src 'self' https://4211421036.github.io"
+    "img-src 'self' https://4211421036.github.io",
     "default-src 'self' https://4211421036.github.io",
     // Izinkan script dari domain github.io dan inline scripts
     "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://4211421036.github.io",
@@ -77,7 +77,13 @@ function generateHtml() {
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="Selamat Ulang Tahun!">
         <meta name="twitter:description" content="Selamat Ulang Tahun!">
+        <meta property="og:audio" content="https://4211421036.github.io/hbd/hbd.mp3" />
+        <meta property="og:locale" content="id" />
         <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">
+        <meta property="og:image:alt" content="HBD" />
+        <meta property="og:audio:secure_url" content="https://4211421036.github.io/hbd/hbd.mp3" />
+        <meta property="og:type" content="website" />
+        <meta property="og:audio:type" content="audio/mpeg" />
         <meta http-equiv="Content-Security-Policy" content="${cspContent}">
         <title>Selamat Ulang Tahun!</title>
         
