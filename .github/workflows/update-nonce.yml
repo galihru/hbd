@@ -1,39 +1,35 @@
-name: Update HTML with Nonce
+name: Update Dynamic HTML with Nonce
 
 on:
   push:
     branches:
-      - main  # Sesuaikan dengan nama branch utama Anda
+      - main
 
 jobs:
-  build:
+  update-html:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'  # Sesuaikan dengan versi Node.js yang Anda inginkan
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
 
-      - name: Install dependencies
-        run: npm install
+    - name: Install dependencies
+      run: npm install
 
-      - name: Run Node.js script to generate HTML
-        run: node sc.js
+    - name: Update index.html
+      run: node sc.js
 
-      - name: Set up GitHub user
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Commit and push changes
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add index.html
-          git commit -m "Update index.html with dynamic nonce" || echo "No changes to commit"
-          git remote set-url origin https://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@github.com/4211421036/hbd.git
-          git push
+    - name: Commit and push changes
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git add index.html
+        git commit -m "Update index.html with dynamic nonce"
+        git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
