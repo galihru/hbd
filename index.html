@@ -1,9 +1,9 @@
-
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="en">
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Selamat Ulang Tahun!</title>
         <meta name="description" content="Selamat Ulang Tahun!">
         <meta name="keywords" content="Selamat Ulang Tahun!">
         <meta name="author" content="GALIH RIDHO UTOMO">
@@ -17,8 +17,7 @@
         <meta name="twitter:title" content="Selamat Ulang Tahun!">
         <meta name="twitter:description" content="Selamat Ulang Tahun!">
         <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">
-        <meta id="csp-meta" http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-n5chm8num';">
-        <title>Selamat Ulang Tahun!</title>
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-q3yk18qx8t';">
       </head>
       <body>
         <style>
@@ -27,42 +26,11 @@
             overflow: hidden;
           }
         </style>
-
-        <!-- Script Dinamis untuk Mengupdate Nonce -->
-        <script id="dynamic-script" nonce="n5chm8num">
-          console.log('Skrip ini dijalankan dengan nonce:', 'n5chm8num');
+        <script nonce="q3yk18qx8t">
+          console.log('Skrip ini dijalankan dengan nonce:', 'q3yk18qx8t');
         </script>
-
-        <script src="p5.js" nonce="n5chm8num"></script>
-        <script src="main.js" nonce="n5chm8num"></script>
-        <script src="firework.js" nonce="n5chm8num"></script>
-
-        <!-- Mengupdate Nonce dan CSP setiap detik -->
-        <script>
-          function generateNonce() {
-            return Math.random().toString(36).substring(2, 15);
-          }
-
-          function updateNonce() {
-            const nonce = generateNonce();  // Membuat nonce baru setiap detik
-            const scriptTag = document.getElementById('dynamic-script');
-            const cspMetaTag = document.getElementById('csp-meta');
-
-            // Mengubah atribut CSP dengan nonce baru
-            cspMetaTag.setAttribute('content', `script-src 'self' 'nonce-${nonce}';`);
-
-            // Update tag <script> dengan nonce baru
-            scriptTag.setAttribute('nonce', nonce);
-
-            // Update isi script jika diperlukan
-            scriptTag.innerHTML = `
-              console.log('Skrip ini dijalankan dengan nonce:', '${nonce}');
-            `;
-          }
-
-          // Perbarui nonce setiap detik
-          setInterval(updateNonce, 1000);
-        </script>
+        <script src="p5.js" nonce="q3yk18qx8t"></script>
+        <script src="main.js" nonce="q3yk18qx8t"></script>
+        <script src="firework.js" nonce="q3yk18qx8t"></script>
       </body>
     </html>
-  
