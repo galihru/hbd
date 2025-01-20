@@ -106,7 +106,7 @@ async function generateHtml() {
       <script nonce="${nonce}">
         console.log('Generated automatic on: ${getCurrentTime()}');
       </script>
-        !-- page generated automatic: ${getCurrentTime()} -->
+        <!-- page generated automatic: ${getCurrentTime()} -->
     </body>
   </html>`;
 
