@@ -11,25 +11,20 @@ function generateHtml() {
   // Generate nonce untuk setiap elemen
   const nonce = generateNonce();
 
-  // CSP dengan nonce yang benar
+  // CSP yang diperbaiki
   const cspContent = [
-    `style-src 'self' 'unsafe-inline' 'nonce-${nonce}'`,
+    `style-src 'self' 'unsafe-inline' 'nonce-${nonce}' https://4211421036.github.io`,
     "object-src 'none'",
     "base-uri 'self'",
-    "img-src 'self' https://4211421036.github.io",
+    "img-src 'self' data: https://4211421036.github.io",
     "default-src 'self' https://4211421036.github.io",
     `script-src 'self' 'unsafe-inline' 'unsafe-eval' 'nonce-${nonce}' https://4211421036.github.io`,
-    `style-src 'self' 'unsafe-inline' 'nonce-${nonce}' https://4211421036.github.io`,
-    "img-src 'self' data: https://4211421036.github.io",
     "font-src 'self' https://4211421036.github.io",
     "media-src 'self' https://4211421036.github.io",
-    "frame-src 'self' https://4211421036.github.io",
     "connect-src 'self' https://4211421036.github.io",
     "form-action 'self'",
-    "frame-ancestors 'self'",
     "manifest-src 'self' https://4211421036.github.io",
-    "worker-src 'self' blob: https://4211421036.github.io",
-    "prefetch-src 'self' https://4211421036.github.io"
+    "worker-src 'self' blob: https://4211421036.github.io"
   ].join('; ');
 
   const htmlContent = `<!DOCTYPE html>
