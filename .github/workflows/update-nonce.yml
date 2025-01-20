@@ -19,10 +19,11 @@ jobs:
           node-version: '14'  # Pastikan versi Node.js sesuai dengan yang kamu butuhkan
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install  # Install semua dependensi yang tercantum di package.json
 
       - name: Update Nonce in index.html
-        run: node sc.js  # Memanggil skrip untuk memperbarui nonce
+        run: node updateNonce.js  # Memanggil skrip untuk memperbarui nonce
 
       - name: Commit updated HTML file
         run: |
