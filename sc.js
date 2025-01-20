@@ -71,7 +71,7 @@ function generateHtml() {
   jsFiles.forEach(file => {
     const integrityHash = generateIntegrityHash(file);
     htmlContent += `
-        <script src="${file}" integrity="sha384-${integrityHash}" crossorigin="anonymous"></script>
+        <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous"></script>
     `;
   });
 
