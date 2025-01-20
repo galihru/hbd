@@ -28,11 +28,35 @@ function generateHtml() {
 
   // CSP yang lebih sederhana
   const cspContent = [
-    "script-src 'self' 'unsafe-inline'",
     "style-src 'self' 'unsafe-inline'",
     "object-src 'none'",
     "base-uri 'self'",
     "img-src 'self' https://4211421036.github.io"
+    "default-src 'self' https://4211421036.github.io",
+    // Izinkan script dari domain github.io dan inline scripts
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://4211421036.github.io",
+    // Izinkan style dari domain github.io dan inline styles
+    "style-src 'self' 'unsafe-inline' https://4211421036.github.io",
+    // Izinkan gambar dari domain github.io dan data URLs
+    "img-src 'self' data: https://4211421036.github.io",
+    // Izinkan fonts dari domain github.io
+    "font-src 'self' https://4211421036.github.io",
+    // Izinkan media dari domain github.io
+    "media-src 'self' https://4211421036.github.io",
+    // Izinkan frame dari domain github.io
+    "frame-src 'self' https://4211421036.github.io",
+    // Izinkan koneksi dari domain github.io
+    "connect-src 'self' https://4211421036.github.io",
+    // Kontrol form submission
+    "form-action 'self'",
+    // Kontrol frame ancestors
+    "frame-ancestors 'self'",
+    // Izinkan manifest dari domain github.io
+    "manifest-src 'self' https://4211421036.github.io",
+    // Izinkan worker scripts
+    "worker-src 'self' blob: https://4211421036.github.io",
+    // Izinkan sumber prefetch
+    "prefetch-src 'self' https://4211421036.github.io"
   ].join('; ');
 
   const htmlContent = `
