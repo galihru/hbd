@@ -17,51 +17,46 @@
         <meta name="twitter:title" content="Selamat Ulang Tahun!">
         <meta name="twitter:description" content="Selamat Ulang Tahun!">
         <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">
-        <meta id="csp-meta" http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-r2aohn51ddc';">
+        <!-- CSP dipindahkan ke HTTP header, ini hanya sebagai fallback -->
+        <meta id="csp-meta" http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-UWpVbWmE7hOXUcsHND0rEg==' 'unsafe-inline'; object-src 'none'; base-uri 'self'; img-src 'self' https://4211421036.github.io; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src 'none'; media-src 'self'; connect-src 'self'">
         <title>Selamat Ulang Tahun!</title>
       </head>
       <body>
-        <style>
+        <style nonce="UWpVbWmE7hOXUcsHND0rEg==">
           body {
             margin: 0;
             overflow: hidden;
           }
         </style>
-
-        <!-- Script Dinamis untuk Mengupdate Nonce -->
-        <script id="dynamic-script" nonce="r2aohn51ddc">
-          console.log('Skrip ini dijalankan dengan nonce:', 'r2aohn51ddc');
+        
+        <script id="dynamic-script" nonce="UWpVbWmE7hOXUcsHND0rEg==">
+          console.log('Script dijalankan dengan nonce:', 'UWpVbWmE7hOXUcsHND0rEg==');
         </script>
-
-        <script src="p5.js" nonce="r2aohn51ddc"></script>
-        <script src="main.js" nonce="r2aohn51ddc"></script>
-        <script src="firework.js" nonce="r2aohn51ddc"></script>
-
-        <!-- Mengupdate Nonce dan CSP setiap detik -->
-        <script>
-          function generateNonce() {
-            return Math.random().toString(36).substring(2, 15);
-          }
-
+        
+        <script src="p5.js" nonce="UWpVbWmE7hOXUcsHND0rEg=="></script>
+        <script src="main.js" nonce="UWpVbWmE7hOXUcsHND0rEg=="></script>
+        <script src="firework.js" nonce="UWpVbWmE7hOXUcsHND0rEg=="></script>
+        
+        <!-- Script untuk update nonce -->
+        <script nonce="UWpVbWmE7hOXUcsHND0rEg==">
           function updateNonce() {
-            const nonce = generateNonce();  // Membuat nonce baru setiap detik
-            const scriptTag = document.getElementById('dynamic-script');
+            const nonce = crypto.randomBytes(16).toString('base64');
+            const scriptTags = document.querySelectorAll('script[nonce]');
+            const styleTags = document.querySelectorAll('style[nonce]');
             const cspMetaTag = document.getElementById('csp-meta');
-
-            // Mengubah atribut CSP dengan nonce baru
-            cspMetaTag.setAttribute('content', `script-src 'self' 'nonce-${nonce}';`);
-
-            // Update tag <script> dengan nonce baru
-            scriptTag.setAttribute('nonce', nonce);
-
-            // Update isi script jika diperlukan
-            scriptTag.innerHTML = `
-              console.log('Skrip ini dijalankan dengan nonce:', '${nonce}');
-            `;
+            
+            // Update CSP
+            const newCsp = "default-src 'self'; script-src 'self' 'nonce-UWpVbWmE7hOXUcsHND0rEg==' 'unsafe-inline'; object-src 'none'; base-uri 'self'; img-src 'self' https://4211421036.github.io; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src 'none'; media-src 'self'; connect-src 'self'".replace(/nonce-[a-zA-Z0-9+/=]+/, 'nonce-' + nonce);
+            cspMetaTag.setAttribute('content', newCsp);
+            
+            // Update nonce pada semua script dan style tags
+            [...scriptTags, ...styleTags].forEach(tag => {
+              tag.setAttribute('nonce', nonce);
+            });
           }
-
-          // Perbarui nonce setiap detik
-          setInterval(updateNonce, 1000);
+          
+          // Update nonce setiap 5 detik untuk mengurangi beban server
+          setInterval(updateNonce, 5000);
         </script>
       </body>
     </html>
