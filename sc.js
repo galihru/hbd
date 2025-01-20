@@ -73,8 +73,10 @@ async function generateHtmlAndCommit() {
     await runGitCommand('git config --global user.name "GitHub Actions"');
     await runGitCommand('git config --global user.email "actions@github.com"');
 
+    // Menambahkan semua file yang telah diubah ke staging
+    await runGitCommand('git add .');
+
     // Jalankan perintah git untuk commit dan push
-    await runGitCommand('git add index.html');
     await runGitCommand('git commit -m "Update HTML with new nonce at ' + new Date().toISOString() + '"');
     await runGitCommand('git push origin main');
     console.log('Perubahan telah di-commit dan dipush ke GitHub.');
