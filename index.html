@@ -17,46 +17,50 @@
         <meta name="twitter:title" content="Selamat Ulang Tahun!">
         <meta name="twitter:description" content="Selamat Ulang Tahun!">
         <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">
-        <!-- CSP dipindahkan ke HTTP header, ini hanya sebagai fallback -->
-        <meta id="csp-meta" http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-UWpVbWmE7hOXUcsHND0rEg==' 'unsafe-inline'; object-src 'none'; base-uri 'self'; img-src 'self' https://4211421036.github.io; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src 'none'; media-src 'self'; connect-src 'self'">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-4595dd18' 'nonce-25d94269' 'nonce-66f9940b' 'nonce-6d6f7dc5' 'nonce-5e05e24b' 'unsafe-inline'; style-src 'self' 'nonce-4595dd18' 'unsafe-inline'; object-src 'none'; base-uri 'self'; img-src 'self' https://4211421036.github.io">
         <title>Selamat Ulang Tahun!</title>
-      </head>
-      <body>
-        <style nonce="UWpVbWmE7hOXUcsHND0rEg==">
+        
+        <style nonce="4595dd18">
           body {
             margin: 0;
             overflow: hidden;
           }
         </style>
-        
-        <script id="dynamic-script" nonce="UWpVbWmE7hOXUcsHND0rEg==">
-          console.log('Script dijalankan dengan nonce:', 'UWpVbWmE7hOXUcsHND0rEg==');
+      </head>
+      <body>
+        <script nonce="25d94269">
+          console.log('Script berjalan dengan hash: ' + '5d6a0a98');
         </script>
         
-        <script src="p5.js" nonce="UWpVbWmE7hOXUcsHND0rEg=="></script>
-        <script src="main.js" nonce="UWpVbWmE7hOXUcsHND0rEg=="></script>
-        <script src="firework.js" nonce="UWpVbWmE7hOXUcsHND0rEg=="></script>
-        
-        <!-- Script untuk update nonce -->
-        <script nonce="UWpVbWmE7hOXUcsHND0rEg==">
-          function updateNonce() {
-            const nonce = crypto.randomBytes(16).toString('base64');
-            const scriptTags = document.querySelectorAll('script[nonce]');
-            const styleTags = document.querySelectorAll('style[nonce]');
-            const cspMetaTag = document.getElementById('csp-meta');
-            
-            // Update CSP
-            const newCsp = "default-src 'self'; script-src 'self' 'nonce-UWpVbWmE7hOXUcsHND0rEg==' 'unsafe-inline'; object-src 'none'; base-uri 'self'; img-src 'self' https://4211421036.github.io; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src 'none'; media-src 'self'; connect-src 'self'".replace(/nonce-[a-zA-Z0-9+/=]+/, 'nonce-' + nonce);
-            cspMetaTag.setAttribute('content', newCsp);
-            
-            // Update nonce pada semua script dan style tags
-            [...scriptTags, ...styleTags].forEach(tag => {
-              tag.setAttribute('nonce', nonce);
+        <script src="p5.js" nonce="66f9940b"></script>
+        <script src="main.js" nonce="6d6f7dc5"></script>
+        <script src="firework.js" nonce="5e05e24b"></script>
+
+        <script nonce="25d94269">
+          function updateNonces() {
+            const timestamp = Date.now().toString();
+            const newNonce = Math.abs(
+              Array.from(timestamp + Math.random().toString())
+                .reduce((hash, char) => {
+                  return ((hash << 5) - hash) + char.charCodeAt(0);
+                }, 0)
+            ).toString(16);
+
+            document.querySelectorAll('script[nonce], style[nonce]').forEach(function(el) {
+              el.setAttribute('nonce', newNonce);
             });
+
+            const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+            if (cspMeta) {
+              const newCsp = cspMeta.getAttribute('content').replace(
+                /nonce-[a-f0-9]+/g,
+                'nonce-' + newNonce
+              );
+              cspMeta.setAttribute('content', newCsp);
+            }
           }
-          
-          // Update nonce setiap 5 detik untuk mengurangi beban server
-          setInterval(updateNonce, 5000);
+
+          setInterval(updateNonces, 5000);
         </script>
       </body>
     </html>
