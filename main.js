@@ -212,7 +212,6 @@ function handleTouchEnd() {
 
 function createStartButton() {
     startButton = createButton('Selamat Ulang Tahun! 🎂')
-    startButton.position(windowWidth / 2 - 100, windowHeight / 2 - 25)
     startButton.style('padding', '15px 30px')
     startButton.style('background-color', '#FF4081')
     startButton.style('color', 'white')
@@ -223,7 +222,10 @@ function createStartButton() {
     startButton.style('box-shadow', '0 4px 8px rgba(0,0,0,0.2)')
     startButton.style('transition', 'all 0.3s ease')
     startButton.style('z-index', '999')
-    startButton.style('transform', 'translateX(-5%)')
+    startButton.style('position', 'absolute')
+    startButton.style('left', '50%')
+    startButton.style('top', '50%')
+    startButton.style('transform', 'translate(-50%, -50%)')
     startButton.hide()
 
     startButton.mousePressed(() => {
@@ -233,12 +235,12 @@ function createStartButton() {
     })
 
     startButton.mouseOver(() => {
-        startButton.style('transform', 'scale(1.05)')
+        startButton.style('transform', 'translate(-50%, -50%) scale(1.05)')
         startButton.style('box-shadow', '0 6px 12px rgba(0,0,0,0.3)')
     })
 
     startButton.mouseOut(() => {
-        startButton.style('transform', 'scale(1)')
+        startButton.style('transform', 'translate(-50%, -50%) scale(1)')
         startButton.style('box-shadow', '0 4px 8px rgba(0,0,0,0.2)')
     })
 }
@@ -294,7 +296,6 @@ function shareToWhatsApp() {
 
 function createShareButton() {
     shareButton = createButton('Download & Share to WhatsApp 📱');
-    shareButton.position(windowWidth / 2 - 100, windowHeight - 100);
     shareButton.style('padding', '10px 20px');
     shareButton.style('background-color', '#25D366');
     shareButton.style('color', 'white');
@@ -303,13 +304,10 @@ function createShareButton() {
     shareButton.style('cursor', 'pointer');
     shareButton.style('font-size', '16px');
     shareButton.style('z-index', '1000');
-    shareButton.style('width', 'max-content')
-    shareButton.style('height', 'max-content')
-    shareButton.style('border-radius', '25px')
     shareButton.style('position', 'absolute');
-    shareButton.style('bottom', '10px');
     shareButton.style('left', '50%');
-    shareButton.style('transform', 'translateX(-145px)');
+    shareButton.style('bottom', '10px');
+    shareButton.style('transform', 'translateX(-50%)');
     shareButton.hide();
 
     shareButton.mousePressed(shareToWhatsApp);
@@ -330,10 +328,13 @@ function setup() {
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight)
     if (shareButton) {
-        shareButton.position(windowWidth / 2 - 100, windowHeight - 100)
+        shareButton.style('left', '50%')
+        shareButton.style('transform', 'translateX(-50%)')
     }
     if (startButton) {
-        startButton.position(windowWidth / 2 - 100, windowHeight / 2 - 25)
+        startButton.style('left', '50%')
+        startButton.style('top', '50%')
+        startButton.style('transform', 'translate(-50%, -50%)')
     }
 }
 
