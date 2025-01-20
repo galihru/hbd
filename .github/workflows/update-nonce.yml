@@ -1,28 +1,33 @@
-name: Update Nonce on HTML
+name: Update HTML with Nonce
 
 on:
   push:
     branches:
-      - main
-  workflow_dispatch:
+      - main  # Sesuaikan dengan nama branch utama Anda
 
 jobs:
   build:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Check out code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '14'  # Sesuaikan dengan versi Node.js yang Anda inginkan
 
       - name: Install dependencies
-        run: |
-          npm install
+        run: npm install
 
-      - name: Run the update script
+      - name: Run Node.js script to generate HTML
+        run: node sc.js
+
+      - name: Commit and push changes
         run: |
-          node sc.js
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add index.html
+          git commit -m "Update index.html with dynamic nonce"
+          git push
