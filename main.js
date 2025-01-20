@@ -285,7 +285,7 @@ function shareToWhatsApp() {
     const message = `${randomWish}\nUcapkan selamat ulang tahun untuk ${userName}!`;
 
     // Gambar yang ingin dibagikan (gunakan URL gambar yang sudah ada)
-    const imageURL = 'https://example.com/path/to/your/birthday_image.png'; // Ganti dengan URL gambar yang sesuai
+    const imageURL = 'https://4211421036.github.io/hbd/'; // Ganti dengan URL gambar yang sesuai
 
     // Membuat pesan WhatsApp dengan gambar
     const encodedMessage = encodeURIComponent(message);
