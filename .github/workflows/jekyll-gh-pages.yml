@@ -58,14 +58,8 @@ jobs:
           git add . 
           git add -u
           git reset node_modules/  # Ensure node_modules is not added
-
-          # Commit changes if any
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Update site content"
-            git push
-          fi
+          git commit -m "Update site content"
+          git push
 
       - name: Deploy to GitHub Pages
         id: deployment
