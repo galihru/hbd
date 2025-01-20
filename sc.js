@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Fungsi untuk menghasilkan nonce acak
 function generateNonce() {
@@ -51,6 +52,10 @@ function generateHtml() {
     </body>
     </html>
   `;
+
+  // Dapatkan path direktori saat ini dengan import.meta.url
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
 
   // Tentukan lokasi file yang akan dihasilkan di root folder
   const outputPath = path.join(__dirname, 'index.html');
