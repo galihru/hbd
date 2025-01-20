@@ -29,8 +29,6 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script>
-    <script id="firework-script" data-src="firework.js"></script>
-    <script id="main-script" data-src="main.js"></script>
     <script>
         async function generateHash(fileName) {
             try {
@@ -46,19 +44,28 @@
         }
 
         async function applyHashedScripts() {
-            const scripts = document.querySelectorAll('script[data-src]');
+            const scripts = [
+                { id: 'firework-script', src: 'firework.js' },
+                { id: 'main-script', src: 'main.js' }
+            ];
+
             for (const script of scripts) {
-                const src = script.getAttribute('data-src');
-                const hash = await generateHash(src);
+                const hash = await generateHash(script.src);
                 if (hash) {
-                    script.src = `${src}?hash=${hash}`;
+                    const scriptElement = document.createElement('script');
+                    scriptElement.src = `${script.src}?hash=${hash}`;
+                    document.body.appendChild(scriptElement);
                 } else {
-                    script.src = src; // Fallback to original src if hash generation fails
+                    const scriptElement = document.createElement('script');
+                    scriptElement.src = script.src; // Fallback to original src if hash generation fails
+                    document.body.appendChild(scriptElement);
                 }
             }
         }
 
-        applyHashedScripts();
+        applyHashedScripts().catch(error => {
+            console.error('Error applying hashed scripts:', error);
+        });
     </script>
 </body>
 
