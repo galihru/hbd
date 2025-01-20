@@ -33,3 +33,11 @@ jobs:
         git add index.html
         git commit -m "Update index.html with dynamic nonce"
         git push
+        
+    - name: Commit and Push Minified Files
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git add *.min.js
+        git commit -m "Add minified JS files"
+        git push
