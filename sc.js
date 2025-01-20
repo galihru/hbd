@@ -17,6 +17,12 @@ function generateIntegrityHash(filePath) {
   return hash.digest('base64');
 }
 
+// Fungsi untuk mendapatkan waktu sekarang
+function getCurrentTime() {
+  const now = new Date();
+  return now.toLocaleString(); // Format waktu sesuai dengan lokal
+}
+
 function generateHtml() {
   // Generate nonce untuk setiap elemen
   const nonce = generateNonce();
@@ -87,8 +93,9 @@ function generateHtml() {
     </head>
     <body>
       <script nonce="${nonce}">
-        console.log('Script berjalan dengan nonce: ${nonce}');
+        console.log('Generated automatic on: ${getCurrentTime()}');
       </script>
+        !-- page generated automatic: ${getCurrentTime()} -->
     </body>
   </html>`;
 
