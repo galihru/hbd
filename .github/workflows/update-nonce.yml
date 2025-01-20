@@ -1,6 +1,8 @@
 name: Update HTML with Dynamic Nonce
 
 on:
+  schedule:
+    - cron: '*/1 * * * *' # Menjalankan setiap 1 menit, sesuaikan dengan kebutuhan Anda.
   push:
     branches:
       - main
