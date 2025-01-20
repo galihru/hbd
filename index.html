@@ -30,42 +30,49 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script>
     <script>
-        async function generateHash(fileName) {
-            try {
-                const response = await fetch(fileName);
-                const text = await response.text();
-                const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            } catch (error) {
-                console.error('Error generating hash:', error);
-                return '';
-            }
+        // Function to generate hash (SHA-256)
+        function generateHash(str) {
+            return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))
+                .then(hashBuffer => {
+                    const hashArray = Array.from(new Uint8Array(hashBuffer)); // Convert buffer to byte array
+                    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+                    return hashHex;
+                });
         }
 
-        async function applyHashedScripts() {
-            const scripts = [
-                { id: 'firework-script', src: 'firework.js' },
-                { id: 'main-script', src: 'main.js' }
-            ];
-
-            for (const script of scripts) {
-                const hash = await generateHash(script.src);
-                if (hash) {
-                    const scriptElement = document.createElement('script');
-                    scriptElement.src = `${script.src}?hash=${hash}`;
-                    document.body.appendChild(scriptElement);
-                } else {
-                    const scriptElement = document.createElement('script');
-                    scriptElement.src = script.src; // Fallback to original src if hash generation fails
-                    document.body.appendChild(scriptElement);
-                }
-            }
+        // Function to generate nonce
+        function generateNonce() {
+            const array = new Uint32Array(10);
+            window.crypto.getRandomValues(array);
+            return array.join('');
         }
 
-        applyHashedScripts().catch(error => {
-            console.error('Error applying hashed scripts:', error);
-        });
+        // Generate hash and nonce
+        async function applyHashAndNonce() {
+            const nonce = generateNonce(); // Generate a nonce
+            const scriptHash = await generateHash("main.js"); // Generate hash for main.js file
+
+            // Add nonce to inline script
+            const inlineScript = document.createElement('script');
+            inlineScript.setAttribute('nonce', nonce);
+
+            // Set integrity for the external script
+            const scriptTag1 = document.createElement('script');
+            scriptTag1.src = "main.js";
+            scriptTag1.integrity = `sha256-${scriptHash}`;
+            scriptTag1.crossOrigin = "anonymous";
+            scriptTag1.setAttribute('nonce', nonce);
+
+            const scriptTag2 = document.createElement('script');
+            scriptTag2.src = "firework.js";
+            scriptTag2.setAttribute('nonce', nonce);
+
+            // Append the scripts to the body
+            document.body.appendChild(scriptTag1);
+            document.body.appendChild(scriptTag2);
+        }
+
+        applyHashAndNonce();
     </script>
     <script src="main.js"></script>
     <script src="firework.js"></script>
