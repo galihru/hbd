@@ -11,5 +11,5 @@
   },
   "author": "Galih Ridho Utomo",
   "license": "MIT",
-  "type": "module"  // Tambahkan ini untuk memungkinkan penggunaan import
+  "type": "module"
 }
