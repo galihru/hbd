@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { minify } from 'html-minifier';
 
 // Fungsi untuk generate nonce sederhana
 function generateNonce() {
@@ -91,12 +92,22 @@ function generateHtml() {
     </body>
   </html>`;
 
+  // Minify HTML yang dihasilkan
+  const minifiedHtml = minify(htmlContent, {
+    collapseWhitespace: true,  // Menghapus spasi dan baris kosong
+    removeComments: true,      // Menghapus komentar
+    removeRedundantAttributes: true, // Menghapus atribut yang tidak perlu
+    useShortDoctype: true,     // Menggunakan doctype singkat
+    minifyJS: true,            // Minify JS
+    minifyCSS: true            // Minify CSS
+  });
+
   // Tentukan path untuk file HTML yang akan dihasilkan
   const outputPath = path.join(process.cwd(), 'index.html');
 
-  // Simpan HTML ke file
-  fs.writeFileSync(outputPath, htmlContent);
-  console.log('File HTML telah dibuat di:', outputPath);
+  // Simpan HTML yang telah di-minify ke file
+  fs.writeFileSync(outputPath, minifiedHtml);
+  console.log('File HTML telah dibuat dan di-minify di:', outputPath);
 }
 
 // Generate HTML
