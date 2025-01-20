@@ -30,10 +30,10 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Commit and push changes
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
           git add index.html
           git commit -m "Update index.html with dynamic nonce" || echo "No changes to commit"
-          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
+          git remote set-url origin https://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@github.com/4211421036/hbd.git
           git push
