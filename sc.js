@@ -92,26 +92,43 @@ function generateHtml() {
 function commitAndPushChanges() {
   const commitMessage = `Update HTML with new nonce at ${new Date().toISOString()}`;
 
-  exec('git add index.html', (err, stdout, stderr) => {
+  // Konfigurasi identitas pengguna Git
+  exec('git config user.email "g4lihru@students.unnes.ac.id"', (err, stdout, stderr) => {
     if (err) {
-      console.error(`Error adding changes: ${stderr}`);
+      console.error(`Error configuring user email: ${stderr}`);
       return;
     }
     console.log(stdout);
 
-    exec(`git commit -m "${commitMessage}"`, (err, stdout, stderr) => {
+    exec('git config user.name "GALIH RIDHO UTOMO"', (err, stdout, stderr) => {
       if (err) {
-        console.error(`Error committing changes: ${stderr}`);
+        console.error(`Error configuring user name: ${stderr}`);
         return;
       }
       console.log(stdout);
 
-      exec('git push origin main', (err, stdout, stderr) => {
+      exec('git add index.html', (err, stdout, stderr) => {
         if (err) {
-          console.error(`Error pushing changes: ${stderr}`);
+          console.error(`Error adding changes: ${stderr}`);
           return;
         }
         console.log(stdout);
+
+        exec(`git commit -m "${commitMessage}"`, (err, stdout, stderr) => {
+          if (err) {
+            console.error(`Error committing changes: ${stderr}`);
+            return;
+          }
+          console.log(stdout);
+
+          exec('git push origin main', (err, stdout, stderr) => {
+            if (err) {
+              console.error(`Error pushing changes: ${stderr}`);
+              return;
+            }
+            console.log(stdout);
+          });
+        });
       });
     });
   });
