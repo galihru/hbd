@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { minify } from 'html-minifier';
+import { minify } from 'terser'; // Menggunakan terser untuk minify JavaScript
 
 // Fungsi untuk generate nonce sederhana
 function generateNonce() {
@@ -23,7 +23,14 @@ function getCurrentTime() {
   return now.toLocaleString(); // Format waktu sesuai dengan lokal
 }
 
-function generateHtml() {
+// Fungsi untuk meminify file JavaScript
+async function minifyJs(filePath) {
+  const code = fs.readFileSync(filePath, 'utf8');
+  const minified = await minify(code);
+  return minified.code;
+}
+
+async function generateHtml() {
   // Generate nonce untuk setiap elemen
   const nonce = generateNonce();
 
@@ -74,14 +81,20 @@ function generateHtml() {
       <title>Selamat Ulang Tahun!</title>
   `;
 
-  // Menambahkan file JavaScript dengan atribut integrity dan crossorigin
-  jsFiles.forEach(file => {
+  // Menambahkan file JavaScript yang sudah diminifikasi dengan atribut integrity dan crossorigin
+  for (const file of jsFiles) {
     const filePath = path.join(process.cwd(), file);
-    const integrityHash = generateIntegrityHash(filePath);
+    const minifiedJs = await minifyJs(filePath); // Meminify file JS
+    const integrityHash = generateIntegrityHash(filePath); // Menghitung hash untuk SRI
+    const minifiedJsFileName = file.replace('.js', '.min.js'); // Menggunakan nama file .min.js
+
+    // Menulis file JS yang sudah diminifikasi ke disk
+    fs.writeFileSync(path.join(process.cwd(), minifiedJsFileName), minifiedJs);
+
     htmlContent += `
-        <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous"></script>
+        <script src="${minifiedJsFileName}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous"></script>
     `;
-  });
+  }
 
   // Menambahkan style inline dengan nonce
   htmlContent += `
