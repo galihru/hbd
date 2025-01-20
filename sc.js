@@ -1,30 +1,29 @@
-const fetch = require('node-fetch');  // Kita bisa menggunakan node-fetch untuk mengambil isi HTML
-const fs = require('fs');             // Jika ada perubahan file menggunakan fs, tetap butuh node fs
+// sc.js
+import fetch from 'node-fetch';  // Menggunakan import alih-alih require
 
-async function updateNonceInHTML() {
-  // Ambil isi file index.html dari repository yang telah di-checkout
-  const htmlPath = 'index.html';  // Atur sesuai dengan lokasi file HTML di dalam repo
+// Fungsi untuk memperbarui nonce di file HTML
+async function updateNonce() {
+  const nonce = Math.random().toString(36).substring(2, 15); // Membuat nonce acak
+  const url = 'https://raw.githubusercontent.com/4211421036/hbd/main/index.html'; // URL file HTML yang akan diperbarui
 
-  // Baca file HTML yang sudah ada
-  const data = fs.readFileSync(htmlPath, 'utf8');
+  try {
+    const response = await fetch(url);
+    let htmlContent = await response.text();
 
-  // Fungsi untuk membuat nonce
-  function generateNonce() {
-    const array = new Uint32Array(10);
-    window.crypto.getRandomValues(array);
-    return array.join('');
+    // Menambahkan nonce pada script tag
+    htmlContent = htmlContent.replace(/<script src=".*"><\/script>/g, (match) => {
+      return match.replace('></script>', ` nonce="${nonce}"></script>`);
+    });
+
+    console.log('File HTML telah diperbarui dengan nonce:', nonce);
+    console.log(htmlContent); // Cetak HTML yang sudah diperbarui di konsol (untuk pengujian)
+
+    // **Catatan:** Karena GitHub Pages tidak mendukung pengeditan file langsung dari server, kamu harus mengunduh dan mengubah file secara manual atau menggunakan API eksternal.
+
+  } catch (error) {
+    console.error('Terjadi kesalahan saat memperbarui HTML:', error);
   }
-
-  const nonce = generateNonce();  // Generate nonce baru
-
-  // Mengganti tag script dengan nonce baru
-  const updatedData = data.replace(/<script.*?src="(.*?)".*?>/g, (match, src) => {
-    return match.replace('<script', `<script nonce="${nonce}"`);
-  });
-
-  // Tulis file dengan nonce baru
-  fs.writeFileSync(htmlPath, updatedData, 'utf8');
-  console.log("Nonce updated successfully in index.html!");
 }
 
-updateNonceInHTML();
+// Memanggil fungsi untuk memperbarui nonce
+updateNonce();
