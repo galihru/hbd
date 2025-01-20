@@ -23,7 +23,7 @@ jobs:
           npm install  # Install semua dependensi yang tercantum di package.json
 
       - name: Update Nonce in index.html
-        run: node updateNonce.js  # Memanggil skrip untuk memperbarui nonce
+        run: node sc.js  # Memanggil skrip untuk memperbarui nonce
 
       - name: Commit updated HTML file
         run: |
