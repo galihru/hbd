@@ -12,10 +12,10 @@ function simpleHash(str) {
   return Math.abs(hash).toString(16);
 }
 
-// Fungsi untuk generate nonce
+// Fungsi untuk generate nonce sederhana tanpa crypto
 function generateNonce() {
-  const timestamp = Date.now().toString();
-  return simpleHash(timestamp + Math.random().toString());
+  return Math.random().toString(36).substring(2, 15) + 
+         Math.random().toString(36).substring(2, 15);
 }
 
 function generateHtml() {
@@ -25,16 +25,11 @@ function generateHtml() {
   const scriptNonce2 = generateNonce();
   const scriptNonce3 = generateNonce();
   const scriptNonce4 = generateNonce();
-  
-  // Kumpulkan semua nonce untuk CSP
-  const nonces = [styleNonce, scriptNonce1, scriptNonce2, scriptNonce3, scriptNonce4]
-    .map(nonce => "'nonce-" + nonce + "'")
-    .join(' ');
 
   // CSP yang lebih sederhana
   const cspContent = [
-    "script-src 'self' " + nonces + " 'unsafe-inline'",
-    "style-src 'self' 'nonce-" + styleNonce + "' 'unsafe-inline'",
+    "script-src 'self' 'unsafe-inline'",
+    "style-src 'self' 'unsafe-inline'",
     "object-src 'none'",
     "base-uri 'self'",
     "img-src 'self' https://4211421036.github.io"
@@ -62,7 +57,7 @@ function generateHtml() {
         <meta http-equiv="Content-Security-Policy" content="${cspContent}">
         <title>Selamat Ulang Tahun!</title>
         
-        <style nonce="${styleNonce}">
+        <style>
           body {
             margin: 0;
             overflow: hidden;
@@ -70,38 +65,38 @@ function generateHtml() {
         </style>
       </head>
       <body>
-        <script nonce="${scriptNonce1}">
+        <script>
           console.log('Script berjalan dengan hash: ' + '${simpleHash("Script berjalan")}');
         </script>
         
-        <script src="p5.js" nonce="${scriptNonce2}"></script>
-        <script src="main.js" nonce="${scriptNonce3}"></script>
-        <script src="firework.js" nonce="${scriptNonce4}"></script>
+        <script src="p5.js"></script>
+        <script src="main.js"></script>
+        <script src="firework.js"></script>
 
-        <script nonce="${scriptNonce1}">
+        <script>
+          function generateSimpleNonce() {
+            return Math.random().toString(36).substring(2, 15) + 
+                   Math.random().toString(36).substring(2, 15);
+          }
+
           function updateNonces() {
-            const timestamp = Date.now().toString();
-            const newNonce = Math.abs(
-              Array.from(timestamp + Math.random().toString())
-                .reduce((hash, char) => {
-                  return ((hash << 5) - hash) + char.charCodeAt(0);
-                }, 0)
-            ).toString(16);
-
-            document.querySelectorAll('script[nonce], style[nonce]').forEach(function(el) {
+            const newNonce = generateSimpleNonce();
+            
+            // Update semua script dan style tags
+            document.querySelectorAll('script, style').forEach(function(el) {
               el.setAttribute('nonce', newNonce);
             });
 
+            // Update CSP meta tag
             const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
             if (cspMeta) {
-              const newCsp = cspMeta.getAttribute('content').replace(
-                /nonce-[a-f0-9]+/g,
-                'nonce-' + newNonce
-              );
-              cspMeta.setAttribute('content', newCsp);
+              let content = cspMeta.getAttribute('content');
+              content = content.replace(/(nonce-[a-zA-Z0-9+/=]+)/g, 'nonce-' + newNonce);
+              cspMeta.setAttribute('content', content);
             }
           }
 
+          // Update nonces setiap 5 detik
           setInterval(updateNonces, 5000);
         </script>
       </body>
@@ -111,11 +106,6 @@ function generateHtml() {
   const outputPath = path.join(process.cwd(), 'index.html');
   fs.writeFileSync(outputPath, htmlContent);
   console.log('File HTML telah dibuat di:', outputPath);
-  
-  // Tampilkan hash untuk referensi
-  console.log('\nHash yang digunakan:');
-  console.log('Style hash:', simpleHash('body { margin: 0; overflow: hidden; }'));
-  console.log('Script hash:', simpleHash('Script berjalan'));
 }
 
 // Generate HTML
