@@ -31,23 +31,15 @@
     </style>
     <script src="p5.js"></script>
     <script>
-        function generateRandomNonce() {
-          // Menghasilkan string acak dengan panjang 32 karakter (sesuai dengan rekomendasi)
-          return crypto.getRandomValues(new Uint8Array(32)).toString('base64');
-        }
-        
-        // Mendapatkan semua elemen script
-        const scripts = document.querySelectorAll('script');
-        
-        // Iterasi melalui setiap elemen script dan tambahkan atribut nonce
-        scripts.forEach(script => {
-          const nonce = generateRandomNonce();
-          script.setAttribute('nonce', nonce);
+        window.addEventListener('DOMContentLoaded', (event) => {
+          const nonce = Math.random().toString(36).substring(2, 15); // Membuat nonce acak
+          const scriptTags = document.querySelectorAll('script[src]'); // Ambil semua script tag dengan atribut src
+          scriptTags.forEach(script => {
+            script.setAttribute('nonce', nonce); // Tambahkan nonce ke atribut script
+          });
+    
+          console.log('Nonce yang ditambahkan:', nonce);
         });
-        
-        // Mengatur CSP dengan nonce yang baru saja dihasilkan
-        const metaCSP = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
-        metaCSP.content = `script-src 'nonce-${nonce}';`;
     </script>
     <script src="main.js"></script>
     <script src="firework.js"></script>
