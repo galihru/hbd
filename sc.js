@@ -1,14 +1,29 @@
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
-// Fungsi untuk menghasilkan nonce acak
+// Fungsi untuk menghasilkan nonce yang lebih aman menggunakan crypto
 function generateNonce() {
-  return Math.random().toString(36).substring(2, 15);
+  return crypto.randomBytes(16).toString('base64');
 }
 
-// Fungsi untuk membuat HTML dengan nonce dinamis
+// Fungsi untuk membuat HTML dengan CSP yang ditingkatkan
 function generateHtml() {
-  const nonce = generateNonce(); // Menghasilkan nonce baru setiap kali fungsi ini dipanggil
+  const nonce = generateNonce();
+  
+  // Definisi CSP yang lebih ketat dan lengkap
+  const cspDirectives = [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'unsafe-inline'`, // Menambahkan unsafe-inline untuk kompatibilitas
+    "object-src 'none'", // Mengatasi masalah object-src
+    "base-uri 'self'", // Mengatasi masalah base-uri
+    "img-src 'self' https://4211421036.github.io",
+    "style-src 'self' 'unsafe-inline'",
+    "font-src 'self'",
+    "frame-src 'none'",
+    "media-src 'self'",
+    "connect-src 'self'"
+  ].join('; ');
 
   const htmlContent = `
     <!DOCTYPE html>
@@ -29,63 +44,60 @@ function generateHtml() {
         <meta name="twitter:title" content="Selamat Ulang Tahun!">
         <meta name="twitter:description" content="Selamat Ulang Tahun!">
         <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">
-        <meta id="csp-meta" http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-${nonce}';">
+        <!-- CSP dipindahkan ke HTTP header, ini hanya sebagai fallback -->
+        <meta id="csp-meta" http-equiv="Content-Security-Policy" content="${cspDirectives}">
         <title>Selamat Ulang Tahun!</title>
       </head>
       <body>
-        <style>
+        <style nonce="${nonce}">
           body {
             margin: 0;
             overflow: hidden;
           }
         </style>
-
-        <!-- Script Dinamis untuk Mengupdate Nonce -->
+        
         <script id="dynamic-script" nonce="${nonce}">
-          console.log('Skrip ini dijalankan dengan nonce:', '${nonce}');
+          console.log('Script dijalankan dengan nonce:', '${nonce}');
         </script>
-
+        
         <script src="p5.js" nonce="${nonce}"></script>
         <script src="main.js" nonce="${nonce}"></script>
         <script src="firework.js" nonce="${nonce}"></script>
-
-        <!-- Mengupdate Nonce dan CSP setiap detik -->
-        <script>
-          function generateNonce() {
-            return Math.random().toString(36).substring(2, 15);
-          }
-
+        
+        <!-- Script untuk update nonce -->
+        <script nonce="${nonce}">
           function updateNonce() {
-            const nonce = generateNonce();  // Membuat nonce baru setiap detik
-            const scriptTag = document.getElementById('dynamic-script');
+            const nonce = crypto.randomBytes(16).toString('base64');
+            const scriptTags = document.querySelectorAll('script[nonce]');
+            const styleTags = document.querySelectorAll('style[nonce]');
             const cspMetaTag = document.getElementById('csp-meta');
-
-            // Mengubah atribut CSP dengan nonce baru
-            cspMetaTag.setAttribute('content', \`script-src 'self' 'nonce-\${nonce}';\`);
-
-            // Update tag <script> dengan nonce baru
-            scriptTag.setAttribute('nonce', nonce);
-
-            // Update isi script jika diperlukan
-            scriptTag.innerHTML = \`
-              console.log('Skrip ini dijalankan dengan nonce:', '\${nonce}');
-            \`;
+            
+            // Update CSP
+            const newCsp = ${JSON.stringify(cspDirectives)}.replace(/nonce-[a-zA-Z0-9+/=]+/, 'nonce-' + nonce);
+            cspMetaTag.setAttribute('content', newCsp);
+            
+            // Update nonce pada semua script dan style tags
+            [...scriptTags, ...styleTags].forEach(tag => {
+              tag.setAttribute('nonce', nonce);
+            });
           }
-
-          // Perbarui nonce setiap detik
-          setInterval(updateNonce, 1000);
+          
+          // Update nonce setiap 5 detik untuk mengurangi beban server
+          setInterval(updateNonce, 5000);
         </script>
       </body>
     </html>
   `;
 
-  // Tentukan lokasi file yang akan dihasilkan
-  const outputPath = path.join(process.cwd(), 'index.html');  // Menggunakan cwd untuk direktori saat ini
-
   // Simpan HTML ke file
+  const outputPath = path.join(process.cwd(), 'index.html');
   fs.writeFileSync(outputPath, htmlContent);
-  console.log('Halaman HTML dengan nonce dinamis telah dibuat di:', outputPath);
+  console.log('Halaman HTML dengan CSP yang ditingkatkan telah dibuat di:', outputPath);
+  
+  // Tampilkan instruksi untuk konfigurasi server
+  console.log('\nPenting: Untuk keamanan optimal, tambahkan header CSP berikut di server Anda:');
+  console.log(`Content-Security-Policy: ${cspDirectives}`);
 }
 
-// Jalankan fungsi untuk menghasilkan HTML pertama kali
+// Jalankan fungsi untuk menghasilkan HTML
 generateHtml();
