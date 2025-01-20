@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "Selamat Ulang Tahun!",
   "main": "sc.js",
-  "dependencies": {
-    "node-fetch": "^3.0.0",
-    "express": "^4.17.3"
-  },
   "scripts": {
     "start": "node sc.js"
   },
