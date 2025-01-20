@@ -1,5 +1,4 @@
-// sc.js
-import fetch from 'node-fetch';  // Menggunakan import alih-alih require
+const fetch = require('node-fetch');  // Menggunakan require untuk node-fetch versi 2.x
 
 // Fungsi untuk memperbarui nonce di file HTML
 async function updateNonce() {
