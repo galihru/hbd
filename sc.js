@@ -13,11 +13,25 @@ function generateHtml() {
   const htmlContent = `
     <!DOCTYPE html>
     <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-${nonce}';">
-      <title>Selamat Ulang Tahun!</title>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Selamat Ulang Tahun!</title>
+        <meta name="description" content="Selamat Ulang Tahun!">
+        <meta name="keywords" content="Selamat Ulang Tahun!">
+        <meta name="author" content="GALIH RIDHO UTOMO">
+        <meta name="robots" content="index, follow">
+        <meta property="og:title" content="Selamat Ulang Tahun!">
+        <meta property="og:description" content="Selamat Ulang Tahun!">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://4211421036.github.io/hbd">
+        <meta property="og:image" content="https://4211421036.github.io/hbd/hbd.jpg">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Selamat Ulang Tahun!">
+        <meta name="twitter:description" content="Selamat Ulang Tahun!">
+        <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-${nonce}';">
+        <title>Selamat Ulang Tahun!</title>
     </head>
     <body>
       <style>
