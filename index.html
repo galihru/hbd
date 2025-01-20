@@ -28,10 +28,38 @@
             overflow: hidden;
         }
     </style>
-    <script>async function generateHash(t){try{const r=await fetch(t),a=await r.text(),e=await crypto.subtle.digest("SHA-256",(new TextEncoder).encode(a));return Array.from(new Uint8Array(e)).map((t=>t.toString(16).padStart(2,"0"))).join("")}catch(t){return console.error("Error generating hash:",t),""}}async function applyHashedScripts(){const t=document.querySelectorAll("script[data-src]");for(const r of t){const t=r.getAttribute("data-src"),a=await generateHash(t);r.src=a?`${t}?hash=${a}`:t}}applyHashedScripts();</script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script>
     <script id="firework-script" data-src="firework.js"></script>
     <script id="main-script" data-src="main.js"></script>
+    <script>
+        async function generateHash(fileName) {
+            try {
+                const response = await fetch(fileName);
+                const text = await response.text();
+                const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            } catch (error) {
+                console.error('Error generating hash:', error);
+                return '';
+            }
+        }
+
+        async function applyHashedScripts() {
+            const scripts = document.querySelectorAll('script[data-src]');
+            for (const script of scripts) {
+                const src = script.getAttribute('data-src');
+                const hash = await generateHash(src);
+                if (hash) {
+                    script.src = `${src}?hash=${hash}`;
+                } else {
+                    script.src = src; // Fallback to original src if hash generation fails
+                }
+            }
+        }
+
+        applyHashedScripts();
+    </script>
 </body>
 
 </html>
