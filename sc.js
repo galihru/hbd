@@ -38,8 +38,7 @@ function generateHtml() {
 
   // File JavaScript dan CSS yang perlu dihitung integritasnya
   const jsFiles = ['p5.js', 'main.js', 'firework.js'];
-  const cssFiles = ['style.css'];  // Jika ada file CSS
-
+  
   let htmlContent = `<!DOCTYPE html>
   <html lang="en">
     <head>
@@ -67,14 +66,6 @@ function generateHtml() {
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <title>Selamat Ulang Tahun!</title>
   `;
-
-  // Menambahkan file CSS dengan atribut integrity dan crossorigin
-  cssFiles.forEach(file => {
-    const integrityHash = generateIntegrityHash(file);
-    htmlContent += `
-        <link rel="stylesheet" href="${file}" integrity="sha384-${integrityHash}" crossorigin="anonymous">
-    `;
-  });
 
   // Menambahkan file JavaScript dengan atribut integrity dan crossorigin
   jsFiles.forEach(file => {
