@@ -12,5 +12,11 @@
   "dependencies": {
     "fs": "^0.0.1-security",
     "node-fetch": "^3.3.2"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node sc.js"
+  },
+  "author": "Galih Ridho Utomo",
+  "license": "MIT"
 }
