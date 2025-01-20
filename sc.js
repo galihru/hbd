@@ -1,18 +1,18 @@
 import fs from 'fs';
 import path from 'path';
 
-// Fungsi untuk generate hash sederhana (SHA-256 like)
+// Fungsi untuk generate hash sederhana
 function simpleHash(str) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Konversi ke 32-bit integer
+    hash = hash & hash;
   }
   return Math.abs(hash).toString(16);
 }
 
-// Fungsi untuk generate nonce sederhana
+// Fungsi untuk generate nonce
 function generateNonce() {
   const timestamp = Date.now().toString();
   return simpleHash(timestamp + Math.random().toString());
@@ -28,16 +28,16 @@ function generateHtml() {
   
   // Kumpulkan semua nonce untuk CSP
   const nonces = [styleNonce, scriptNonce1, scriptNonce2, scriptNonce3, scriptNonce4]
-    .map(nonce => `'nonce-${nonce}'`)
+    .map(nonce => "'nonce-" + nonce + "'")
     .join(' ');
 
   // CSP yang lebih sederhana
   const cspContent = [
-    `script-src 'self' ${nonces} 'unsafe-inline'`,
-    `style-src 'self' 'nonce-${styleNonce}' 'unsafe-inline'`,
+    "script-src 'self' " + nonces + " 'unsafe-inline'",
+    "style-src 'self' 'nonce-" + styleNonce + "' 'unsafe-inline'",
     "object-src 'none'",
     "base-uri 'self'",
-    "img-src 'self' https://4211421036.github.io",
+    "img-src 'self' https://4211421036.github.io"
   ].join('; ');
 
   const htmlContent = `
@@ -62,7 +62,6 @@ function generateHtml() {
         <meta http-equiv="Content-Security-Policy" content="${cspContent}">
         <title>Selamat Ulang Tahun!</title>
         
-        <!-- Style dengan nonce -->
         <style nonce="${styleNonce}">
           body {
             margin: 0;
@@ -71,17 +70,14 @@ function generateHtml() {
         </style>
       </head>
       <body>
-        <!-- Script inline dengan nonce -->
         <script nonce="${scriptNonce1}">
-          console.log('Script berjalan dengan hash:', '${simpleHash("Script berjalan")}');
+          console.log('Script berjalan dengan hash: ' + '${simpleHash("Script berjalan")}');
         </script>
         
-        <!-- Script eksternal dengan nonce -->
         <script src="p5.js" nonce="${scriptNonce2}"></script>
         <script src="main.js" nonce="${scriptNonce3}"></script>
         <script src="firework.js" nonce="${scriptNonce4}"></script>
 
-        <!-- Script untuk auto-update nonce -->
         <script nonce="${scriptNonce1}">
           function updateNonces() {
             const timestamp = Date.now().toString();
@@ -92,23 +88,20 @@ function generateHtml() {
                 }, 0)
             ).toString(16);
 
-            // Update nonce untuk semua script dan style tags
-            document.querySelectorAll('script[nonce], style[nonce]').forEach(el => {
-              el.nonce = newNonce;
+            document.querySelectorAll('script[nonce], style[nonce]').forEach(function(el) {
+              el.setAttribute('nonce', newNonce);
             });
 
-            // Update CSP meta tag
             const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
             if (cspMeta) {
-              const newCsp = cspMeta.content.replace(
-                /nonce-[a-f0-9]+/g, 
-                `nonce-${newNonce}`
+              const newCsp = cspMeta.getAttribute('content').replace(
+                /nonce-[a-f0-9]+/g,
+                'nonce-' + newNonce
               );
-              cspMeta.content = newCsp;
+              cspMeta.setAttribute('content', newCsp);
             }
           }
 
-          // Update nonces setiap 5 detik
           setInterval(updateNonces, 5000);
         </script>
       </body>
@@ -119,7 +112,7 @@ function generateHtml() {
   fs.writeFileSync(outputPath, htmlContent);
   console.log('File HTML telah dibuat di:', outputPath);
   
-  // Tampilkan hash dari konten untuk referensi
+  // Tampilkan hash untuk referensi
   console.log('\nHash yang digunakan:');
   console.log('Style hash:', simpleHash('body { margin: 0; overflow: hidden; }'));
   console.log('Script hash:', simpleHash('Script berjalan'));
