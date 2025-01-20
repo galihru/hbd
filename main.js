@@ -139,6 +139,10 @@ function createModal() {
                 select('#modal').remove()
                 startButton.remove()
                 let audio = new Audio('./hbd.mp3');
+                audio.addEventListener('ended', function() {
+                    this.currentTime = 0;
+                    this.play();
+                }, false);
                 audio.play();
             } else {
                 alert("Pastikan nomor WA dimulai dengan 62.")
