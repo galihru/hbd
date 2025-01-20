@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
 // Fungsi untuk menghasilkan nonce acak
 function generateNonce() {
@@ -11,7 +10,6 @@ function generateNonce() {
 function generateHtml() {
   const nonce = generateNonce();
 
-  // HTML dengan CSP dan nonce dinamis
   const htmlContent = `
     <!DOCTYPE html>
     <html lang="en">
@@ -20,20 +18,6 @@ function generateHtml() {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-${nonce}';">
       <title>Selamat Ulang Tahun!</title>
-      <meta name="description" content="Selamat Ulang Tahun!">
-      <meta name="keywords" content="Selamat Ulang Tahun!">
-      <meta name="author" content="GALIH RIDHO UTOMO">
-      <meta name="robots" content="index, follow">
-      <meta property="og:title" content="Selamat Ulang Tahun!">
-      <meta property="og:description" content="Selamat Ulang Tahun!">
-      <meta property="og:type" content="website">
-      <meta property="og:url" content="https://4211421036.github.io/hbd/">
-      <meta property="og:image" content="https://4211421036.github.io/hbd/hbd.jpg">
-      <meta name="twitter:card" content="summary_large_image">
-      <meta name="twitter:title" content="Selamat Ulang Tahun!">
-      <meta name="twitter:description" content="Selamat Ulang Tahun!">
-      <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">
-      <link rel="icon" href="https://4211421036.github.io/g4lihru/987654567.png" type="image/x-icon">
     </head>
     <body>
       <style>
@@ -53,12 +37,8 @@ function generateHtml() {
     </html>
   `;
 
-  // Dapatkan path direktori saat ini dengan import.meta.url
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-
-  // Tentukan lokasi file yang akan dihasilkan di root folder
-  const outputPath = path.join(__dirname, 'index.html');
+  // Tentukan lokasi file yang akan dihasilkan
+  const outputPath = path.join(process.cwd(), 'index.html');  // Menggunakan cwd untuk direktori saat ini
 
   // Simpan HTML ke file
   fs.writeFileSync(outputPath, htmlContent);
