@@ -243,12 +243,45 @@ function createStartButton() {
     })
 }
 
-function shareToWhatsApp(nomorWA) {
+function createStartButton() {
+    startButton = createButton('Selamat Ulang Tahun! 🎂')
+    startButton.position(windowWidth / 2 - 100, windowHeight / 2 - 25)
+    startButton.style('padding', '15px 30px')
+    startButton.style('background-color', '#FF4081')
+    startButton.style('color', 'white')
+    startButton.style('border', 'none')
+    startButton.style('border-radius', '25px')
+    startButton.style('cursor', 'pointer')
+    startButton.style('font-size', '18px')
+    startButton.style('box-shadow', '0 4px 8px rgba(0,0,0,0.2)')
+    startButton.style('transition', 'all 0.3s ease')
+    startButton.style('z-index', '999')
+    startButton.style('transform', 'translateX(-5%)')
+    startButton.hide()
+
+    startButton.mousePressed(() => {
+        startButton.hide()
+        showModal = true
+        createModal()
+    })
+
+    startButton.mouseOver(() => {
+        startButton.style('transform', 'scale(1.05)')
+        startButton.style('box-shadow', '0 6px 12px rgba(0,0,0,0.3)')
+    })
+
+    startButton.mouseOut(() => {
+        startButton.style('transform', 'scale(1)')
+        startButton.style('box-shadow', '0 4px 8px rgba(0,0,0,0.2)')
+    })
+}
+
+function shareToWhatsApp() {
     const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
     const message = `${randomWish}\nUcapkan selamat ulang tahun untuk ${userName}!`;
 
     // Gambar yang ingin dibagikan (gunakan URL gambar yang sudah ada)
-    const imageURL = 'https://4211421036.github.io/hbd/hbd.jpg'; // Ganti dengan URL gambar yang sesuai
+    const imageURL = 'https://example.com/path/to/your/birthday_image.png'; // Ganti dengan URL gambar yang sesuai
 
     // Membuat pesan WhatsApp dengan gambar
     const encodedMessage = encodeURIComponent(message);
