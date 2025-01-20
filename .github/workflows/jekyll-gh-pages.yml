@@ -52,6 +52,21 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
 
+      - name: Stage changes and commit
+        run: |
+          # Add modified files, but exclude node_modules/
+          git add . 
+          git add -u
+          git reset node_modules/  # Ensure node_modules is not added
+
+          # Commit changes if any
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update site content"
+            git push
+          fi
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
