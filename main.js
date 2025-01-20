@@ -138,6 +138,8 @@ function createModal() {
                 clicked = true
                 select('#modal').remove()
                 startButton.remove()
+                let audio = new Audio('./hbd.mp3');
+                audio.play();
             } else {
                 alert("Pastikan nomor WA dimulai dengan 62.")
             }
