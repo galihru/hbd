@@ -184,7 +184,7 @@ function createModal() {
         setTimeout(() => {
             modal.style('opacity', '1')  // Fade-in efek
             modalContent.style('opacity', '1')  // Fade-in efek
-            modalContent.style('transform', 'translateY(0)')  // Modal bergerak naik
+            modalContent.style('transform', 'translateY(0)')
         }, 50)
     }
 }
