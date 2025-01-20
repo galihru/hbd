@@ -1,35 +1,28 @@
-name: Update Nonce in HTML
+name: Update Nonce on HTML
 
 on:
   push:
     branches:
-      - main  # Ganti dengan branch yang sesuai jika menggunakan branch lain
+      - main
+  workflow_dispatch:
 
 jobs:
-  update-nonce:
+  build:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+      - name: Check out code
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'  # Pastikan versi Node.js sesuai dengan yang kamu butuhkan
+          node-version: '16'
 
       - name: Install dependencies
         run: |
-          npm install  # Install semua dependensi yang tercantum di package.json
-          npm install node-fetch@2
+          npm install
 
-      - name: Update Nonce in index.html
-        run: node sc.js  # Memanggil skrip untuk memperbarui nonce
-
-      - name: Commit updated HTML file
+      - name: Run the update script
         run: |
-          git config --local user.name "github-actions"
-          git config --local user.email "github-actions@users.noreply.github.com"
-          git add index.html
-          git commit -m "Update nonce in index.html"
-          git push
+          node sc.js
