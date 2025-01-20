@@ -1,22 +1,35 @@
 import fs from 'fs';
 import path from 'path';
-import { exec } from 'child_process';
+import { exec } from 'child_process'; // Import exec untuk menjalankan perintah git secara synchronous
 
 // Fungsi untuk menghasilkan nonce acak
 function generateNonce() {
   return Math.random().toString(36).substring(2, 15);
 }
 
-// Fungsi untuk membuat HTML dengan nonce dinamis
-function generateHtml() {
-  const nonce = generateNonce(); // Menghasilkan nonce baru setiap kali fungsi ini dipanggil
+// Fungsi untuk menjalankan perintah git secara synchronous
+function runGitCommand(command) {
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        reject(`Error executing command: ${stderr}`);
+      } else {
+        resolve(stdout);
+      }
+    });
+  });
+}
 
-  const htmlContent = `
-    <!DOCTYPE html>
+// Fungsi untuk membuat HTML dengan nonce
+async function generateHtmlAndCommit() {
+  const nonce = generateNonce();
+
+  const htmlContent = `<!DOCTYPE html>
     <html lang="en">
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Selamat Ulang Tahun!</title>
         <meta name="description" content="Selamat Ulang Tahun!">
         <meta name="keywords" content="Selamat Ulang Tahun!">
         <meta name="author" content="GALIH RIDHO UTOMO">
@@ -30,8 +43,7 @@ function generateHtml() {
         <meta name="twitter:title" content="Selamat Ulang Tahun!">
         <meta name="twitter:description" content="Selamat Ulang Tahun!">
         <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">
-        <meta id="csp-meta" http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-${nonce}';">
-        <title>Selamat Ulang Tahun!</title>
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-${nonce}';">
       </head>
       <body>
         <style>
@@ -40,105 +52,39 @@ function generateHtml() {
             overflow: hidden;
           }
         </style>
-
-        <!-- Script Dinamis untuk Mengupdate Nonce -->
-        <script id="dynamic-script" nonce="${nonce}">
+        <script nonce="${nonce}">
           console.log('Skrip ini dijalankan dengan nonce:', '${nonce}');
         </script>
-
         <script src="p5.js" nonce="${nonce}"></script>
         <script src="main.js" nonce="${nonce}"></script>
         <script src="firework.js" nonce="${nonce}"></script>
-
-        <!-- Mengupdate Nonce dan CSP setiap detik -->
-        <script>
-          function generateNonce() {
-            return Math.random().toString(36).substring(2, 15);
-          }
-
-          function updateNonce() {
-            const nonce = generateNonce();  // Membuat nonce baru setiap detik
-            const scriptTag = document.getElementById('dynamic-script');
-            const cspMetaTag = document.getElementById('csp-meta');
-
-            // Mengubah atribut CSP dengan nonce baru
-            cspMetaTag.setAttribute('content', \`script-src 'self' 'nonce-\${nonce}';\`);
-
-            // Update tag <script> dengan nonce baru
-            scriptTag.setAttribute('nonce', nonce);
-
-            // Update isi script jika diperlukan
-            scriptTag.innerHTML = \`
-              console.log('Skrip ini dijalankan dengan nonce:', '\${nonce}');
-            \`;
-          }
-
-          // Perbarui nonce setiap detik
-          setInterval(updateNonce, 1000);
-        </script>
       </body>
-    </html>
-  `;
+    </html>`;
 
   // Tentukan lokasi file yang akan dihasilkan
-  const outputPath = path.join(process.cwd(), 'index.html');  // Menggunakan cwd untuk direktori saat ini
+  const outputPath = path.join(process.cwd(), 'index.html');
 
   // Simpan HTML ke file
   fs.writeFileSync(outputPath, htmlContent);
   console.log('Halaman HTML dengan nonce dinamis telah dibuat di:', outputPath);
+
+  // Jalankan perintah git untuk commit dan push
+  try {
+    await runGitCommand('git add index.html');
+    await runGitCommand('git commit -m "Update HTML with new nonce at ' + new Date().toISOString() + '"');
+    await runGitCommand('git push origin main');
+    console.log('Perubahan telah di-commit dan dipush ke GitHub.');
+  } catch (error) {
+    console.error('Terjadi kesalahan saat menjalankan perintah git:', error);
+  }
 }
 
-// Fungsi untuk menjalankan perintah Git: commit dan push
-function commitAndPushChanges() {
-  const commitMessage = `Update HTML with new nonce at ${new Date().toISOString()}`;
-
-  // Konfigurasi identitas pengguna Git
-  exec('git config user.email "g4lihru@students.unnes.ac.id"', (err, stdout, stderr) => {
-    if (err) {
-      console.error(`Error configuring user email: ${stderr}`);
-      return;
-    }
-    console.log(stdout);
-
-    exec('git config user.name "GALIH RIDHO UTOMO"', (err, stdout, stderr) => {
-      if (err) {
-        console.error(`Error configuring user name: ${stderr}`);
-        return;
-      }
-      console.log(stdout);
-
-      exec('git add index.html', (err, stdout, stderr) => {
-        if (err) {
-          console.error(`Error adding changes: ${stderr}`);
-          return;
-        }
-        console.log(stdout);
-
-        exec(`git commit -m "${commitMessage}"`, (err, stdout, stderr) => {
-          if (err) {
-            console.error(`Error committing changes: ${stderr}`);
-            return;
-          }
-          console.log(stdout);
-
-          exec('git push origin main', (err, stdout, stderr) => {
-            if (err) {
-              console.error(`Error pushing changes: ${stderr}`);
-              return;
-            }
-            console.log(stdout);
-          });
-        });
-      });
-    });
-  });
+// Fungsi untuk menjalankan proses setiap detik
+function startCommitLoop() {
+  setInterval(async () => {
+    await generateHtmlAndCommit(); // Tunggu proses selesai sebelum melanjutkan
+  }, 1000); // Menjalankan setiap detik
 }
 
-// Jalankan fungsi untuk menghasilkan HTML pertama kali
-generateHtml();
-
-// Commit dan Push perubahan setiap detik
-setInterval(() => {
-  generateHtml();  // Memperbarui HTML dengan nonce baru
-  commitAndPushChanges();  // Commit dan Push perubahan ke GitHub
-}, 1000);
+// Mulai proses commit dengan interval
+startCommitLoop();
