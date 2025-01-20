@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { minify } from 'terser'; // Menggunakan terser untuk minify JavaScript
+import { minify } from 'html-minifier';
+import { minify as minifyJS } from 'terser';  // Import terser for JS minification
 
 // Fungsi untuk generate nonce sederhana
 function generateNonce() {
@@ -21,13 +22,6 @@ function generateIntegrityHash(filePath) {
 function getCurrentTime() {
   const now = new Date();
   return now.toLocaleString(); // Format waktu sesuai dengan lokal
-}
-
-// Fungsi untuk meminify file JavaScript
-async function minifyJs(filePath) {
-  const code = fs.readFileSync(filePath, 'utf8');
-  const minified = await minify(code);
-  return minified.code;
 }
 
 async function generateHtml() {
@@ -81,20 +75,23 @@ async function generateHtml() {
       <title>Selamat Ulang Tahun!</title>
   `;
 
-  // Menambahkan file JavaScript yang sudah diminifikasi dengan atribut integrity dan crossorigin
-  for (const file of jsFiles) {
+  // Minify JS files and save them as .min.js files
+  const minifiedJSFiles = await Promise.all(jsFiles.map(async (file) => {
     const filePath = path.join(process.cwd(), file);
-    const minifiedJs = await minifyJs(filePath); // Meminify file JS
-    const integrityHash = generateIntegrityHash(filePath); // Menghitung hash untuk SRI
-    const minifiedJsFileName = file.replace('.js', '.min.js'); // Menggunakan nama file .min.js
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const minified = await minifyJS(fileContent); // Minify using Terser
+    const minifiedFilePath = path.join(process.cwd(), file.replace('.js', '.min.js'));
 
-    // Menulis file JS yang sudah diminifikasi ke disk
-    fs.writeFileSync(path.join(process.cwd(), minifiedJsFileName), minifiedJs);
+    // Save minified file
+    fs.writeFileSync(minifiedFilePath, minified.code);
 
-    htmlContent += `
-        <script src="${minifiedJsFileName}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous"></script>
-    `;
-  }
+    // Return the minified file reference for HTML
+    const integrityHash = generateIntegrityHash(minifiedFilePath); // Generate integrity hash
+    return `<script src="${file.replace('.js', '.min.js')}" integrity="sha384-${integrityHash}" crossorigin="anonymous"></script>`;
+  }));
+
+  // Add minified JS to HTML content
+  htmlContent += minifiedJSFiles.join('\n');
 
   // Menambahkan style inline dengan nonce
   htmlContent += `
@@ -113,22 +110,26 @@ async function generateHtml() {
     </body>
   </html>`;
 
-  // Minify HTML yang dihasilkan
-  const minifiedHtml = minify(htmlContent, {
-    collapseWhitespace: true,  // Menghapus spasi dan baris kosong
-    removeComments: true,      // Menghapus komentar
-    removeRedundantAttributes: true, // Menghapus atribut yang tidak perlu
-    useShortDoctype: true,     // Menggunakan doctype singkat
-    minifyJS: true,            // Minify JS
-    minifyCSS: true            // Minify CSS
-  });
+  try {
+    // Minify HTML yang dihasilkan
+    const minifiedHtml = await minify(htmlContent, {
+      collapseWhitespace: true,  // Menghapus spasi dan baris kosong
+      removeComments: true,      // Menghapus komentar
+      removeRedundantAttributes: true, // Menghapus atribut yang tidak perlu
+      useShortDoctype: true,     // Menggunakan doctype singkat
+      minifyJS: true,            // Minify JS
+      minifyCSS: true            // Minify CSS
+    });
 
-  // Tentukan path untuk file HTML yang akan dihasilkan
-  const outputPath = path.join(process.cwd(), 'index.html');
+    // Tentukan path untuk file HTML yang akan dihasilkan
+    const outputPath = path.join(process.cwd(), 'index.html');
 
-  // Simpan HTML yang telah di-minify ke file
-  fs.writeFileSync(outputPath, minifiedHtml);
-  console.log('File HTML telah dibuat dan di-minify di:', outputPath);
+    // Simpan HTML yang telah di-minify ke file
+    fs.writeFileSync(outputPath, minifiedHtml);
+    console.log('File HTML telah dibuat dan di-minify di:', outputPath);
+  } catch (error) {
+    console.error('Error during minification:', error);
+  }
 }
 
 // Generate HTML
