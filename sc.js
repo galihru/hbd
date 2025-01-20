@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';  // Menggunakan import untuk fs
+import path from 'path';  // Menggunakan import untuk path
 
 // Fungsi untuk menghasilkan nonce acak
 function generateNonce() {
@@ -53,7 +53,7 @@ function generateHtml() {
   `;
 
   // Tentukan lokasi file yang akan dihasilkan
-  const outputPath = path.join(__dirname, 'docs', 'index.html');
+  const outputPath = path.join('docs', 'index.html');
 
   // Pastikan folder docs ada
   if (!fs.existsSync(path.dirname(outputPath))) {
