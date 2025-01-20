@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { minify } from 'html-minifier';
-import { minify as minifyJS } from 'terser';  // Import terser for JS minification
 
 // Fungsi untuk generate nonce sederhana
 function generateNonce() {
@@ -75,23 +74,14 @@ async function generateHtml() {
       <title>Selamat Ulang Tahun!</title>
   `;
 
-  // Minify JS files and save them as .min.js files
-  const minifiedJSFiles = await Promise.all(jsFiles.map(async (file) => {
+  // Menambahkan file JavaScript dengan atribut integrity dan crossorigin
+  jsFiles.forEach(file => {
     const filePath = path.join(process.cwd(), file);
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
-    const minified = await minifyJS(fileContent); // Minify using Terser
-    const minifiedFilePath = path.join(process.cwd(), file.replace('.js', '.min.js'));
-
-    // Save minified file
-    fs.writeFileSync(minifiedFilePath, minified.code);
-
-    // Return the minified file reference for HTML
-    const integrityHash = generateIntegrityHash(minifiedFilePath); // Generate integrity hash
-    return `<script src="${file.replace('.js', '.min.js')}" integrity="sha384-${integrityHash}" crossorigin="anonymous"></script>`;
-  }));
-
-  // Add minified JS to HTML content
-  htmlContent += minifiedJSFiles.join('\n');
+    const integrityHash = generateIntegrityHash(filePath);
+    htmlContent += `
+        <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous"></script>
+    `;
+  });
 
   // Menambahkan style inline dengan nonce
   htmlContent += `
@@ -106,7 +96,7 @@ async function generateHtml() {
       <script nonce="${nonce}">
         console.log('Generated automatic on: ${getCurrentTime()}');
       </script>
-        <!-- page generated automatic: ${getCurrentTime()} -->
+        !-- page generated automatic: ${getCurrentTime()} -->
     </body>
   </html>`;
 
