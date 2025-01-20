@@ -1,4 +1,4 @@
-name: Update Dynamic HTML with Nonce
+name: Update HTML with Dynamic Nonce
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Update index.html
+    - name: Run script to update HTML
       run: node sc.js
 
     - name: Commit and push changes
