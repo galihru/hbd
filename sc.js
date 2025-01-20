@@ -1,9 +1,12 @@
-import fetch from 'node-fetch';  // Menggunakan import untuk node-fetch versi 2.x atau lebih tinggi
+import express from 'express';  // Menggunakan import untuk Express
+import fetch from 'node-fetch'; // Menggunakan node-fetch untuk mengambil HTML
 
-// Fungsi untuk memperbarui nonce di file HTML
-async function updateNonce() {
+const app = express();
+const port = 3000;
+
+app.get('/', async (req, res) => {
   const nonce = Math.random().toString(36).substring(2, 15); // Membuat nonce acak
-  const url = 'https://raw.githubusercontent.com/4211421036/hbd/main/index.html'; // URL file HTML yang akan diperbarui
+  const url = 'https://raw.githubusercontent.com/4211421036/hbd/main/index.html'; // URL file HTML
 
   try {
     const response = await fetch(url);
@@ -14,15 +17,12 @@ async function updateNonce() {
       return match.replace('></script>', ` nonce="${nonce}"></script>`);
     });
 
-    console.log('File HTML telah diperbarui dengan nonce:', nonce);
-    console.log(htmlContent); // Cetak HTML yang sudah diperbarui di konsol (untuk pengujian)
-
-    // **Catatan:** Karena GitHub Pages tidak mendukung pengeditan file langsung dari server, kamu harus mengunduh dan mengubah file secara manual atau menggunakan API eksternal.
-
+    res.send(htmlContent); // Kirim HTML yang sudah diperbarui ke pengguna
   } catch (error) {
-    console.error('Terjadi kesalahan saat memperbarui HTML:', error);
+    res.status(500).send('Terjadi kesalahan saat memperbarui HTML');
   }
-}
+});
 
-// Memanggil fungsi untuk memperbarui nonce
-updateNonce();
+app.listen(port, () => {
+  console.log(`Server berjalan di http://localhost:${port}`);
+});
