@@ -17,6 +17,12 @@ app.get('/', async (req, res) => {
       return match.replace('></script>', ` nonce="${nonce}"></script>`);
     });
 
+    // Mengatur CSP dengan nonce yang baru saja dihasilkan
+    htmlContent = htmlContent.replace(
+      /<meta http-equiv="Content-Security-Policy"[^>]*>/,
+      `<meta http-equiv="Content-Security-Policy" content="script-src 'nonce-${nonce}';">`
+    );
+
     res.send(htmlContent); // Kirim HTML yang sudah diperbarui ke pengguna
   } catch (error) {
     res.status(500).send('Terjadi kesalahan saat memperbarui HTML');
