@@ -1,73 +1,43 @@
-
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Selamat Ulang Tahun!">
-        <meta name="keywords" content="Selamat Ulang Tahun!">
-        <meta name="author" content="GALIH RIDHO UTOMO">
-        <meta name="robots" content="index, follow">
-        <meta property="og:title" content="Selamat Ulang Tahun!">
-        <meta property="og:description" content="Selamat Ulang Tahun!">
-        <meta property="og:type" content="website">
-        <meta property="og:url" content="https://4211421036.github.io/hbd">
-        <meta property="og:image" content="https://4211421036.github.io/hbd/hbd.jpg">
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="Selamat Ulang Tahun!">
-        <meta name="twitter:description" content="Selamat Ulang Tahun!">
-        <meta property="og:audio" content="https://4211421036.github.io/hbd/hbd.mp3" />
-        <meta property="og:locale" content="id" />
-        <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">
-        <meta property="og:image:alt" content="HBD" />
-        <meta property="og:audio:secure_url" content="https://4211421036.github.io/hbd/hbd.mp3" />
-        <meta property="og:type" content="website" />
-        <meta property="og:audio:type" content="audio/mpeg" />
-        <meta http-equiv="Content-Security-Policy" content="style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; img-src 'self' https://4211421036.github.io; default-src 'self' https://4211421036.github.io; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://4211421036.github.io; style-src 'self' 'unsafe-inline' https://4211421036.github.io; img-src 'self' data: https://4211421036.github.io; font-src 'self' https://4211421036.github.io; media-src 'self' https://4211421036.github.io; frame-src 'self' https://4211421036.github.io; connect-src 'self' https://4211421036.github.io; form-action 'self'; frame-ancestors 'self'; manifest-src 'self' https://4211421036.github.io; worker-src 'self' blob: https://4211421036.github.io; prefetch-src 'self' https://4211421036.github.io">
-        <title>Selamat Ulang Tahun!</title>
-        
-        <style>
-          body {
-            margin: 0;
-            overflow: hidden;
-          }
-        </style>
-      </head>
-      <body>
-        <script>
-          console.log('Script berjalan dengan hash: ' + '5d6a0a98');
-        </script>
-        
-        <script src="p5.js"></script>
-        <script src="main.js"></script>
-        <script src="firework.js"></script>
-
-        <script>
-          function generateSimpleNonce() {
-            return Math.random().toString(36).substring(2, 15) + 
-                   Math.random().toString(36).substring(2, 15);
-          }
-
-          function updateNonces() {
-            const newNonce = generateSimpleNonce();
-            
-            // Update semua script dan style tags
-            document.querySelectorAll('script, style').forEach(function(el) {
-              el.setAttribute('nonce', newNonce);
-            });
-
-            // Update CSP meta tag
-            const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
-            if (cspMeta) {
-              let content = cspMeta.getAttribute('content');
-              content = content.replace(/(nonce-[a-zA-Z0-9+/=]+)/g, 'nonce-' + newNonce);
-              cspMeta.setAttribute('content', content);
-            }
-          }
-
-          // Update nonces setiap 5 detik
-          setInterval(updateNonces, 5000);
-        </script>
-      </body>
-    </html>
-  
+<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="Selamat Ulang Tahun!">
+      <meta name="keywords" content="Selamat Ulang Tahun!">
+      <meta name="author" content="GALIH RIDHO UTOMO">
+      <meta name="robots" content="index, follow">
+      <meta property="og:title" content="Selamat Ulang Tahun!">
+      <meta property="og:description" content="Selamat Ulang Tahun!">
+      <meta property="og:type" content="website">
+      <meta property="og:url" content="https://4211421036.github.io/hbd">
+      <meta property="og:image" content="https://4211421036.github.io/hbd/hbd.jpg">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="Selamat Ulang Tahun!">
+      <meta name="twitter:description" content="Selamat Ulang Tahun!">
+      <meta property="og:audio" content="https://4211421036.github.io/hbd/hbd.mp3" />
+      <meta property="og:locale" content="id" />
+      <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">
+      <meta property="og:image:alt" content="HBD" />
+      <meta property="og:audio:secure_url" content="https://4211421036.github.io/hbd/hbd.mp3" />
+      <meta property="og:type" content="website" />
+      <meta property="og:audio:type" content="audio/mpeg" />
+      <meta http-equiv="Content-Security-Policy" content="style-src 'self' 'unsafe-inline' 'nonce-bhg6sy5k5mmfo1nb0i68f'; object-src 'none'; base-uri 'self'; img-src 'self' https://4211421036.github.io; default-src 'self' https://4211421036.github.io; script-src 'self' 'unsafe-inline' 'unsafe-eval' 'nonce-${nonce}' https://4211421036.github.io; style-src 'self' 'unsafe-inline' 'nonce-${nonce}' https://4211421036.github.io; img-src 'self' data: https://4211421036.github.io; font-src 'self' https://4211421036.github.io; media-src 'self' https://4211421036.github.io; frame-src 'self' https://4211421036.github.io; connect-src 'self' https://4211421036.github.io; form-action 'self'; frame-ancestors 'self'; manifest-src 'self' https://4211421036.github.io; worker-src 'self' blob: https://4211421036.github.io; prefetch-src 'self' https://4211421036.github.io">
+      <title>Selamat Ulang Tahun!</title>
+      <style nonce="bhg6sy5k5mmfo1nb0i68f">
+        body {
+          margin: 0;
+          overflow: hidden;
+        }
+      </style>
+    </head>
+    <body>
+      <script nonce="bhg6sy5k5mmfo1nb0i68f">
+        console.log('Script berjalan dengan nonce: bhg6sy5k5mmfo1nb0i68f');
+      </script>
+      
+      <script nonce="bhg6sy5k5mmfo1nb0i68f" src="p5.js"></script>
+      <script nonce="bhg6sy5k5mmfo1nb0i68f" src="main.js"></script>
+      <script nonce="bhg6sy5k5mmfo1nb0i68f" src="firework.js"></script>
+    </body>
+  </html>
