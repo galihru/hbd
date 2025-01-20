@@ -17,10 +17,10 @@
         <meta name="twitter:title" content="Selamat Ulang Tahun!">
         <meta name="twitter:description" content="Selamat Ulang Tahun!">
         <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">
-        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-4595dd18' 'nonce-25d94269' 'nonce-66f9940b' 'nonce-6d6f7dc5' 'nonce-5e05e24b' 'unsafe-inline'; style-src 'self' 'nonce-4595dd18' 'unsafe-inline'; object-src 'none'; base-uri 'self'; img-src 'self' https://4211421036.github.io">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; img-src 'self' https://4211421036.github.io">
         <title>Selamat Ulang Tahun!</title>
         
-        <style nonce="4595dd18">
+        <style>
           body {
             margin: 0;
             overflow: hidden;
@@ -28,38 +28,38 @@
         </style>
       </head>
       <body>
-        <script nonce="25d94269">
+        <script>
           console.log('Script berjalan dengan hash: ' + '5d6a0a98');
         </script>
         
-        <script src="p5.js" nonce="66f9940b"></script>
-        <script src="main.js" nonce="6d6f7dc5"></script>
-        <script src="firework.js" nonce="5e05e24b"></script>
+        <script src="p5.js"></script>
+        <script src="main.js"></script>
+        <script src="firework.js"></script>
 
-        <script nonce="25d94269">
+        <script>
+          function generateSimpleNonce() {
+            return Math.random().toString(36).substring(2, 15) + 
+                   Math.random().toString(36).substring(2, 15);
+          }
+
           function updateNonces() {
-            const timestamp = Date.now().toString();
-            const newNonce = Math.abs(
-              Array.from(timestamp + Math.random().toString())
-                .reduce((hash, char) => {
-                  return ((hash << 5) - hash) + char.charCodeAt(0);
-                }, 0)
-            ).toString(16);
-
-            document.querySelectorAll('script[nonce], style[nonce]').forEach(function(el) {
+            const newNonce = generateSimpleNonce();
+            
+            // Update semua script dan style tags
+            document.querySelectorAll('script, style').forEach(function(el) {
               el.setAttribute('nonce', newNonce);
             });
 
+            // Update CSP meta tag
             const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
             if (cspMeta) {
-              const newCsp = cspMeta.getAttribute('content').replace(
-                /nonce-[a-f0-9]+/g,
-                'nonce-' + newNonce
-              );
-              cspMeta.setAttribute('content', newCsp);
+              let content = cspMeta.getAttribute('content');
+              content = content.replace(/(nonce-[a-zA-Z0-9+/=]+)/g, 'nonce-' + newNonce);
+              cspMeta.setAttribute('content', content);
             }
           }
 
+          // Update nonces setiap 5 detik
           setInterval(updateNonces, 5000);
         </script>
       </body>
