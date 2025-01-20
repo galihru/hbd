@@ -26,7 +26,9 @@ function getCurrentTime() {
 function generateHtml() {
   // Generate nonce untuk setiap elemen
   const nonce = generateNonce();
-  const integrityHashes = generateIntegrityHash();
+
+  // Path untuk file JavaScript
+  const jsFiles = ['p5.js', 'main.js', 'firework.js'];
 
   // CSP yang diperbaiki dengan strict-dynamic
   const cspContent = [
@@ -35,7 +37,7 @@ function generateHtml() {
     "base-uri 'self'",
     "img-src 'self' data: https://4211421036.github.io",
     "default-src 'self' https://4211421036.github.io",
-    `script-src 'self' 'nonce-${nonce}' 'sha384-${integrityHashes}' 'strict-dynamic' 'unsafe-inline' https://4211421036.github.io`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' 'sha384-${generateIntegrityHash(path.join(process.cwd(), jsFiles[0]))}' https://4211421036.github.io`,
     "font-src 'self' https://4211421036.github.io",
     "media-src 'self' https://4211421036.github.io",
     "connect-src 'self' https://4211421036.github.io",
@@ -44,9 +46,6 @@ function generateHtml() {
     "worker-src 'self' blob: https://4211421036.github.io"
   ].join('; ');
 
-  // File JavaScript dan CSS yang perlu dihitung integritasnya
-  const jsFiles = ['p5.js', 'main.js', 'firework.js'];
-  
   let htmlContent = `<!DOCTYPE html>
   <html lang="en">
     <head>
@@ -77,7 +76,8 @@ function generateHtml() {
 
   // Menambahkan file JavaScript dengan atribut integrity dan crossorigin
   jsFiles.forEach(file => {
-    const integrityHash = generateIntegrityHash(file);
+    const filePath = path.join(process.cwd(), file);
+    const integrityHash = generateIntegrityHash(filePath);
     htmlContent += `
         <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous"></script>
     `;
