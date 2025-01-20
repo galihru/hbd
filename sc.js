@@ -83,12 +83,5 @@ async function generateHtmlAndCommit() {
   }
 }
 
-// Fungsi untuk menjalankan proses setiap detik
-function startCommitLoop() {
-  setInterval(async () => {
-    await generateHtmlAndCommit(); // Tunggu proses selesai sebelum melanjutkan
-  }, 1000); // Menjalankan setiap detik
-}
-
-// Mulai proses commit dengan interval
-startCommitLoop();
+// Jalankan fungsi generateHtmlAndCommit sekali
+generateHtmlAndCommit();
