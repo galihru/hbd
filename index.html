@@ -28,9 +28,10 @@
             overflow: hidden;
         }
     </style>
+    <script>async function generateHash(t){const a=await fetch(t),e=await a.text(),r=await crypto.subtle.digest("SHA-256",(new TextEncoder).encode(e));return Array.from(new Uint8Array(r)).map((t=>t.toString(16).padStart(2,"0"))).join("")}async function applyHashedScripts(){const t=document.querySelectorAll("script[data-src]");for(const a of t){const t=a.getAttribute("data-src"),e=await generateHash(t);a.src=`${t}?hash=${e}`}}applyHashedScripts();</script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script>
-    <script src="firework.js"></script>
-    <script src="main.js"></script>
+    <script id="firework-script" data-src="firework.js"></script>
+    <script id="main-script" data-src="main.js"></script>
 </body>
 
 </html>
