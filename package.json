@@ -6,10 +6,10 @@
   "dependencies": {
     "node-fetch": "^3.0.0"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "node sc.js"
   },
   "author": "Galih Ridho Utomo",
-  "license": "MIT"
+  "license": "MIT",
+  "type": "module"  // Tambahkan ini untuk memungkinkan penggunaan import
 }
