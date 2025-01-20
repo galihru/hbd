@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node sc.js"
   },
+  "dependencies": {
+    "crypto": "^1.0.1"
+  },
   "author": "Galih Ridho Utomo",
   "license": "MIT",
   "type": "module"
