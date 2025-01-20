@@ -155,13 +155,7 @@ function createModal() {
         modalContent.child(inputPhone)
         modalContent.child(button)
         modal.child(modalContent)
-        // Menambahkan efek setelah modal dibuat
-        setTimeout(() => {
-            modal.style('opacity', '1')  // Fade-in efek
-            modalContent.style('opacity', '1')  // Fade-in efek
-            modalContent.style('transform', 'translateY(0)')  // Modal bergerak naik
-        }, 50)
-
+        
         let modalContentElem = select('#modalContent').elt
         const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         modalContentElem.addEventListener('touchstart', handleTouchStart, false)
@@ -185,6 +179,12 @@ function createModal() {
             modalContent.style('color', '#000000');
             swipeIndicator.style('backgroundColor', 'rgb(205 205 205)');
         }
+        // Menambahkan efek setelah modal dibuat
+        setTimeout(() => {
+            modal.style('opacity', '1')  // Fade-in efek
+            modalContent.style('opacity', '1')  // Fade-in efek
+            modalContent.style('transform', 'translateY(0)')  // Modal bergerak naik
+        }, 50)
     }
 }
 
