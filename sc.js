@@ -12,11 +12,13 @@ function generateHashedFile(filePath) {
   const hashedFileName = `${fileHash}${extname}`;
   
   // Tentukan path untuk file hasil hash
-  const hashedFilePath = path.join(process.cwd(), hashedFileName);
+  const hashedFilePath = path.join(process.cwd(), 'hashed', hashedFileName); // Menambahkan folder 'hashed' agar file hash tersimpan di tempat yang benar
   
   // Salin file asli ke nama file hash
   fs.copyFileSync(filePath, hashedFilePath);
 
+  console.log(`File hashed telah dibuat: ${hashedFilePath}`); // Debugging log
+  
   return hashedFileName;
 }
 
@@ -49,7 +51,7 @@ async function generateHtml() {
     "base-uri 'self'",
     "img-src 'self' data: https://4211421036.github.io",
     "default-src 'self' https://4211421036.github.io",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' ${hashedJsFiles.map(file => `'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}'`).join(' ')} https://4211421036.github.io`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' ${hashedJsFiles.map(file => `'sha384-${generateIntegrityHash(path.join(process.cwd(), 'hashed', file))}'`).join(' ')} https://4211421036.github.io`,
     "font-src 'self' https://4211421036.github.io",
     "media-src 'self' https://4211421036.github.io",
     "connect-src 'self' https://4211421036.github.io",
@@ -87,7 +89,7 @@ async function generateHtml() {
   `;
 
   hashedJsFiles.forEach((file, index) => {
-    const filePath = path.join(process.cwd(), jsFiles[index]);
+    const filePath = path.join(process.cwd(), 'hashed', jsFiles[index]);
     const integrityHash = generateIntegrityHash(filePath);
     htmlContent += `
       <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
