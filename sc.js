@@ -10,7 +10,7 @@ function generateHashedFileName(filePath) {
   hash.update(fileBuffer);
   const fileHash = hash.digest('hex').slice(0, 8);  // Ambil sebagian dari hash
   const extname = path.extname(filePath); // Menyimpan ekstensi file (misalnya .js)
-  return ${fileHash}${extname};
+  return `${fileHash}${extname}`;
 }
 
 // Fungsi untuk menghitung hash file untuk SRI
