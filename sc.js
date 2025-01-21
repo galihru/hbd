@@ -20,7 +20,6 @@ function generateHashedFileName(filePath) {
   return newFileName;
 }
 
-// Fungsi untuk menghitung hash file untuk SRI
 function generateIntegrityHash(filePath) {
   const fileBuffer = fs.readFileSync(filePath);
   const hash = crypto.createHash('sha384');
