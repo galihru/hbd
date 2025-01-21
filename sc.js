@@ -126,15 +126,9 @@ async function generateHtml() {
     <body>
       <script nonce="${nonce}">
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/hbd/sw.js').then(function(registration) {
-                    // Registration was successful
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, function(err) {
-                    // registration failed :(
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-            });
+          navigator.serviceWorker.register('/hbd/sw.js')
+            .then(reg => console.log('Service worker registered'))
+            .catch(err => console.log('Service worker not registered', err));
         }
         console.log('Generated automatic on: ${new Date().toLocaleString()}');
       </script>
