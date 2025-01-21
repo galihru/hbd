@@ -12,14 +12,6 @@ function generateHashedFileName(filePath) {
   const newFileName = `${fileHash}${extname}`;
   const newFilePath = path.join(process.cwd(), newFileName);
 
-  // Hapus file lama jika hash berbeda
-  const currentFiles = fs.readdirSync(process.cwd());
-  currentFiles.forEach(file => {
-    if (file.endsWith(extname) && file !== newFileName) {
-      fs.unlinkSync(path.join(process.cwd(), file)); // Hapus file lama
-    }
-  });
-
   // Salin file ke nama baru hanya jika belum ada
   if (!fs.existsSync(newFilePath)) {
     fs.copyFileSync(filePath, newFilePath);
