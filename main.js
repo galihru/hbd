@@ -86,6 +86,7 @@ function createModal() {
         modalContent.style('touch-action', 'none')
         modalContent.style('transition', 'transform 0.5s ease')
         modalContent.style('bottom', '0')
+        modalContent.style('transform', 'translateY(0)')
         modalContent.id('modalContent')
 
         const swipeIndicator = createDiv('')
