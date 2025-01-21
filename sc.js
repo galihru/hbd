@@ -4,22 +4,15 @@ import crypto from 'crypto';
 import { minify } from 'html-minifier';
 
 // Fungsi untuk menghasilkan nama file JS acak (hash)
-function generateHashedFile(filePath) {
+function generateHashedFileName(filePath) {
   const hash = crypto.createHash('sha256');
   const fileBuffer = fs.readFileSync(filePath);
   hash.update(fileBuffer);
-  const fileHash = hash.digest('hex').slice(0, 8); // Ambil sebagian dari hash
+  const fileHash = hash.digest('hex').slice(0, 8);  // Ambil sebagian dari hash
   const extname = path.extname(filePath); // Menyimpan ekstensi file (misalnya .js)
-  const hashedFileName = `${fileHash}${extname}`;
-  
-  // Tentukan path untuk file hasil hash
-  const hashedFilePath = path.join(process.cwd(), hashedFileName);
-  
-  // Salin file asli ke nama file hash
-  fs.copyFileSync(filePath, hashedFilePath);
-
-  return hashedFileName;
+  return ${fileHash}${extname};
 }
+
 // Fungsi untuk menghitung hash file untuk SRI
 function generateIntegrityHash(filePath) {
   const fileBuffer = fs.readFileSync(filePath);
@@ -28,30 +21,6 @@ function generateIntegrityHash(filePath) {
   return hash.digest('base64');
 }
 
-// Fungsi untuk menghasilkan nama file JS dengan hash baru dan menyalin file ke nama baru
-function generateHashedFile(filePath) {
-  const hash = crypto.createHash('sha256');
-  const fileBuffer = fs.readFileSync(filePath);
-  hash.update(fileBuffer);
-  const fileHash = hash.digest('hex').slice(0, 8); // Ambil sebagian dari hash
-  const extname = path.extname(filePath); // Menyimpan ekstensi file (misalnya .js)
-  const hashedFileName = `${fileHash}${extname}`;
-  
-  // Tentukan path untuk file hasil hash
-  const hashedFilePath = path.join(process.cwd(), hashedFileName);
-
-  // Periksa apakah file sudah ada, jika tidak, salin file asli
-  if (!fs.existsSync(hashedFilePath)) {
-    fs.copyFileSync(filePath, hashedFilePath);
-    console.log(`File hashed and copied: ${hashedFileName}`);
-  } else {
-    console.log(`File already exists: ${hashedFileName}`);
-  }
-
-  return hashedFileName;
-}
-
-// Perbarui fungsi generateHtml
 async function generateHtml() {
   // Generate nonce untuk setiap elemen
   const nonce = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
@@ -59,19 +28,20 @@ async function generateHtml() {
   // Daftar file JavaScript yang digunakan
   const jsFiles = ['p5.js', 'main.js', 'firework.js'];
 
-  // Menghasilkan nama file hash untuk setiap file JS dan menyalinnya
+  // Menghasilkan nama file hash untuk setiap file JS
   const hashedJsFiles = jsFiles.map(file => {
     const originalPath = path.join(process.cwd(), file);
-    return generateHashedFile(originalPath); // Nama hash file, sekarang sudah dibuat salinan
+    return generateHashedFileName(originalPath); // Nama hash file, tidak perlu membuat salinan
   });
+
   // CSP dengan strict-dynamic
   const cspContent = [
-    `style-src 'self' 'nonce-${nonce}' https://4211421036.github.io`,
+    style-src 'self' 'nonce-${nonce}' https://4211421036.github.io,
     "object-src 'none'",
     "base-uri 'self'",
     "img-src 'self' data: https://4211421036.github.io",
     "default-src 'self' https://4211421036.github.io",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' ${hashedJsFiles.map(file => `'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}'`).join(' ')} https://4211421036.github.io`,
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' ${hashedJsFiles.map(file => 'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}').join(' ')} https://4211421036.github.io,
     "font-src 'self' https://4211421036.github.io",
     "media-src 'self' https://4211421036.github.io",
     "connect-src 'self' https://4211421036.github.io",
@@ -80,7 +50,7 @@ async function generateHtml() {
     "worker-src 'self' blob: https://4211421036.github.io"
   ].join('; ');
 
-  let htmlContent = `<!DOCTYPE html>
+  let htmlContent = <!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="UTF-8">
@@ -106,19 +76,19 @@ async function generateHtml() {
       <meta property="og:audio:type" content="audio/mpeg" />
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <title>Selamat Ulang Tahun!</title>
-  `;
+  ;
 
   // Menambahkan file JavaScript yang sudah di-hash dengan atribut integrity dan crossorigin
   hashedJsFiles.forEach((file, index) => {
     const filePath = path.join(process.cwd(), jsFiles[index]);
-    const integrityHash = generateIntegrityHash(filePath);
-    htmlContent += `
+    const integrityHash = generateIntegrityHash(path.join(process.cwd(), file));
+    htmlContent += 
       <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
-    `;
+    ;
   });
 
   // Menambahkan style inline dengan nonce
-  htmlContent += `
+  htmlContent += 
       <style nonce="${nonce}">
         body {
           margin: 0;
@@ -132,17 +102,17 @@ async function generateHtml() {
       </script>
       <!-- page generated automatic: ${new Date().toLocaleString()} -->
     </body>
-  </html>`;
+  </html>;
 
   try {
     // Minify HTML yang dihasilkan
     const minifiedHtml = await minify(htmlContent, {
-      collapseWhitespace: true,
-      removeComments: true,
-      removeRedundantAttributes: true,
-      useShortDoctype: true,
-      minifyJS: true,
-      minifyCSS: true
+      collapseWhitespace: true,  // Menghapus spasi dan baris kosong
+      removeComments: true,      // Menghapus komentar
+      removeRedundantAttributes: true, // Menghapus atribut yang tidak perlu
+      useShortDoctype: true,     // Menggunakan doctype singkat
+      minifyJS: true,            // Minify JS
+      minifyCSS: true            // Minify CSS
     });
 
     // Tentukan path untuk file HTML yang akan dihasilkan
