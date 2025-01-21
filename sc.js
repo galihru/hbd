@@ -146,25 +146,29 @@ const structuredData = {
       <meta name="robots" content="index, follow">
       <meta name="theme-color" media="(prefers-color-scheme: light)" content="#edf4f8">
       <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1e1e1e">
-      <meta property="og:title" content="Selamat Ulang Tahun!">
-      <meta property="og:description" content="Selamat Ulang Tahun!">
-      <meta property="og:type" content="website">
-      <meta property="og:url" content="https://4211421036.github.io/hbd">
-      <meta property="og:image" content="https://4211421036.github.io/hbd/hbd.jpg">
+      <meta prefix="og: http://ogp.me/ns#" property="og:type" content="website">
+      <meta prefix="og: http://ogp.me/ns#" property="og:title" content="Selamat Ulang Tahun!">
+      <meta prefix="og: http://ogp.me/ns#" property="og:description" content="Selamat Ulang Tahun!">
+      <meta prefix="og: http://ogp.me/ns#" property="og:site_name" content="Birthday Celebration">
+      <meta prefix="og: http://ogp.me/ns#" property="og:locale" content="id_ID">
+      <meta prefix="og: http://ogp.me/ns#" property="og:url" content="https://4211421036.github.io/hbd/">
+      <meta prefix="og: http://ogp.me/ns#" property="og:image" content="https://4211421036.github.io/hbd/hbd.jpg">
+      <meta prefix="og: http://ogp.me/ns#" property="og:image:secure_url" content="https://4211421036.github.io/hbd/hbd.jpg">
+      <meta prefix="og: http://ogp.me/ns#" property="og:image:type" content="image/jpeg">
+      <meta prefix="og: http://ogp.me/ns#" property="og:image:width" content="1280">
+      <meta prefix="og: http://ogp.me/ns#" property="og:image:height" content="1280">
+      <meta prefix="og: http://ogp.me/ns#" property="og:image:alt" content="Birthday Celebration Image">
+      <meta prefix="og: http://ogp.me/ns#" property="og:audio" content="https://4211421036.github.io/hbd/hbd.mp3">
+      <meta prefix="og: http://ogp.me/ns#" property="og:audio:secure_url" content="https://4211421036.github.io/hbd/hbd.mp3">
+      <meta prefix="og: http://ogp.me/ns#" property="og:audio:type" content="audio/mpeg">
       <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:title" content="Selamat Ulang Tahun!">
       <meta name="twitter:description" content="Selamat Ulang Tahun!">
-      <meta property="og:audio" content="https://4211421036.github.io/hbd/hbd.mp3" />
-      <meta property="og:locale" content="id" />
-      <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">
-      <meta property="og:image:alt" content="HBD" />
-      <meta property="og:audio:secure_url" content="https://4211421036.github.io/hbd/hbd.mp3" />
-      <meta property="og:type" content="website" />
-      <meta property="og:audio:type" content="audio/mpeg" />
+      <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">      
+      <link rel="canonical" href="https://4211421036.github.io/hbd/">
       <link rel="manifest" href="manifest.json">
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <title>Selamat Ulang Tahun!</title>
-      <!-- Structured Data -->
       <script type="application/ld+json" nonce="${nonce}">
         ${JSON.stringify(structuredData, null, 2)}
       </script>
