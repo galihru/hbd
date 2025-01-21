@@ -86,11 +86,12 @@ async function generateHtml() {
   // Menambahkan file JavaScript yang sudah di-hash dengan atribut integrity dan crossorigin
   hashedJsFiles.forEach((file, index) => {
     const filePath = path.join(process.cwd(), jsFiles[index]);
-    const integrityHash = generateIntegrityHash(path.join(process.cwd(), file));
+    const integrityHash = generateIntegrityHash(filePath);
     htmlContent += `
       <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
     `;
   });
+
 
   // Menambahkan style inline dengan nonce
   htmlContent += `
