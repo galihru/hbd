@@ -24,6 +24,11 @@ jobs:
     - name: Generate HTML and JS with hash
       run: node sc.js
 
+    - name: Add generated files to Git
+      run: |
+        git add .
+        git commit -m "Update generated files with hashed names"
+
     - name: Git configuration
       run: |
         git config --global user.name "GitHub Actions"
