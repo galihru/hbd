@@ -71,6 +71,8 @@ async function generateHtml() {
       <meta name="keywords" content="Selamat Ulang Tahun!">
       <meta name="author" content="GALIH RIDHO UTOMO">
       <meta name="robots" content="index, follow">
+      <meta name="theme-color" media="(prefers-color-scheme: light)" content="#edf4f8">
+      <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1e1e1e">
       <meta property="og:title" content="Selamat Ulang Tahun!">
       <meta property="og:description" content="Selamat Ulang Tahun!">
       <meta property="og:type" content="website">
@@ -86,6 +88,7 @@ async function generateHtml() {
       <meta property="og:audio:secure_url" content="https://4211421036.github.io/hbd/hbd.mp3" />
       <meta property="og:type" content="website" />
       <meta property="og:audio:type" content="audio/mpeg" />
+      <link rel="manifest" href="manifest.json">
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <title>Selamat Ulang Tahun!</title>
   `;
@@ -121,6 +124,13 @@ async function generateHtml() {
     </head>
     <body>
       <script nonce="${nonce}">
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/sw.js').then(() => {
+            console.log('Service Worker registered!');
+          }).catch(err => {
+            console.error('Service Worker registration failed:', err);
+          });
+        }
         console.log('Generated automatic on: ${new Date().toLocaleString()}');
       </script>
       <!-- page generated automatic: ${new Date().toLocaleString()} -->
@@ -149,5 +159,103 @@ async function generateHtml() {
   }
 }
 
-// Generate HTML
+function generateServiceWorker() {
+  const hashedJsFiles = ['p5.js', 'main.js', 'firework.js'].map(file => {
+    const originalPath = path.join(process.cwd(), file);
+    return generateHashedFileName(originalPath); // Get hashed file names
+  });
+  const swContent = `
+    const cacheName = 'offline-cache-v1';
+    const filesToCache = [
+      '/',
+      '/index.html',
+      '/manifest.json',
+      '/sw.js',
+      // Dynamically add each hashed JS file to the cache list
+      ${hashedJsFiles.map(file => `'/${file}'`).join(',\n')}
+    ];
+
+    self.addEventListener('install', (event) => {
+      event.waitUntil(
+        caches.open(cacheName).then((cache) => {
+          return cache.addAll(filesToCache);
+        })
+      );
+    });
+
+    self.addEventListener('fetch', (event) => {
+      event.respondWith(
+        caches.match(event.request).then((response) => {
+          return response || fetch(event.request);
+        })
+      );
+    });
+
+    self.addEventListener('activate', (event) => {
+      event.waitUntil(
+        caches.keys().then((keyList) => {
+          return Promise.all(
+            keyList.map((key) => {
+              if (key !== cacheName) {
+                return caches.delete(key);
+              }
+            })
+          );
+        })
+      );
+    });
+  `;
+
+  const outputPath = path.join(process.cwd(), 'sw.js');
+  fs.writeFileSync(outputPath, swContent.trim());
+  console.log('Service Worker file sw.js telah dibuat di:', outputPath);
+}
+
+function generateManifest() {
+  const manifestContent = {
+    name: "Selamat Ulang Tahun",
+    short_name: "Ulang Tahun",
+    description: "Website offline untuk ucapan ulang tahun.",
+    icons: [
+      {
+        src: "192x192.png",
+        type: "image/png",
+        sizes: "192x192"
+      },
+      {
+        src: "512x512.png",
+        type: "image/png",
+        sizes: "512x512"
+      }
+    ],
+    start_url: "/",
+    display: "standalone",
+     "screenshots": [
+        {
+            "src": "/345677.png",
+            "sizes": "637x436",
+            "form_factor": "wide",
+            "label": "Splash Screen view displaying App"
+        },
+        {
+            "src": "/345677.png",
+            "sizes": "637x436",
+            "platform": "android",
+            "label": "Splash Screen view displaying App"
+        }
+    ],
+    "version": "1.0.0",
+    "author": "GALIH RIDHO UTOMO",
+    "editor": "GALIH RIDHO UTOMO",
+    "scope": "/",
+    "orientation": "portrait"
+  };
+
+  const outputPath = path.join(process.cwd(), 'manifest.json');
+  fs.writeFileSync(outputPath, JSON.stringify(manifestContent, null, 2));
+  console.log('Manifest file manifest.json telah dibuat di:', outputPath);
+}
+
 generateHtml();
+generateServiceWorker();
+generateManifest();
