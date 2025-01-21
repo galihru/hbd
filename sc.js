@@ -175,7 +175,7 @@ const structuredData = {
         "@type": "Event",
         "name": "Selamat Ulang Tahun GALIH RIDHO UTOMO",
         "startDate": "2025-01-20T4:00-04:00",
-        "endDate": `"new Date().toISOString()"`,
+        "endDate": "new Date().toISOString()",
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "eventStatus": "https://schema.org/EventScheduled",
         "location": {
