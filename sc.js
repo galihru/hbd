@@ -83,9 +83,7 @@ async function generateHtml() {
   const filePath = path.join(process.cwd(), jsFiles[index]);
   const integrityHash = generateIntegrityHash(filePath);
   htmlContent += `
-    <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
-  `;
-});
+  <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>`;
 
   // Menambahkan style inline dengan nonce
   htmlContent += 
