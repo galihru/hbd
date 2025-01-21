@@ -126,11 +126,15 @@ async function generateHtml() {
     <body>
       <script nonce="${nonce}">
         if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/hbd/sw.js').then(() => {
-            console.log('Service Worker registered!');
-          }).catch(err => {
-            console.error('Service Worker registration failed:', err);
-          });
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/hbd/sw.js').then(function(registration) {
+                    // Registration was successful
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                    // registration failed :(
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
         }
         console.log('Generated automatic on: ${new Date().toLocaleString()}');
       </script>
@@ -166,49 +170,29 @@ function generateServiceWorker() {
     return generateHashedFileName(originalPath); // Get hashed file names
   });
   const swContent = `
-    const cacheName = 'offline-cache-v1';
-    const filesToCache = [
-      '/',
-      '/index.html',
-      '/manifest.json',
-      '/192x192.png',
-      '/512x512.png',
-      '/sw.js',
-      // Dynamically add each hashed JS file to the cache list
-      ${hashedJsFiles.map(file => `'/${file}'`).join(',\n')}
-    ];
-
-    self.addEventListener('install', (event) => {
-      event.waitUntil(
-        caches.open(cacheName).then((cache) => {
-          console.log('Caching files:');
-          return cache.addAll(filesToCache).catch(err => {
-            console.error('Failed to cache files:', err);
-          });
-        })
-      );
-    });
-    
-    self.addEventListener('fetch', (event) => {
-      event.respondWith(
-        caches.match(event.request).then((response) => {
-          return response || fetch(event.request);
-        })
-      );
-    });
-    
-    self.addEventListener('activate', (event) => {
-      event.waitUntil(
-        caches.keys().then((keyList) => {
-          return Promise.all(
-            keyList.map((key) => {
-              if (key !== cacheName) {
-                return caches.delete(key);
-              }
+  this.addEventListener('install', e => {
+      e.waitUntil(
+          caches.open("static").then(cahce => {
+              return cahce.addAll([
+                '/',
+                '/index.html',
+                '/manifest.json',
+                '/192x192.png',
+                '/512x512.png',
+                '/sw.js',
+                // Dynamically add each hashed JS file to the cache list
+                ${hashedJsFiles.map(file => `'/${file}'`).join(',\n')}
+                ])
             })
-          );
-        })
-      );
+        )
+    });
+    
+    self.addEventListener("fetch", e => {
+        e.respondWith(
+            cahces.match(e.request).then(response => {
+                return response || fetch(e.request);
+            })
+        )
     });
   `;
 
