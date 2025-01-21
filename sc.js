@@ -6,27 +6,22 @@ import { minify } from 'html-minifier';
 function generateHashedFile(filePath) {
   const hash = crypto.createHash('sha256');
   
-  // Verify the file exists before reading
+  // Verifikasi apakah file ada sebelum dibaca
   if (!fs.existsSync(filePath)) {
-    console.error(`File not found: ${filePath}`);
-    return null; // Or handle error as appropriate
+    console.error(`File tidak ditemukan: ${filePath}`);
+    return null; // Atau tangani error sesuai kebutuhan
   }
 
   const fileBuffer = fs.readFileSync(filePath);
   hash.update(fileBuffer);
   const fileHash = hash.digest('hex').slice(0, 8); // Ambil sebagian dari hash
-  const extname = path.extname(filePath); // Menyimpan ekstensi file (misalnya .js)
+  const extname = path.extname(filePath); // Mendapatkan ekstensi file (misalnya .js)
   const hashedFileName = `${fileHash}${extname}`;
   
-  // Tentukan path untuk file hasil hash
-  const hashedFilePath = path.join(process.cwd(), 'hashed', hashedFileName);
+  // Tentukan path untuk file hasil hash di direktori yang sama dengan file asli
+  const hashedFilePath = path.join(path.dirname(filePath), hashedFileName);
   
-  // Buat folder 'hashed' jika belum ada
-  if (!fs.existsSync(path.dirname(hashedFilePath))) {
-    fs.mkdirSync(path.dirname(hashedFilePath), { recursive: true });
-  }
-
-  // Salin file asli ke nama file hash
+  // Salin file asli ke nama file hash di lokasi yang sama
   fs.copyFileSync(filePath, hashedFilePath);
 
   return hashedFileName;
