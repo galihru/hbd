@@ -12,7 +12,15 @@ function generateHashedFileName(filePath) {
   const newFileName = `${fileHash}${extname}`;
   const newFilePath = path.join(process.cwd(), newFileName);
 
-  // Salin file ke nama baru jika belum ada
+  // Hapus file lama jika hash berbeda
+  const currentFiles = fs.readdirSync(process.cwd());
+  currentFiles.forEach(file => {
+    if (file.endsWith(extname) && file !== newFileName) {
+      fs.unlinkSync(path.join(process.cwd(), file)); // Hapus file lama
+    }
+  });
+
+  // Salin file ke nama baru hanya jika belum ada
   if (!fs.existsSync(newFilePath)) {
     fs.copyFileSync(filePath, newFilePath);
   }
@@ -84,14 +92,19 @@ async function generateHtml() {
       <title>Selamat Ulang Tahun!</title>
   `;
 
-  hashedJsFiles.forEach((file, index) => {
-    const filePath = path.join(process.cwd(), file); // Gunakan nama file hashed
+  // Mengelola hashed JS files
+  hashedJsFiles.forEach((file) => {
+    const filePath = path.join(process.cwd(), file); // Lokasi file asli
+    const hashedFileName = generateHashedFileName(filePath);
+  
+    // Verifikasi hash integritas
     const integrityHash = generateIntegrityHash(filePath);
     htmlContent += `
-      <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
+      <script src="${hashedFileName}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
     `;
   });
-
+  
+  // Verifikasi file asli
   jsFiles.forEach(file => {
     const originalPath = path.join(process.cwd(), file);
     if (!fs.existsSync(originalPath)) {
