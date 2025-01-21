@@ -36,12 +36,12 @@ async function generateHtml() {
 
   // CSP dengan strict-dynamic
   const cspContent = [
-    `style-src 'self' 'nonce-${nonce}' https://4211421036.github.io,`
+    `style-src 'self' 'nonce-${nonce}' https://4211421036.github.io`,
     "object-src 'none'",
     "base-uri 'self'",
     "img-src 'self' data: https://4211421036.github.io",
     "default-src 'self' https://4211421036.github.io",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' ${hashedJsFiles.map(file => 'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}').join(' ')} https://4211421036.github.io,`
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' ${hashedJsFiles.map(file => `'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}'`).join(' ')} https://4211421036.github.io`,
     "font-src 'self' https://4211421036.github.io",
     "media-src 'self' https://4211421036.github.io",
     "connect-src 'self' https://4211421036.github.io",
@@ -82,9 +82,9 @@ async function generateHtml() {
   hashedJsFiles.forEach((file, index) => {
     const filePath = path.join(process.cwd(), jsFiles[index]);
     const integrityHash = generateIntegrityHash(path.join(process.cwd(), file));
-    htmlContent += 
-      `<script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>`
-    ;
+    htmlContent += `
+      <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
+    `;
   });
 
   // Menambahkan style inline dengan nonce
@@ -102,7 +102,7 @@ async function generateHtml() {
       </script>
       <!-- page generated automatic: ${new Date().toLocaleString()} -->
     </body>
-  </html>;`
+  </html>`;
 
   try {
     // Minify HTML yang dihasilkan
