@@ -37,9 +37,14 @@ function generateHashedFile(filePath) {
   
   // Tentukan path untuk file hasil hash
   const hashedFilePath = path.join(process.cwd(), hashedFileName);
-  
-  // Salin file asli ke nama file hash
-  fs.copyFileSync(filePath, hashedFilePath);
+
+  // Periksa apakah file sudah ada, jika tidak, salin file asli
+  if (!fs.existsSync(hashedFilePath)) {
+    fs.copyFileSync(filePath, hashedFilePath);
+    console.log(`File hashed and copied: ${hashedFileName}`);
+  } else {
+    console.log(`File already exists: ${hashedFileName}`);
+  }
 
   return hashedFileName;
 }
@@ -110,7 +115,6 @@ async function generateHtml() {
     `;
   });
 
-
   // Menambahkan style inline dengan nonce
   htmlContent += `
       <style nonce="${nonce}">
@@ -131,12 +135,12 @@ async function generateHtml() {
   try {
     // Minify HTML yang dihasilkan
     const minifiedHtml = await minify(htmlContent, {
-      collapseWhitespace: true,  // Menghapus spasi dan baris kosong
-      removeComments: true,      // Menghapus komentar
-      removeRedundantAttributes: true, // Menghapus atribut yang tidak perlu
-      useShortDoctype: true,     // Menggunakan doctype singkat
-      minifyJS: true,            // Minify JS
-      minifyCSS: true            // Minify CSS
+      collapseWhitespace: true,
+      removeComments: true,
+      removeRedundantAttributes: true,
+      useShortDoctype: true,
+      minifyJS: true,
+      minifyCSS: true
     });
 
     // Tentukan path untuk file HTML yang akan dihasilkan
