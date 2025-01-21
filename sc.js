@@ -19,7 +19,7 @@ function generateHashedFile(filePath) {
   const hashedFileName = `${fileHash}${extname}`;
   
   // Tentukan path untuk file hasil hash di direktori yang sama dengan file asli
-  const hashedFilePath = path.join(path.dirname(filePath), hashedFileName);
+  const hashedFilePath = path.join(path.cwd(filePath), hashedFileName);
   
   // Salin file asli ke nama file hash di lokasi yang sama
   fs.copyFileSync(filePath, hashedFilePath);
