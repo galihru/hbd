@@ -3,7 +3,6 @@ import path from 'path';
 import crypto from 'crypto';
 import { minify } from 'html-minifier';
 
-// Fungsi untuk menghasilkan nama file JS dengan hash baru dan menyalin file ke nama baru
 function generateHashedFile(filePath) {
   const hash = crypto.createHash('sha256');
   const fileBuffer = fs.readFileSync(filePath);
