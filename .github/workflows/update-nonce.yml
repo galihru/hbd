@@ -10,52 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout the repository
+      uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
 
-      - name: Install dependencies
-        run: npm install
+    - name: Install dependencies
+      run: npm install
 
-      - name: Check and rename hashed files if exists
-        run: |
-          files=("p5.js" "main.js" "firework.js")
-          
-          for file in "${files[@]}"; do
-            hash_name=$(node -e "
-              const fs = require('fs');
-              const crypto = require('crypto');
-              const fileBuffer = fs.readFileSync('$file');
-              const hash = crypto.createHash('sha256');
-              hash.update(fileBuffer);
-              const fileHash = hash.digest('hex').slice(0, 8);
-              console.log(fileHash + '.js');
-            ")
+    - name: Generate HTML and JS with hash
+      run: node sc.js
 
-            if [ -f "$hash_name" ]; then
-              mv "$hash_name" "${hash_name%.js}-old.js"
-              echo "Renamed existing file $hash_name to ${hash_name%.js}-old.js"
-            else
-              echo "No existing file found with name $hash_name"
-            fi
-          done
+    - name: Git configuration
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "github-actions@github.com"
 
-      - name: Commit changes
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add .
-          git commit -m "Update index.html and JS files with dynamic hash"
-
-      - name: Pull remote changes and push updates
-        run: |
-          git pull origin main --rebase
-          git push origin main
-
-      - name: Deploy
-        run: |
-          echo "Deploying..."
+    - name: Pull remote changes and push updates
+      run: |
+        git pull origin main --rebase  # Pull the latest changes from the remote repository
+        git push origin main  # Push your local changes to the remote repository
