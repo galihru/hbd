@@ -16,7 +16,6 @@ function generateHashedFileName(filePath) {
   const newFileName = `${fileHash}${extname}`;
   const newFilePath = path.join(process.cwd(), newFileName);
 
-  // Salin file ke nama baru hanya jika belum ada
   if (!fs.existsSync(newFilePath)) {
     fs.copyFileSync(filePath, newFilePath);
   }
