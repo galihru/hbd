@@ -3,15 +3,20 @@ import path from 'path';
 import crypto from 'crypto';
 import { minify } from 'html-minifier';
 
-// Fungsi untuk menghasilkan nama file JS acak (hash)
 function generateHashedFileName(filePath) {
   const hash = crypto.createHash('sha256');
   const fileBuffer = fs.readFileSync(filePath);
   hash.update(fileBuffer);
-  const fileHash = hash.digest('hex').slice(0, 8);  // Ambil sebagian dari hash
+
+  // Tambahkan faktor waktu (timestamp) untuk memastikan hash berbeda
+  const timestamp = Date.now();
+  hash.update(timestamp.toString());
+
+  const fileHash = hash.digest('hex').slice(0, 8); // Ambil sebagian dari hash
   const extname = path.extname(filePath); // Menyimpan ekstensi file (misalnya .js)
-  return ${fileHash}${extname};
+  return `${fileHash}${extname}`;
 }
+
 
 // Fungsi untuk menghitung hash file untuk SRI
 function generateIntegrityHash(filePath) {
@@ -78,14 +83,13 @@ async function generateHtml() {
       <title>Selamat Ulang Tahun!</title>
   ;
 
-  // Menambahkan file JavaScript yang sudah di-hash dengan atribut integrity dan crossorigin
   hashedJsFiles.forEach((file, index) => {
-    const filePath = path.join(process.cwd(), jsFiles[index]);
-    const integrityHash = generateIntegrityHash(path.join(process.cwd(), file));
-    htmlContent += 
-      <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
-    ;
-  });
+  const filePath = path.join(process.cwd(), jsFiles[index]);
+  const integrityHash = generateIntegrityHash(filePath);
+  htmlContent += `
+    <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
+  `;
+});
 
   // Menambahkan style inline dengan nonce
   htmlContent += 
