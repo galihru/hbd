@@ -23,19 +23,15 @@ function generateHashedFile(filePath) {
 
 // Perbarui fungsi generateHtml
 async function generateHtml() {
-  // Generate nonce untuk setiap elemen
   const nonce = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
-  // Daftar file JavaScript yang digunakan
   const jsFiles = ['p5.js', 'main.js', 'firework.js'];
 
-  // Menghasilkan nama file hash untuk setiap file JS dan menyalinnya
   const hashedJsFiles = jsFiles.map(file => {
     const originalPath = path.join(process.cwd(), file);
-    return generateHashedFile(originalPath); // Nama hash file, sekarang sudah dibuat salinan
+    return generateHashedFile(originalPath);
   });
 
-  // CSP dengan strict-dynamic
   const cspContent = [
     `style-src 'self' 'nonce-${nonce}' https://4211421036.github.io`,
     "object-src 'none'",
@@ -77,52 +73,50 @@ async function generateHtml() {
       <meta property="og:audio:type" content="audio/mpeg" />
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <title>Selamat Ulang Tahun!</title>
-  ;
+  `;
 
   hashedJsFiles.forEach((file, index) => {
-  const filePath = path.join(process.cwd(), jsFiles[index]);
-  const integrityHash = generateIntegrityHash(filePath);
-  htmlContent += `
-  <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>`;
+    const filePath = path.join(process.cwd(), jsFiles[index]);
+    const integrityHash = generateIntegrityHash(filePath);
+    htmlContent += `
+      <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
+    `;
+  });
 
-  // Menambahkan style inline dengan nonce
-  htmlContent += 
-      <style nonce="${nonce}">
-        body {
-          margin: 0;
-          overflow: hidden;
-        }
-      </style>
-    </head>
-    <body>
-      <script nonce="${nonce}">
-        console.log('Generated automatic on: ${new Date().toLocaleString()}');
-      </script>
-      <!-- page generated automatic: ${new Date().toLocaleString()} -->
-    </body>
-  </html>;
+  // Adding inline style
+  htmlContent += `
+    <style nonce="${nonce}">
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <script nonce="${nonce}">
+      console.log('Generated automatically on: ${new Date().toLocaleString()}');
+    </script>
+  </body>
+  </html>`;
 
   try {
-    // Minify HTML yang dihasilkan
+    // Minify HTML content
     const minifiedHtml = await minify(htmlContent, {
-      collapseWhitespace: true,  // Menghapus spasi dan baris kosong
-      removeComments: true,      // Menghapus komentar
-      removeRedundantAttributes: true, // Menghapus atribut yang tidak perlu
-      useShortDoctype: true,     // Menggunakan doctype singkat
-      minifyJS: true,            // Minify JS
-      minifyCSS: true            // Minify CSS
+      collapseWhitespace: true,
+      removeComments: true,
+      removeRedundantAttributes: true,
+      useShortDoctype: true,
+      minifyJS: true,
+      minifyCSS: true
     });
 
-    // Tentukan path untuk file HTML yang akan dihasilkan
     const outputPath = path.join(process.cwd(), 'index.html');
-
-    // Simpan HTML yang telah di-minify ke file
     fs.writeFileSync(outputPath, minifiedHtml);
-    console.log('File HTML telah dibuat dan di-minify di:', outputPath);
+    console.log('HTML file has been generated and minified at:', outputPath);
   } catch (error) {
     console.error('Error during minification:', error);
   }
 }
 
-// Generate HTML
+// Generate the HTML file
 generateHtml();
