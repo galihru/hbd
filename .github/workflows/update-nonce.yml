@@ -29,7 +29,15 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "github-actions@github.com"
 
+    - name: Stash unstaged changes (if any)
+      run: |
+        git diff --quiet || git stash save "Unstaged changes"
+
     - name: Pull remote changes and push updates
       run: |
         git pull origin main --rebase  # Pull the latest changes from the remote repository
         git push origin main  # Push your local changes to the remote repository
+
+    - name: Pop stashed changes (if any)
+      run: |
+        if git stash list | grep -q "Unstaged changes"; then git stash pop; fi
