@@ -7,7 +7,7 @@ function generateHashedFileName(filePath) {
   const hash = crypto.createHash('sha256');
   const fileBuffer = fs.readFileSync(filePath);
   hash.update(fileBuffer);
-  const fileHash = hash.digest('hex').slice(0, 8);  // Ambil sebagian dari hash
+  const fileHash = hash.digest('hex').slice(0, 8);
   const extname = path.extname(filePath); // Menyimpan ekstensi file (misalnya .js)
   const newFileName = `${fileHash}${extname}`;
   const newFilePath = path.join(process.cwd(), newFileName);
