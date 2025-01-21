@@ -62,6 +62,76 @@ async function generateHtml() {
       "worker-src 'self' blob: https://4211421036.github.io http://4211421036.github.io"
   ].join('; ');
 
+  // Add this script tag in the head section of your HTML
+const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://4211421036.github.io/hbd/#website",
+        "url": "https://4211421036.github.io/hbd/",
+        "name": "Selamat Ulang Tahun!",
+        "description": "Website offline untuk ucapan ulang tahun.",
+        "publisher": {
+          "@type": "Person",
+          "name": "GALIH RIDHO UTOMO"
+        },
+        "inLanguage": "id-ID"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://4211421036.github.io/hbd/#webpage",
+        "url": "https://4211421036.github.io/hbd/",
+        "name": "Selamat Ulang Tahun!",
+        "isPartOf": {
+          "@id": "https://4211421036.github.io/hbd/#website"
+        },
+        "about": {
+          "@type": "Thing",
+          "name": "Birthday Celebration",
+          "description": "Interactive birthday celebration webpage with fireworks animation"
+        },
+        "datePublished": new Date().toISOString(),
+        "dateModified": new Date().toISOString(),
+        "author": {
+          "@type": "Person",
+          "name": "GALIH RIDHO UTOMO",
+          "url": "https://4211421036.github.io"
+        },
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://4211421036.github.io/hbd/hbd.jpg",
+          "width": 1200,
+          "height": 630
+        },
+        "audio": {
+          "@type": "AudioObject",
+          "contentUrl": "https://4211421036.github.io/hbd/hbd.mp3",
+          "encodingFormat": "audio/mpeg",
+          "description": "Birthday celebration music"
+        },
+        "potentialAction": {
+          "@type": "ReadAction",
+          "target": ["https://4211421036.github.io/hbd/"]
+        },
+        "mainEntity": {
+          "@type": "CreativeWork",
+          "name": "Birthday Animation",
+          "description": "Interactive fireworks animation for birthday celebration",
+          "creator": {
+            "@type": "Person",
+            "name": "GALIH RIDHO UTOMO"
+          }
+        },
+        "speakable": {
+          "@type": "SpeakableSpecification",
+          "cssSelector": ["h1", "meta[name='description']"]
+        },
+        "inLanguage": "id-ID"
+      }
+    ]
+  };
+
 
   let htmlContent = `<!DOCTYPE html>
   <html lang="en">
@@ -92,6 +162,10 @@ async function generateHtml() {
       <link rel="manifest" href="manifest.json">
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <title>Selamat Ulang Tahun!</title>
+      <!-- Structured Data -->
+      <script type="application/ld+json" nonce="${nonce}">
+        ${JSON.stringify(structuredData, null, 2)}
+      </script>
   `;
 
   // Mengelola hashed JS files
