@@ -32,6 +32,15 @@ function generateHashedFile(filePath) {
   return hashedFileName;
 }
 
+// Fungsi untuk menghasilkan integritas hash (sha384) dari file
+function generateIntegrityHash(filePath) {
+  const fileBuffer = fs.readFileSync(filePath);
+  const hash = crypto.createHash('sha384');
+  hash.update(fileBuffer);
+  return hash.digest('base64');
+}
+
+
 // Perbarui fungsi generateHtml
 async function generateHtml() {
   // Generate nonce untuk setiap elemen
