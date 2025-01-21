@@ -3,29 +3,25 @@ import path from 'path';
 import crypto from 'crypto';
 import { minify } from 'html-minifier';
 
-function generateHashedFileName(filePath) {
+// Fungsi untuk menghasilkan nama file JS dengan hash baru dan menyalin file ke nama baru
+function generateHashedFile(filePath) {
   const hash = crypto.createHash('sha256');
   const fileBuffer = fs.readFileSync(filePath);
   hash.update(fileBuffer);
-
-  // Tambahkan faktor waktu (timestamp) untuk memastikan hash berbeda
-  const timestamp = Date.now();
-  hash.update(timestamp.toString());
-
   const fileHash = hash.digest('hex').slice(0, 8); // Ambil sebagian dari hash
   const extname = path.extname(filePath); // Menyimpan ekstensi file (misalnya .js)
-  return `${fileHash}${extname}`;
+  const hashedFileName = `${fileHash}${extname}`;
+  
+  // Tentukan path untuk file hasil hash
+  const hashedFilePath = path.join(process.cwd(), hashedFileName);
+  
+  // Salin file asli ke nama file hash
+  fs.copyFileSync(filePath, hashedFilePath);
+
+  return hashedFileName;
 }
 
-
-// Fungsi untuk menghitung hash file untuk SRI
-function generateIntegrityHash(filePath) {
-  const fileBuffer = fs.readFileSync(filePath);
-  const hash = crypto.createHash('sha384');
-  hash.update(fileBuffer);
-  return hash.digest('base64');
-}
-
+// Perbarui fungsi generateHtml
 async function generateHtml() {
   // Generate nonce untuk setiap elemen
   const nonce = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
@@ -33,20 +29,20 @@ async function generateHtml() {
   // Daftar file JavaScript yang digunakan
   const jsFiles = ['p5.js', 'main.js', 'firework.js'];
 
-  // Menghasilkan nama file hash untuk setiap file JS
+  // Menghasilkan nama file hash untuk setiap file JS dan menyalinnya
   const hashedJsFiles = jsFiles.map(file => {
     const originalPath = path.join(process.cwd(), file);
-    return generateHashedFileName(originalPath); // Nama hash file, tidak perlu membuat salinan
+    return generateHashedFile(originalPath); // Nama hash file, sekarang sudah dibuat salinan
   });
 
   // CSP dengan strict-dynamic
   const cspContent = [
-    style-src 'self' 'nonce-${nonce}' https://4211421036.github.io,
+    `style-src 'self' 'nonce-${nonce}' https://4211421036.github.io`,
     "object-src 'none'",
     "base-uri 'self'",
     "img-src 'self' data: https://4211421036.github.io",
     "default-src 'self' https://4211421036.github.io",
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' ${hashedJsFiles.map(file => 'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}').join(' ')} https://4211421036.github.io,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' ${hashedJsFiles.map(file => `'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}'`).join(' ')} https://4211421036.github.io`,
     "font-src 'self' https://4211421036.github.io",
     "media-src 'self' https://4211421036.github.io",
     "connect-src 'self' https://4211421036.github.io",
