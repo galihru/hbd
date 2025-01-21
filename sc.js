@@ -3,12 +3,16 @@ import path from 'path';
 import crypto from 'crypto';
 import { minify } from 'html-minifier';
 
-function generateNonce() {
-  return Math.random().toString(36).substring(2, 15) + 
-         Math.random().toString(36).substring(2, 15);
+// Fungsi untuk menghasilkan nama file JS acak (hash)
+function generateHashedFileName(filePath) {
+  const hash = crypto.createHash('sha256');
+  const fileBuffer = fs.readFileSync(filePath);
+  hash.update(fileBuffer);
+  const fileHash = hash.digest('hex').slice(0, 8);  // Ambil sebagian dari hash
+  const extname = path.extname(filePath); // Menyimpan ekstensi file (misalnya .js)
+  return `${fileHash}${extname}`;
 }
 
-// Fungsi untuk menghitung hash file untuk SRI
 // Fungsi untuk menghitung hash file untuk SRI
 function generateIntegrityHash(filePath) {
   const fileBuffer = fs.readFileSync(filePath);
@@ -17,27 +21,22 @@ function generateIntegrityHash(filePath) {
   return hash.digest('base64');
 }
 
-// Fungsi untuk mendapatkan waktu sekarang
-function getCurrentTime() {
-  const now = new Date();
-  return now.toLocaleString(); // Format waktu sesuai dengan lokal
-}
-
 async function generateHtml() {
   // Generate nonce untuk setiap elemen
-  const nonce = generateNonce();
+  const nonce = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
-  // Path untuk file JavaScript
+  // Daftar file JavaScript yang digunakan
   const jsFiles = ['p5.js', 'main.js', 'firework.js'];
+  const hashedJsFiles = jsFiles.map(file => generateHashedFileName(path.join(process.cwd(), file)));
 
-  // CSP yang diperbaiki dengan strict-dynamic
+  // CSP dengan strict-dynamic
   const cspContent = [
     `style-src 'self' 'nonce-${nonce}' https://4211421036.github.io`,
     "object-src 'none'",
     "base-uri 'self'",
     "img-src 'self' data: https://4211421036.github.io",
     "default-src 'self' https://4211421036.github.io",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' 'sha384-${generateIntegrityHash(path.join(process.cwd(), jsFiles[0]))}' https://4211421036.github.io`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' ${hashedJsFiles.map(file => `'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}'`).join(' ')} https://4211421036.github.io`,
     "font-src 'self' https://4211421036.github.io",
     "media-src 'self' https://4211421036.github.io",
     "connect-src 'self' https://4211421036.github.io",
@@ -74,12 +73,12 @@ async function generateHtml() {
       <title>Selamat Ulang Tahun!</title>
   `;
 
-  // Menambahkan file JavaScript dengan atribut integrity dan crossorigin
-  jsFiles.forEach(file => {
-    const filePath = path.join(process.cwd(), file);
+  // Menambahkan file JavaScript yang sudah di-hash dengan atribut integrity dan crossorigin
+  hashedJsFiles.forEach((file, index) => {
+    const filePath = path.join(process.cwd(), jsFiles[index]);
     const integrityHash = generateIntegrityHash(filePath);
     htmlContent += `
-        <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
+      <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
     `;
   });
 
@@ -94,9 +93,9 @@ async function generateHtml() {
     </head>
     <body>
       <script nonce="${nonce}">
-        console.log('Generated automatic on: ${getCurrentTime()}');
+        console.log('Generated automatic on: ${new Date().toLocaleString()}');
       </script>
-        <!-- page generated automatic: ${getCurrentTime()} -->
+      <!-- page generated automatic: ${new Date().toLocaleString()} -->
     </body>
   </html>`;
 
