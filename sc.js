@@ -125,7 +125,7 @@ async function generateHtml() {
     <body>
       <script nonce="${nonce}">
         if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/sw.js').then(() => {
+          navigator.serviceWorker.register('/hbd/sw.js').then(() => {
             console.log('Service Worker registered!');
           }).catch(err => {
             console.error('Service Worker registration failed:', err);
