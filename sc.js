@@ -80,7 +80,7 @@ async function generateHtml() {
     const filePath = path.join(process.cwd(), file);
     const integrityHash = generateIntegrityHash(filePath);
     htmlContent += `
-        <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous"></script>
+        <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
     `;
   });
 
