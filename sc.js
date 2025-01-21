@@ -193,8 +193,8 @@ async function generateHtml() {
         "offers": {
           "@type": "Offer",
           "url": "https://4211421036.github.io/hbd/,
-          "price": 10000,
-          "priceCurrency": "IDR",
+          "price": 10,
+          "priceCurrency": "USD",
           "availability": "https://schema.org/InStock",
           "validFrom": "2024-05-21T12:00"
         },
