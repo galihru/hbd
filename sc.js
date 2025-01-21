@@ -5,6 +5,13 @@ import { minify } from 'html-minifier';
 
 function generateHashedFile(filePath) {
   const hash = crypto.createHash('sha256');
+  
+  // Verify the file exists before reading
+  if (!fs.existsSync(filePath)) {
+    console.error(`File not found: ${filePath}`);
+    return null; // Or handle error as appropriate
+  }
+
   const fileBuffer = fs.readFileSync(filePath);
   hash.update(fileBuffer);
   const fileHash = hash.digest('hex').slice(0, 8); // Ambil sebagian dari hash
@@ -12,13 +19,16 @@ function generateHashedFile(filePath) {
   const hashedFileName = `${fileHash}${extname}`;
   
   // Tentukan path untuk file hasil hash
-  const hashedFilePath = path.join(process.cwd(), 'hashed', hashedFileName); // Menambahkan folder 'hashed' agar file hash tersimpan di tempat yang benar
+  const hashedFilePath = path.join(process.cwd(), 'hashed', hashedFileName);
   
+  // Buat folder 'hashed' jika belum ada
+  if (!fs.existsSync(path.dirname(hashedFilePath))) {
+    fs.mkdirSync(path.dirname(hashedFilePath), { recursive: true });
+  }
+
   // Salin file asli ke nama file hash
   fs.copyFileSync(filePath, hashedFilePath);
 
-  console.log(`File hashed telah dibuat: ${hashedFilePath}`); // Debugging log
-  
   return hashedFileName;
 }
 
