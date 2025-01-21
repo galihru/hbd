@@ -51,7 +51,7 @@ async function generateHtml() {
     "worker-src 'self' blob: https://4211421036.github.io"
   ].join('; ');
 
-  let htmlContent = <!DOCTYPE html>
+  let htmlContent = `<!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="UTF-8">
