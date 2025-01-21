@@ -4,20 +4,22 @@ import crypto from 'crypto';
 import { minify } from 'html-minifier';
 
 // Fungsi untuk menghasilkan nama file JS acak (hash)
-function generateHashedFileName(filePath) {
+function generateHashedFile(filePath) {
   const hash = crypto.createHash('sha256');
   const fileBuffer = fs.readFileSync(filePath);
   hash.update(fileBuffer);
-
-  // Tambahkan faktor waktu (timestamp) untuk memastikan hash berbeda
-  const timestamp = Date.now();
-  hash.update(timestamp.toString());
-
   const fileHash = hash.digest('hex').slice(0, 8); // Ambil sebagian dari hash
   const extname = path.extname(filePath); // Menyimpan ekstensi file (misalnya .js)
-  return `${fileHash}${extname}`;
-}
+  const hashedFileName = `${fileHash}${extname}`;
+  
+  // Tentukan path untuk file hasil hash
+  const hashedFilePath = path.join(process.cwd(), hashedFileName);
+  
+  // Salin file asli ke nama file hash
+  fs.copyFileSync(filePath, hashedFilePath);
 
+  return hashedFileName;
+}
 // Fungsi untuk menghitung hash file untuk SRI
 function generateIntegrityHash(filePath) {
   const fileBuffer = fs.readFileSync(filePath);
