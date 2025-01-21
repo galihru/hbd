@@ -27,7 +27,18 @@ async function generateHtml() {
 
   // Daftar file JavaScript yang digunakan
   const jsFiles = ['p5.js', 'main.js', 'firework.js'];
-  const hashedJsFiles = jsFiles.map(file => generateHashedFileName(path.join(process.cwd(), file)));
+  
+  // Salin file asli ke file baru dengan nama hash
+  const hashedJsFiles = jsFiles.map(file => {
+    const originalPath = path.join(process.cwd(), file);
+    const hashedFileName = generateHashedFileName(originalPath);
+    const newFilePath = path.join(process.cwd(), hashedFileName);
+    
+    // Salin file dengan nama baru
+    fs.copyFileSync(originalPath, newFilePath);
+    
+    return hashedFileName;
+  });
 
   // CSP dengan strict-dynamic
   const cspContent = [
@@ -76,7 +87,7 @@ async function generateHtml() {
   // Menambahkan file JavaScript yang sudah di-hash dengan atribut integrity dan crossorigin
   hashedJsFiles.forEach((file, index) => {
     const filePath = path.join(process.cwd(), jsFiles[index]);
-    const integrityHash = generateIntegrityHash(filePath);
+    const integrityHash = generateIntegrityHash(path.join(process.cwd(), file));
     htmlContent += `
       <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
     `;
