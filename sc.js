@@ -61,8 +61,7 @@ async function generateHtml() {
       "worker-src 'self' blob: https://4211421036.github.io http://4211421036.github.io"
   ].join('; ');
 
-  // Add this script tag in the head section of your HTML
-const structuredData = {
+ const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
       {
@@ -161,7 +160,7 @@ const structuredData = {
       <meta prefix="og: http://ogp.me/ns#" property="og:audio:secure_url" content="https://4211421036.github.io/hbd/hbd.mp3">
       <meta prefix="og: http://ogp.me/ns#" property="og:audio:type" content="audio/mpeg">
       <meta name="twitter:card" content="summary_large_image">
-      <meta name="twitter:title" content="Selamat Ulang Tahun!">
+      <meta name="twitter:title" content="Selamat Ulang Tahun">
       <meta name="twitter:description" content="Selamat Ulang Tahun!">
       <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">      
       <link rel="canonical" href="https://4211421036.github.io/hbd/">
