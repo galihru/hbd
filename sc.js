@@ -94,7 +94,7 @@ async function generateHtml() {
   `;
 
   hashedJsFiles.forEach((file, index) => {
-    const filePath = path.join(process.cwd(), 'hashed', jsFiles[index]);
+    const filePath = path.join(process.cwd(), jsFiles[index]);
     const integrityHash = generateIntegrityHash(filePath);
     htmlContent += `
       <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
