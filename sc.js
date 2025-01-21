@@ -23,15 +23,19 @@ function generateHashedFile(filePath) {
 
 // Perbarui fungsi generateHtml
 async function generateHtml() {
+  // Generate nonce untuk setiap elemen
   const nonce = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
+  // Daftar file JavaScript yang digunakan
   const jsFiles = ['p5.js', 'main.js', 'firework.js'];
 
+  // Menghasilkan nama file hash untuk setiap file JS dan menyalinnya
   const hashedJsFiles = jsFiles.map(file => {
     const originalPath = path.join(process.cwd(), file);
-    return generateHashedFile(originalPath);
+    return generateHashedFile(originalPath); // Nama hash file, sekarang sudah dibuat salinan
   });
 
+  // CSP dengan strict-dynamic
   const cspContent = [
     `style-src 'self' 'nonce-${nonce}' https://4211421036.github.io`,
     "object-src 'none'",
@@ -83,40 +87,44 @@ async function generateHtml() {
     `;
   });
 
-  // Adding inline style
+  // Menambahkan style inline dengan nonce
   htmlContent += `
-    <style nonce="${nonce}">
-      body {
-        margin: 0;
-        overflow: hidden;
-      }
-    </style>
-  </head>
-  <body>
-    <script nonce="${nonce}">
-      console.log('Generated automatically on: ${new Date().toLocaleString()}');
-    </script>
-  </body>
+      <style nonce="${nonce}">
+        body {
+          margin: 0;
+          overflow: hidden;
+        }
+      </style>
+    </head>
+    <body>
+      <script nonce="${nonce}">
+        console.log('Generated automatic on: ${new Date().toLocaleString()}');
+      </script>
+      <!-- page generated automatic: ${new Date().toLocaleString()} -->
+    </body>
   </html>`;
 
   try {
-    // Minify HTML content
+    // Minify HTML yang dihasilkan
     const minifiedHtml = await minify(htmlContent, {
-      collapseWhitespace: true,
-      removeComments: true,
-      removeRedundantAttributes: true,
-      useShortDoctype: true,
-      minifyJS: true,
-      minifyCSS: true
+      collapseWhitespace: true,  // Menghapus spasi dan baris kosong
+      removeComments: true,      // Menghapus komentar
+      removeRedundantAttributes: true, // Menghapus atribut yang tidak perlu
+      useShortDoctype: true,     // Menggunakan doctype singkat
+      minifyJS: true,            // Minify JS
+      minifyCSS: true            // Minify CSS
     });
 
+    // Tentukan path untuk file HTML yang akan dihasilkan
     const outputPath = path.join(process.cwd(), 'index.html');
+
+    // Simpan HTML yang telah di-minify ke file
     fs.writeFileSync(outputPath, minifiedHtml);
-    console.log('HTML file has been generated and minified at:', outputPath);
+    console.log('File HTML telah dibuat dan di-minify di:', outputPath);
   } catch (error) {
     console.error('Error during minification:', error);
   }
 }
 
-// Generate the HTML file
+// Generate HTML
 generateHtml();
