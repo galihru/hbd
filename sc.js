@@ -3,7 +3,6 @@ import path from 'path';
 import crypto from 'crypto';
 import { minify } from 'html-minifier';
 
-// Fungsi untuk generate nonce sederhana
 function generateNonce() {
   return Math.random().toString(36).substring(2, 15) + 
          Math.random().toString(36).substring(2, 15);
