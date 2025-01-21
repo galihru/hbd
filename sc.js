@@ -98,17 +98,19 @@ const structuredData = {
           "name": "GALIH RIDHO UTOMO",
           "url": "https://4211421036.github.io"
         },
-        "image": {
+        "primaryImageOfPage": {
           "@type": "ImageObject",
           "url": "https://4211421036.github.io/hbd/hbd.jpg",
-          "width": 1200,
-          "height": 630
+          "contentUrl": "https://4211421036.github.io/hbd/hbd.jpg",
+          "contentSize": "1280x1280",
+          "representativeOfPage": true
         },
         "audio": {
           "@type": "AudioObject",
           "contentUrl": "https://4211421036.github.io/hbd/hbd.mp3",
           "encodingFormat": "audio/mpeg",
-          "description": "Birthday celebration music"
+          "description": "Birthday celebration music",
+          "duration": "PT43S"
         },
         "potentialAction": {
           "@type": "ReadAction",
@@ -125,7 +127,7 @@ const structuredData = {
         },
         "speakable": {
           "@type": "SpeakableSpecification",
-          "cssSelector": ["h1", "meta[name='description']"]
+          "cssSelector": ["p", "meta[name='description']"]
         },
         "inLanguage": "id-ID"
       }
