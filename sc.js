@@ -18,21 +18,18 @@ function generateHashedFile(filePath) {
   const extname = path.extname(filePath); // Mendapatkan ekstensi file (misalnya .js)
   const hashedFileName = `${fileHash}${extname}`;
   
-  // Tentukan path untuk file hasil hash di direktori yang sama dengan file asli
-  const hashedFilePath = path.join(path.cwd(filePath), hashedFileName);
+  // Membuat folder 'hashed' dan subfolder berdasarkan hash folder jika belum ada
+  const hashedFolderPath = path.join(process.cwd(), 'hashed');
+  if (!fs.existsSync(hashedFolderPath)) {
+    fs.mkdirSync(hashedFolderPath, { recursive: true });
+  }
+
+  const hashedFilePath = path.join(hashedFolderPath, hashedFileName);
   
   // Salin file asli ke nama file hash di lokasi yang sama
   fs.copyFileSync(filePath, hashedFilePath);
 
   return hashedFileName;
-}
-
-// Fungsi untuk menghasilkan integritas hash (sha384) dari file
-function generateIntegrityHash(filePath) {
-  const fileBuffer = fs.readFileSync(filePath);
-  const hash = crypto.createHash('sha384');
-  hash.update(fileBuffer);
-  return hash.digest('base64');
 }
 
 // Perbarui fungsi generateHtml
