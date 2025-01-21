@@ -1,0 +1,38 @@
+{
+  "name": "Selamat Ulang Tahun",
+  "short_name": "Ulang Tahun",
+  "description": "Website offline untuk ucapan ulang tahun.",
+  "icons": [
+    {
+      "src": "192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "screenshots": [
+    {
+      "src": "/345677.png",
+      "sizes": "637x436",
+      "form_factor": "wide",
+      "label": "Splash Screen view displaying App"
+    },
+    {
+      "src": "/345677.png",
+      "sizes": "637x436",
+      "platform": "android",
+      "label": "Splash Screen view displaying App"
+    }
+  ],
+  "version": "1.0.0",
+  "author": "GALIH RIDHO UTOMO",
+  "editor": "GALIH RIDHO UTOMO",
+  "scope": "/",
+  "orientation": "portrait"
+}
