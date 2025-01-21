@@ -3,6 +3,10 @@ import path from 'path';
 import crypto from 'crypto';
 import { minify } from 'html-minifier';
 
+function generateNonce() {
+  return crypto.randomBytes(16).toString('base64');
+}
+
 function generateHashedFileName(filePath) {
   const hash = crypto.createHash('sha256');
   const fileBuffer = fs.readFileSync(filePath);
@@ -29,7 +33,7 @@ function generateIntegrityHash(filePath) {
 
 async function generateHtml() {
   // Generate nonce untuk setiap elemen
-  const nonce = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  const nonce = generateNonce();
 
   // Daftar file JavaScript yang digunakan
   const jsFiles = ['p5.js', 'main.js', 'firework.js'];
@@ -47,7 +51,9 @@ async function generateHtml() {
     "base-uri 'self'",
     "img-src 'self' data: https://4211421036.github.io",
     "default-src 'self' https://4211421036.github.io",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' ${hashedJsFiles.map(file => `'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}'`).join(' ')} https://4211421036.github.io`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${hashedJsFiles
+      .map((file) => `'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}'`)
+      .join(' ')};`,
     "font-src 'self' https://4211421036.github.io",
     "media-src 'self' https://4211421036.github.io",
     "connect-src 'self' https://4211421036.github.io",
