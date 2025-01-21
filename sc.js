@@ -170,6 +170,50 @@ const structuredData = {
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <title>Selamat Ulang Tahun!</title>
       <script type="application/ld+json" nonce="${nonce}">
+      {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "Selamat Ulang Tahun GALIH RIDHO UTOMO",
+        "startDate": "2025-01-20T4:00-04:00",
+        "endDate": `new Date().toISOString()`,
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "location": {
+          "@type": "Place",
+          "name": "GALIH RIDHO UTOMO",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Jl. Kemakmuran No. 10",
+            "addressLocality": "Kabupaten Tangerang",
+            "postalCode": "15562",
+            "addressRegion": "Kabupaten Tangerang",
+            "addressCountry": "ID"
+          }
+        },
+        "image": [
+          "https://4211421036.github.io/hbd/hbd.jpg",
+         ],
+        "description": "Selamat Ulang Tahun GALIH RIDHO UTOMO",
+        "offers": {
+          "@type": "Offer",
+          "url": "https://4211421036.github.io/hbd/,
+          "price": 10000,
+          "priceCurrency": "IDR",
+          "availability": "https://schema.org/InStock",
+          "validFrom": "2024-05-21T12:00"
+        },
+        "performer": {
+          "@type": "PerformingGroup",
+          "name": "GALIH RIDHO UTOMO"
+        },
+        "organizer": {
+          "@type": "Organization",
+          "name": "UKM Penelitian UNNES",
+          "url": "https://ukmpenelitianunnes.com"
+        }
+      }
+      </script>
+      <script type="application/ld+json" nonce="${nonce}">
         ${JSON.stringify(structuredData, null, 2)}
       </script>
   `;
