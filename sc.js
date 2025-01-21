@@ -27,17 +27,11 @@ async function generateHtml() {
 
   // Daftar file JavaScript yang digunakan
   const jsFiles = ['p5.js', 'main.js', 'firework.js'];
-  
-  // Salin file asli ke file baru dengan nama hash
+
+  // Menghasilkan nama file hash untuk setiap file JS
   const hashedJsFiles = jsFiles.map(file => {
     const originalPath = path.join(process.cwd(), file);
-    const hashedFileName = generateHashedFileName(originalPath);
-    const newFilePath = path.join(process.cwd(), hashedFileName);
-    
-    // Salin file dengan nama baru
-    fs.copyFileSync(originalPath, newFilePath);
-    
-    return hashedFileName;
+    return generateHashedFileName(originalPath); // Nama hash file, tidak perlu membuat salinan
   });
 
   // CSP dengan strict-dynamic
