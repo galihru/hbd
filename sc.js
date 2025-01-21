@@ -181,11 +181,14 @@ function generateServiceWorker() {
     self.addEventListener('install', (event) => {
       event.waitUntil(
         caches.open(cacheName).then((cache) => {
-          return cache.addAll(filesToCache);
+          console.log('Caching files:');
+          return cache.addAll(filesToCache).catch(err => {
+            console.error('Failed to cache files:', err);
+          });
         })
       );
     });
-
+    
     self.addEventListener('fetch', (event) => {
       event.respondWith(
         caches.match(event.request).then((response) => {
@@ -193,7 +196,7 @@ function generateServiceWorker() {
         })
       );
     });
-
+    
     self.addEventListener('activate', (event) => {
       event.waitUntil(
         caches.keys().then((keyList) => {
