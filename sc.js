@@ -17,17 +17,12 @@ function generateHashedFile(filePath) {
   const fileHash = hash.digest('hex').slice(0, 8); // Ambil sebagian dari hash
   const extname = path.extname(filePath); // Mendapatkan ekstensi file (misalnya .js)
   const hashedFileName = `${fileHash}${extname}`;
-  
-  // Membuat folder 'hashed' dan subfolder berdasarkan hash folder jika belum ada
-  const hashedFolderPath = path.join(process.cwd(), 'hashed');
-  if (!fs.existsSync(hashedFolderPath)) {
-    fs.mkdirSync(hashedFolderPath, { recursive: true });
-  }
 
-  const hashedFilePath = path.join(hashedFolderPath, hashedFileName);
-  
-  // Salin file asli ke nama file hash di lokasi yang sama
-  fs.copyFileSync(filePath, hashedFilePath);
+  // Mengganti nama file asli dengan nama hash
+  const hashedFilePath = path.join(path.dirname(filePath), hashedFileName);
+
+  // Ganti nama file asli dengan nama hash
+  fs.renameSync(filePath, hashedFilePath);
 
   return hashedFileName;
 }
@@ -99,14 +94,9 @@ async function generateHtml() {
       <title>Selamat Ulang Tahun!</title>
   `;
 
-  hashedJsFiles.forEach((file, index) => {
-    const filePath = path.join(process.cwd(), jsFiles[index]);
-    const integrityHash = generateIntegrityHash(filePath);
-    htmlContent += `
-      <script src="${file}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
-    `;
-  });
-
+  htmlContent += `
+  <script src="${hashedFileName}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
+  `;
   // Menambahkan style inline dengan nonce
   htmlContent += `
       <style nonce="${nonce}">
