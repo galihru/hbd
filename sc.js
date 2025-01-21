@@ -190,9 +190,7 @@ const structuredData = {
             "addressCountry": "ID"
           }
         },
-        "image": [
-          "https://4211421036.github.io/hbd/hbd.jpg",
-         ],
+        "image":  "https://4211421036.github.io/hbd/hbd.jpg",
         "description": "Selamat Ulang Tahun GALIH RIDHO UTOMO",
         "offers": {
           "@type": "Offer",
