@@ -25,6 +25,9 @@ jobs:
 
     - name: Run script to update HTML
       run: node sc.js
+    
+    - name: Debug file contents
+      run: cat sc.js
 
     - name: Commit and push changes
       run: |
