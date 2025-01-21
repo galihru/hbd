@@ -23,11 +23,9 @@ jobs:
 
       - name: Check and rename hashed files if exists
         run: |
-          # Path to your source files
           files=("p5.js" "main.js" "firework.js")
           
           for file in "${files[@]}"; do
-            # Generate hash from the file and save the hash name
             hash_name=$(node -e "
               const fs = require('fs');
               const crypto = require('crypto');
@@ -38,9 +36,7 @@ jobs:
               console.log(fileHash + '.js');
             ")
 
-            # Check if the hashed file exists and rename it
             if [ -f "$hash_name" ]; then
-              # If the hashed file exists, rename it by appending '-old'
               mv "$hash_name" "${hash_name%.js}-old.js"
               echo "Renamed existing file $hash_name to ${hash_name%.js}-old.js"
             else
@@ -48,10 +44,18 @@ jobs:
             fi
           done
 
-      - name: Run sc.js
-        run: node sc.js
+      - name: Commit changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "Update index.html and JS files with dynamic hash"
+
+      - name: Pull remote changes and push updates
+        run: |
+          git pull origin main --rebase
+          git push origin main
 
       - name: Deploy
         run: |
-          # Your deployment logic here
           echo "Deploying..."
