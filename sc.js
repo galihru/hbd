@@ -26,6 +26,25 @@ function generateIntegrityHash(filePath) {
   return hash.digest('base64');
 }
 
+// Fungsi untuk menghasilkan nama file JS dengan hash baru dan menyalin file ke nama baru
+function generateHashedFile(filePath) {
+  const hash = crypto.createHash('sha256');
+  const fileBuffer = fs.readFileSync(filePath);
+  hash.update(fileBuffer);
+  const fileHash = hash.digest('hex').slice(0, 8); // Ambil sebagian dari hash
+  const extname = path.extname(filePath); // Menyimpan ekstensi file (misalnya .js)
+  const hashedFileName = `${fileHash}${extname}`;
+  
+  // Tentukan path untuk file hasil hash
+  const hashedFilePath = path.join(process.cwd(), hashedFileName);
+  
+  // Salin file asli ke nama file hash
+  fs.copyFileSync(filePath, hashedFilePath);
+
+  return hashedFileName;
+}
+
+// Perbarui fungsi generateHtml
 async function generateHtml() {
   // Generate nonce untuk setiap elemen
   const nonce = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
@@ -33,12 +52,11 @@ async function generateHtml() {
   // Daftar file JavaScript yang digunakan
   const jsFiles = ['p5.js', 'main.js', 'firework.js'];
 
-  // Menghasilkan nama file hash untuk setiap file JS
+  // Menghasilkan nama file hash untuk setiap file JS dan menyalinnya
   const hashedJsFiles = jsFiles.map(file => {
     const originalPath = path.join(process.cwd(), file);
-    return generateHashedFileName(originalPath); // Nama hash file, tidak perlu membuat salinan
+    return generateHashedFile(originalPath); // Nama hash file, sekarang sudah dibuat salinan
   });
-
   // CSP dengan strict-dynamic
   const cspContent = [
     `style-src 'self' 'nonce-${nonce}' https://4211421036.github.io`,
