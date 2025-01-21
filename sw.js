@@ -1,46 +1,26 @@
-const cacheName = 'offline-cache-v1';
-    const filesToCache = [
-      '/',
-      '/index.html',
-      '/manifest.json',
-      '/192x192.png',
-      '/512x512.png',
-      '/sw.js',
-      // Dynamically add each hashed JS file to the cache list
-      '/99a5361b.js',
+this.addEventListener('install', e => {
+      e.waitUntil(
+          caches.open("static").then(cahce => {
+              return cahce.addAll([
+                '/',
+                '/index.html',
+                '/manifest.json',
+                '/192x192.png',
+                '/512x512.png',
+                '/sw.js',
+                // Dynamically add each hashed JS file to the cache list
+                '/99a5361b.js',
 '/f88a5001.js',
 '/58fcdf02.js'
-    ];
-
-    self.addEventListener('install', (event) => {
-      event.waitUntil(
-        caches.open(cacheName).then((cache) => {
-          console.log('Caching files:');
-          return cache.addAll(filesToCache).catch(err => {
-            console.error('Failed to cache files:', err);
-          });
-        })
-      );
-    });
-    
-    self.addEventListener('fetch', (event) => {
-      event.respondWith(
-        caches.match(event.request).then((response) => {
-          return response || fetch(event.request);
-        })
-      );
-    });
-    
-    self.addEventListener('activate', (event) => {
-      event.waitUntil(
-        caches.keys().then((keyList) => {
-          return Promise.all(
-            keyList.map((key) => {
-              if (key !== cacheName) {
-                return caches.delete(key);
-              }
+                ])
             })
-          );
-        })
-      );
+        )
+    });
+    
+    self.addEventListener("fetch", e => {
+        e.respondWith(
+            cahces.match(e.request).then(response => {
+                return response || fetch(e.request);
+            })
+        )
     });
