@@ -171,6 +171,8 @@ function generateServiceWorker() {
       '/',
       '/index.html',
       '/manifest.json',
+      '/192x192.png',
+      '/512x512.png',
       '/sw.js',
       // Dynamically add each hashed JS file to the cache list
       ${hashedJsFiles.map(file => `'/${file}'`).join(',\n')}
