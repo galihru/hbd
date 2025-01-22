@@ -391,19 +391,13 @@ function generateManifest() {
         {
             "src": "/345677.png",
             "sizes": "637x436",
-            "form_factor": "wide",
-            "label": "Splash Screen view displaying App"
         },
         {
             "src": "/345677.png",
-            "sizes": "637x436",
-            "platform": "android",
-            "label": "Splash Screen view displaying App"
+            "sizes": "637x436"
         }
     ],
     "version": "1.0.0",
-    "author": "GALIH RIDHO UTOMO",
-    "editor": "GALIH RIDHO UTOMO",
     "scope": "/",
     "orientation": "portrait"
   };
