@@ -242,13 +242,13 @@ function createStartButton() {
     startButton.style('box-shadow', '0 4px 8px rgba(0,0,0,0.2)')
     startButton.style('transition', 'all 0.3s ease')
     startButton.style('z-index', '999')
-    startButton.style('position', 'absolute')
+    startButton.style('position', 'fixed')
     startButton.style('left', '50%')
     startButton.style('top', '50%')
     startButton.style('transform', 'translate(-50%, -50%)')
-    startButton.attribute('role', 'alertdialog');
-    startButton.attribute('aria-labelledby', 'Selamat Ulang Tahun 🎂');
-    startButton.attribute('aria-modal', 'true');
+    startButton.attribute('role', 'alertdialog')
+    startButton.attribute('aria-labelledby', 'Selamat Ulang Tahun 🎂')
+    startButton.attribute('aria-modal', 'true')
     startButton.hide()
 
     startButton.mousePressed(() => {
