@@ -171,7 +171,7 @@ async function generateHtml() {
       <meta name="twitter:description" content="Selamat Ulang Tahun!">
       <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">      
       <link rel="canonical" href="https://4211421036.github.io/hbd/">
-      <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
+      <link rel="manifest" href="manifest.webmanifest" crossorigin="use-credentials">
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <title>Selamat Ulang Tahun!</title>
       <script type="application/ld+json" nonce="${nonce}">
@@ -305,7 +305,7 @@ function generateServiceWorker() {
   const ASSETS = [
       '/',
       '/index.html',
-      '/manifest.json',
+      '/manifest.webmanifest',
       '/192x192.png',
       '/512x512.png',
       '/sw.js',
@@ -408,9 +408,9 @@ function generateManifest() {
     "orientation": "portrait"
   };
 
-  const outputPath = path.join(process.cwd(), 'manifest.json');
+  const outputPath = path.join(process.cwd(), 'manifest.webmanifest');
   fs.writeFileSync(outputPath, JSON.stringify(manifestContent, null, 2));
-  console.log('Manifest file manifest.json telah dibuat di:', outputPath);
+  console.log('Manifest file manifest.webmanifest telah dibuat di:', outputPath);
 }
 
 generateHtml();
