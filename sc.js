@@ -218,11 +218,6 @@ async function generateHtml() {
       
       function gtag(){dataLayer.push(arguments);}
       
-       
-      // PENTING - JANGAN MENYALIN/MENEMPEL TANPA MEMODIFIKASI DAFTAR WILAYAH
-      
-      // Tetapkan izin default untuk wilayah tertentu sesuai dengan persyaratan Anda
-      
       gtag('consent', 'default', {
       
         'ad_storage': 'denied',
