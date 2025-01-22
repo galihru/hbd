@@ -262,7 +262,14 @@ async function generateHtml() {
       </style>
     </head>
     <body>
-      <script nonce="${nonce}">${swScript}</script>
+      <script nonce="${nonce}">
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/hbd/sw.js')
+            .then(reg => console.log('Service worker registered'))
+            .catch(err => console.log('Service worker not registered', err));
+        }
+        console.log('Generated automatic on: ${new Date().toLocaleString()}');
+      </script>
       <!-- page generated automatic: ${new Date().toLocaleString()} -->
     </body>
   </html>`;
