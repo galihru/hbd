@@ -248,8 +248,7 @@ function createStartButton() {
     startButton.style('transform', 'translateX(-5%)')
     startButton.attribute('role', 'button')
     startButton.attribute('type', 'button')
-    startButton.attribute('aria-labelledby', 'Selamat Ulang Tahun 🎂')
-    startButton.attribute('aria-modal', 'true')
+    startButton.attribute('aria-label', 'Selamat Ulang Tahun 🎂')
     startButton.hide()
 
     startButton.mousePressed(() => {
@@ -303,7 +302,6 @@ function createShareButton() {
     shareButton.attribute('accesskey','s')
     shareButton.attribute('role','button')
     shareButton.attribute('type','button')
-    shareButton.attribute('aria-modal', 'true')
     shareButton.hide();
 
     shareButton.mousePressed(shareToWhatsApp);
