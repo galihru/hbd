@@ -244,9 +244,9 @@ function createStartButton() {
     startButton.style('left', '50%')
     startButton.style('top', '50%')
     startButton.style('transform', 'translate(-50%, -50%)')
-    shareButton.attribute('role', 'dialog')
-    shareButton.attribute('aria-labelledby', 'Selamat Ulang Tahun 🎂')
-    shareButton.attribute('aria-modal', 'true')
+    startButton.attribute('role', 'dialog');
+    startButton.attribute('aria-labelledby', 'Selamat Ulang Tahun 🎂');
+    startButton.attribute('aria-modal', 'true');
     startButton.hide()
 
     startButton.mousePressed(() => {
