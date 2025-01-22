@@ -75,8 +75,7 @@ function createModal() {
         modal.style('transition', 'transform 0.3s ease')
         modal.id('modal')
         modal.attribute('role', 'document')
-        modal.attribute('aria-labelledby', 'Selamat Ulang Tahun')
-        modal.attribute('aria-modal', 'true')
+        modal.attribute('tabindex', '0')
 
         const modalContent = createDiv('')
         modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%);')
