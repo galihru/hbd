@@ -232,6 +232,7 @@ function handleTouchEnd() {
 
 function createStartButton() {
     startButton = createButton('Selamat Ulang Tahun! 🎂')
+    startButton.position(windowWidth / 2 - 100, windowHeight / 2 - 25)
     startButton.style('padding', '15px 30px')
     startButton.style('background-color', '#FF4081')
     startButton.style('color', 'white')
@@ -242,10 +243,7 @@ function createStartButton() {
     startButton.style('box-shadow', '0 4px 8px rgba(0,0,0,0.2)')
     startButton.style('transition', 'all 0.3s ease')
     startButton.style('z-index', '999')
-    startButton.style('position', 'fixed')
-    startButton.style('left', '50%')
-    startButton.style('top', '50%')
-    startButton.style('transform', 'translate(-50%, -50%)')
+    startButton.style('transform', 'translateX(-5%)')
     startButton.attribute('role', 'alertdialog')
     startButton.attribute('aria-labelledby', 'Selamat Ulang Tahun 🎂')
     startButton.attribute('aria-modal', 'true')
@@ -256,14 +254,12 @@ function createStartButton() {
         showModal = true
         createModal()
     })
-
     startButton.mouseOver(() => {
-        startButton.style('transform', 'translate(-50%, -50%) scale(1.05)')
+        startButton.style('transform', 'scale(1.05)')
         startButton.style('box-shadow', '0 6px 12px rgba(0,0,0,0.3)')
     })
-
     startButton.mouseOut(() => {
-        startButton.style('transform', 'translate(-50%, -50%) scale(1)')
+        startButton.style('transform', 'scale(1)')
         startButton.style('box-shadow', '0 4px 8px rgba(0,0,0,0.2)')
     })
 }
