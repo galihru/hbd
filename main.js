@@ -102,6 +102,8 @@ function createModal() {
         // Input untuk nama
         const inputName = createInput('')
         inputName.attribute('placeholder', 'Masukkan nama yang Ulang Tahun')
+        inputName.attribute('id', 'inputName')
+        inputName.attribute('name', 'name'); 
         inputName.style('margin', '10px')
         inputName.style('padding', '10px')
         inputName.style('width', '80%')
@@ -113,6 +115,8 @@ function createModal() {
         // Input untuk nomor WhatsApp
         const inputPhone = createInput('')
         inputPhone.attribute('placeholder', 'Masukkan nomor WA (+62)')
+        inputPhone.attribute('id', 'inputPhone')
+        inputPhone.attribute('name', 'phone');
         inputPhone.style('margin', '10px')
         inputPhone.style('padding', '10px')
         inputPhone.style('width', '80%')
