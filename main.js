@@ -74,6 +74,9 @@ function createModal() {
         modal.style('z-index', '1000')
         modal.style('transition', 'transform 0.3s ease')
         modal.id('modal')
+        modal.attribute('role', 'dialog')
+        modal.attribute('aria-labelledby', 'Selamat Ulang Tahun')
+        modal.attribute('aria-modal', 'true')
 
         const modalContent = createDiv('')
         modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%);')
@@ -88,6 +91,7 @@ function createModal() {
         modalContent.style('bottom', '0')
         modalContent.style('transform', 'translateY(0)')
         modalContent.id('modalContent')
+        modalContent.attribute('role', 'document')
 
         const swipeIndicator = createDiv('')
         swipeIndicator.style('width', '40px')
@@ -240,6 +244,9 @@ function createStartButton() {
     startButton.style('left', '50%')
     startButton.style('top', '50%')
     startButton.style('transform', 'translate(-50%, -50%)')
+    shareButton.attribute('role', 'dialog')
+    shareButton.attribute('aria-labelledby', 'Selamat Ulang Tahun 🎂')
+    shareButton.attribute('aria-modal', 'true')
     startButton.hide()
 
     startButton.mousePressed(() => {
@@ -255,39 +262,6 @@ function createStartButton() {
 
     startButton.mouseOut(() => {
         startButton.style('transform', 'translate(-50%, -50%) scale(1)')
-        startButton.style('box-shadow', '0 4px 8px rgba(0,0,0,0.2)')
-    })
-}
-
-function createStartButton() {
-    startButton = createButton('Selamat Ulang Tahun! 🎂')
-    startButton.position(windowWidth / 2 - 100, windowHeight / 2 - 25)
-    startButton.style('padding', '15px 30px')
-    startButton.style('background-color', '#FF4081')
-    startButton.style('color', 'white')
-    startButton.style('border', 'none')
-    startButton.style('border-radius', '25px')
-    startButton.style('cursor', 'pointer')
-    startButton.style('font-size', '18px')
-    startButton.style('box-shadow', '0 4px 8px rgba(0,0,0,0.2)')
-    startButton.style('transition', 'all 0.3s ease')
-    startButton.style('z-index', '999')
-    startButton.style('transform', 'translateX(-5%)')
-    startButton.hide()
-
-    startButton.mousePressed(() => {
-        startButton.hide()
-        showModal = true
-        createModal()
-    })
-
-    startButton.mouseOver(() => {
-        startButton.style('transform', 'scale(1.05)')
-        startButton.style('box-shadow', '0 6px 12px rgba(0,0,0,0.3)')
-    })
-
-    startButton.mouseOut(() => {
-        startButton.style('transform', 'scale(1)')
         startButton.style('box-shadow', '0 4px 8px rgba(0,0,0,0.2)')
     })
 }
@@ -322,6 +296,9 @@ function createShareButton() {
     shareButton.style('left', '50%');
     shareButton.style('bottom', '10px');
     shareButton.style('transform', 'translateX(-50%)');
+    shareButton.attribute('role', 'dialog')
+    shareButton.attribute('aria-labelledby', 'Share Sosial Media')
+    shareButton.attribute('aria-modal', 'true')
     shareButton.hide();
 
     shareButton.mousePressed(shareToWhatsApp);
