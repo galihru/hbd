@@ -74,7 +74,8 @@ function createModal() {
         modal.style('z-index', '1000')
         modal.style('transition', 'transform 0.3s ease')
         modal.id('modal')
-        modal.attribute('role', 'alertdialog')
+        modal.attribute('role', 'document')
+        modal.attribute('title', 'Dokument Selamat Ulang Tahun')
         modal.attribute('aria-labelledby', 'Selamat Ulang Tahun')
         modal.attribute('aria-modal', 'true')
 
