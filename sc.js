@@ -30,6 +30,12 @@ function generateIntegrityHash(filePath) {
   return hash.digest('base64');
 }
 
+function generateInlineScriptHash(scriptContent) {
+  const hash = crypto.createHash('sha256');
+  hash.update(scriptContent);
+  return `'sha256-${hash.digest('base64')}'`;
+}
+
 async function generateHtml() {
   // Generate nonce untuk setiap elemen
   const nonce = generateNonce();
@@ -43,6 +49,26 @@ async function generateHtml() {
     return generateHashedFileName(originalPath); // Nama hash file, tidak perlu membuat salinan
   });
 
+   // Inline scripts that need hashes
+  const gtmScript = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;var n=d.querySelector('[nonce]');
+    n&&j.setAttribute('nonce',n.nonce||n.getAttribute('nonce'));f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NN8S46CR');`;
+
+  const gaScript = `
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-10CPK9SS6N');
+  `;
+
+  // Generate hashes for inline scripts
+  const gtmHash = generateInlineScriptHash(gtmScript);
+  const gaHash = generateInlineScriptHash(gaScript);
+  const swHash = generateInlineScriptHash(swScript);
+
   // CSP dengan strict-dynamic
   const cspContent = [
     `style-src 'self' 'nonce-${nonce}'`,
@@ -50,7 +76,7 @@ async function generateHtml() {
     "base-uri 'self'",
     "img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://4211421036.github.io http://4211421036.github.io",
     "default-src 'self' https://4211421036.github.io http://4211421036.github.io",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.googletagmanager.com https://www.google-analytics.com https://4211421036.github.io http://4211421036.github.io ${hashedJsFiles
+    `script-src 'self' 'nonce-${nonce}' ${gtmHash} ${gaHash} ${swHash} 'strict-dynamic' https://www.googletagmanager.com https://www.google-analytics.com https://4211421036.github.io http://4211421036.github.io ${hashedJsFiles
       .map((file) => `'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}'`)
       .join(' ')}`,
     "font-src 'self' https://4211421036.github.io http://4211421036.github.io",
@@ -253,14 +279,6 @@ async function generateHtml() {
       </script>
       
       <!--Skrip banner di sini!-->
-      <script nonce="${nonce}" async src="https://www.googletagmanager.com/gtag/js?id=G-10CPK9SS6N"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-      
-        gtag('config', 'G-10CPK9SS6N');
-      </script>
       <script type="application/ld+json" nonce="${nonce}">
         ${JSON.stringify(structuredData, null, 2)}
       </script>
@@ -295,26 +313,19 @@ async function generateHtml() {
         }
       </style>
       <!-- Google Tag Manager -->
-      <script nonce="${nonce}">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','GTM-NN8S46CR');</script>
-      <!-- End Google Tag Manager -->
+      <script>${gtmScript}</script>
+      
+      <!-- Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-10CPK9SS6N"></script>
+      <script>${gaScript}</script>
     </head>
     <body>
       <!-- Google Tag Manager (noscript) -->
       <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NN8S46CR"
       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <!-- End Google Tag Manager (noscript) -->
-      <script nonce="${nonce}">
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/hbd/sw.js')
-            .then(reg => console.log('Service worker registered'))
-            .catch(err => console.log('Service worker not registered', err));
-        }
-        console.log('Generated automatic on: ${new Date().toLocaleString()}');
-      </script>
+      <!-- Service Worker Registration -->
+      <script>${swScript}</script>
       <!-- page generated automatic: ${new Date().toLocaleString()} -->
     </body>
   </html>`;
