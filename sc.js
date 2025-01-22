@@ -49,17 +49,6 @@ async function generateHtml() {
     return generateHashedFileName(originalPath); // Nama hash file, tidak perlu membuat salinan
   });
 
-  const swScript = `
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/hbd/sw.js')
-        .then(reg => console.log('Service worker registered'))
-        .catch(err => console.log('Service worker not registered', err));
-    }
-    console.log('Generated automatic on: ${new Date().toLocaleString()}');
-  `;
-
-  const swHash = generateInlineScriptHash(swScript);
-
   // CSP dengan strict-dynamic
   const cspContent = [
       `style-src 'self' 'nonce-${nonce}' 'unsafe-inline' https://4211421036.github.io http://4211421036.github.io`,
