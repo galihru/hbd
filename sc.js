@@ -262,7 +262,7 @@ async function generateHtml() {
       </style>
     </head>
     <body>
-      <script>${swScript}</script>
+      <script nonce="${nonce}">${swScript}</script>
       <!-- page generated automatic: ${new Date().toLocaleString()} -->
     </body>
   </html>`;
