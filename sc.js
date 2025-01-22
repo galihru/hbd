@@ -192,7 +192,7 @@ async function generateHtml() {
         "description": "Selamat Ulang Tahun GALIH RIDHO UTOMO",
         "offers": {
           "@type": "Offer",
-          "url": "https://4211421036.github.io/hbd",
+          "url": "https://4211421036.github.io/hbd/",
           "price": 10,
           "priceCurrency": "USD",
           "availability": "https://schema.org/InStock",
