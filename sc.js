@@ -210,6 +210,50 @@ async function generateHtml() {
         }
       }
       </script>
+      <script>
+      
+      // Tentukan dataLayer dan fungsi gtag.
+      
+      window.dataLayer = window.dataLayer || [];
+      
+      function gtag(){dataLayer.push(arguments);}
+      
+       
+      // PENTING - JANGAN MENYALIN/MENEMPEL TANPA MEMODIFIKASI DAFTAR WILAYAH
+      
+      // Tetapkan izin default untuk wilayah tertentu sesuai dengan persyaratan Anda
+      
+      gtag('consent', 'default', {
+      
+        'ad_storage': 'denied',
+      
+        'ad_user_data': 'denied',
+      
+        'ad_personalization': 'denied',
+      
+        'analytics_storage': 'denied',
+      
+       'regions':[<list of ISO 3166-2 region codes>]
+      
+      });
+      
+      // Tetapkan izin default untuk semua wilayah lain sesuai dengan persyaratan Anda
+      
+      gtag('consent', 'default', {
+      
+        'ad_storage': 'denied',
+      
+        'ad_user_data': 'denied',
+      
+        'ad_personalization': 'denied',
+      
+        'analytics_storage': 'denied'
+      
+      });
+      
+      </script>
+      
+      <!--Skrip banner di sini!-->
       <script nonce="${nonce}" async src="https://www.googletagmanager.com/gtag/js?id=G-10CPK9SS6N"></script>
       <script>
         window.dataLayer = window.dataLayer || [];
