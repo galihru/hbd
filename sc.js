@@ -49,21 +49,6 @@ async function generateHtml() {
     return generateHashedFileName(originalPath); // Nama hash file, tidak perlu membuat salinan
   });
 
-   // Inline scripts that need hashes
-  const gtmScript = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;var n=d.querySelector('[nonce]');
-    n&&j.setAttribute('nonce',n.nonce||n.getAttribute('nonce'));f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-NN8S46CR');`;
-
-  const gaScript = `
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-10CPK9SS6N');
-  `;
-
   const swScript = `
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/hbd/sw.js')
@@ -85,7 +70,7 @@ async function generateHtml() {
     "base-uri 'self'",
     "img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://4211421036.github.io http://4211421036.github.io",
     "default-src 'self' https://4211421036.github.io http://4211421036.github.io",
-    `script-src 'self' 'nonce-${nonce}' ${gtmHash} ${gaHash} ${swHash} 'strict-dynamic' https://www.googletagmanager.com https://www.google-analytics.com https://4211421036.github.io http://4211421036.github.io ${hashedJsFiles
+    `script-src 'self' 'nonce-${nonce}' ${swHash} 'strict-dynamic' https://www.googletagmanager.com https://www.google-analytics.com https://4211421036.github.io http://4211421036.github.io ${hashedJsFiles
       .map((file) => `'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}'`)
       .join(' ')}`,
     "font-src 'self' https://4211421036.github.io http://4211421036.github.io",
@@ -245,49 +230,6 @@ async function generateHtml() {
         }
       }
       </script>
-      <script>
-      
-     // Tentukan dataLayer dan fungsi gtag.
-
-    window.dataLayer = window.dataLayer || [];
-    
-    function gtag(){dataLayer.push(arguments);}
-    
-     
-    // PENTING - JANGAN MENYALIN/MENEMPEL TANPA MEMODIFIKASI DAFTAR WILAYAH
-    
-    // Tetapkan izin default untuk wilayah tertentu sesuai dengan persyaratan Anda
-    
-    gtag('consent', 'default', {
-    
-      'ad_storage': 'denied',
-    
-      'ad_user_data': 'denied',
-    
-      'ad_personalization': 'denied',
-    
-      'analytics_storage': 'denied',
-    
-     'regions':[<list of ISO 3166-2 region codes>]
-    
-    });
-    
-    // Tetapkan izin default untuk semua wilayah lain sesuai dengan persyaratan Anda
-    
-    gtag('consent', 'default', {
-    
-      'ad_storage': 'denied',
-    
-      'ad_user_data': 'denied',
-    
-      'ad_personalization': 'denied',
-    
-      'analytics_storage': 'denied'
-    
-    });
-      </script>
-      
-      <!--Skrip banner di sini!-->
       <script type="application/ld+json" nonce="${nonce}">
         ${JSON.stringify(structuredData, null, 2)}
       </script>
@@ -321,19 +263,8 @@ async function generateHtml() {
           overflow: hidden;
         }
       </style>
-      <!-- Google Tag Manager -->
-      <script>${gtmScript}</script>
-      
-      <!-- Google Analytics -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-10CPK9SS6N"></script>
-      <script>${gaScript}</script>
     </head>
     <body>
-      <!-- Google Tag Manager (noscript) -->
-      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NN8S46CR"
-      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-      <!-- End Google Tag Manager (noscript) -->
-      <!-- Service Worker Registration -->
       <script>${swScript}</script>
       <!-- page generated automatic: ${new Date().toLocaleString()} -->
     </body>
