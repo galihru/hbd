@@ -74,7 +74,7 @@ function createModal() {
         modal.style('z-index', '1000')
         modal.style('transition', 'transform 0.3s ease')
         modal.id('modal')
-        modal.attribute('role', 'dialog')
+        modal.attribute('role', 'alertdialog')
         modal.attribute('aria-labelledby', 'Selamat Ulang Tahun')
         modal.attribute('aria-modal', 'true')
 
@@ -244,7 +244,7 @@ function createStartButton() {
     startButton.style('left', '50%')
     startButton.style('top', '50%')
     startButton.style('transform', 'translate(-50%, -50%)')
-    startButton.attribute('role', 'dialog');
+    startButton.attribute('role', 'alertdialog');
     startButton.attribute('aria-labelledby', 'Selamat Ulang Tahun 🎂');
     startButton.attribute('aria-modal', 'true');
     startButton.hide()
@@ -296,7 +296,7 @@ function createShareButton() {
     shareButton.style('left', '50%');
     shareButton.style('bottom', '10px');
     shareButton.style('transform', 'translateX(-50%)');
-    shareButton.attribute('role', 'dialog')
+    shareButton.attribute('role', 'alertdialog')
     shareButton.attribute('aria-labelledby', 'Share Sosial Media')
     shareButton.attribute('aria-modal', 'true')
     shareButton.hide();
