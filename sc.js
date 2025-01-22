@@ -58,9 +58,6 @@ async function generateHtml() {
     console.log('Generated automatic on: ${new Date().toLocaleString()}');
   `;
 
-  // Generate hashes for inline scripts
-  const gtmHash = generateInlineScriptHash(gtmScript);
-  const gaHash = generateInlineScriptHash(gaScript);
   const swHash = generateInlineScriptHash(swScript);
 
   // CSP dengan strict-dynamic
