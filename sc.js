@@ -62,20 +62,20 @@ async function generateHtml() {
 
   // CSP dengan strict-dynamic
   const cspContent = [
-    `style-src 'self' 'nonce-${nonce}'`,
-    "object-src 'none'",
-    "base-uri 'self'",
-    "img-src 'self' data: https://4211421036.github.io http://4211421036.github.io",
-    "default-src 'self' https://4211421036.github.io http://4211421036.github.io",
-    `script-src 'self' 'nonce-${nonce}' ${swHash} 'strict-dynamic' https://4211421036.github.io http://4211421036.github.io ${hashedJsFiles
-      .map((file) => `'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}'`)
-      .join(' ')}`,
-    "font-src 'self' https://4211421036.github.io http://4211421036.github.io",
-    "media-src 'self' https://4211421036.github.io http://4211421036.github.io",
-    "connect-src 'self' https://4211421036.github.io http://4211421036.github.io",
-    "form-action 'self'",
-    "manifest-src 'self'",
-    "worker-src 'self' blob:"
+      `style-src 'self' 'nonce-${nonce}' 'unsafe-inline' https://4211421036.github.io http://4211421036.github.io`,
+      "object-src 'none'",
+      "base-uri 'self'",
+      "img-src 'self' data: https://4211421036.github.io http://4211421036.github.io",
+      "default-src 'self' https://4211421036.github.io http://4211421036.github.io",
+      `script-src 'self' 'unsafe-inline' 'nonce-${nonce}' 'strict-dynamic' ${hashedJsFiles
+        .map((file) => `'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}'`)
+        .join(' ')} https://4211421036.github.io http://4211421036.github.io;`,
+      "font-src 'self' https://4211421036.github.io http://4211421036.github.io",
+      "media-src 'self' https://4211421036.github.io http://4211421036.github.io",
+      "connect-src 'self' https://4211421036.github.io http://4211421036.github.io",
+      "form-action 'self'",
+      "manifest-src 'self' https://4211421036.github.io http://4211421036.github.io",
+      "worker-src 'self' blob: https://4211421036.github.io http://4211421036.github.io"
   ].join('; ');
 
  const structuredData = {
@@ -172,7 +172,7 @@ async function generateHtml() {
       <meta prefix="og: http://ogp.me/ns#" property="og:image:type" content="image/jpeg">
       <meta prefix="og: http://ogp.me/ns#" property="og:image:width" content="1280">
       <meta prefix="og: http://ogp.me/ns#" property="og:image:height" content="1280">
-      <meta prefix="og: http://ogp.me/ns#" property="og:image:alt" content="Birthday Celebration Image!">
+      <meta prefix="og: http://ogp.me/ns#" property="og:image:alt" content="Birthday Celebration Image">
       <meta prefix="og: http://ogp.me/ns#" property="og:audio" content="https://4211421036.github.io/hbd/hbd.mp3">
       <meta prefix="og: http://ogp.me/ns#" property="og:audio:secure_url" content="https://4211421036.github.io/hbd/hbd.mp3">
       <meta prefix="og: http://ogp.me/ns#" property="og:audio:type" content="audio/mpeg">
