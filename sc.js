@@ -64,6 +64,15 @@ async function generateHtml() {
     gtag('config', 'G-10CPK9SS6N');
   `;
 
+  const swScript = `
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/hbd/sw.js')
+        .then(reg => console.log('Service worker registered'))
+        .catch(err => console.log('Service worker not registered', err));
+    }
+    console.log('Generated automatic on: ${new Date().toLocaleString()}');
+  `;
+
   // Generate hashes for inline scripts
   const gtmHash = generateInlineScriptHash(gtmScript);
   const gaHash = generateInlineScriptHash(gaScript);
