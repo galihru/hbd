@@ -171,7 +171,7 @@ async function generateHtml() {
       <meta name="twitter:description" content="Selamat Ulang Tahun!">
       <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">      
       <link rel="canonical" href="https://4211421036.github.io/hbd/">
-      <link rel="manifest" href="manifest.json">
+      <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <title>Selamat Ulang Tahun!</title>
       <script type="application/ld+json" nonce="${nonce}">
@@ -245,8 +245,17 @@ async function generateHtml() {
   htmlContent += `
       <style nonce="${nonce}">
         body {
-          margin: 0;
-          overflow: hidden;
+            margin: 0;
+            overflow: hidden;
+            background: adial-gradient(100% 193.51% at 100% 0%, rgb(237, 244, 248) 0%, rgb(239, 242, 250) 16.92%, rgb(250, 239, 246) 34.8%, rgb(250, 230, 242) 48.8%, rgb(250, 240, 247) 63.79%, rgb(241, 241, 251) 81.34%, rgb(240, 244, 248) 100%);;
+            color: #000000;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: rgb(30, 30, 30);
+                color: rgb(255, 255, 255);
+            }
         }
       </style>
     </head>
