@@ -123,6 +123,7 @@ function createModal() {
         button.style('margin', '10px')
         button.style('padding', '10px 30px')
         button.style('background-color', '#4CAF50')
+        button.attribute('accesskey','n')
         if (!isDragging) {
             startButton.hide()
         }
@@ -297,6 +298,7 @@ function createShareButton() {
     shareButton.style('transform', 'translateX(-50%)');
     shareButton.attribute('role', 'alertdialog')
     shareButton.attribute('aria-labelledby', 'Share Sosial Media')
+    shareButton.attribute('accesskey','s')
     shareButton.attribute('aria-modal', 'true')
     shareButton.hide();
 
