@@ -158,8 +158,7 @@ function createModal() {
         }
 
         modalContent.child(swipeIndicator)
-        modalContent.child(createP('Siapa yang ulang tahun?'))
-        modalContent.attribute('role', 'text')
+        modalContent.child(createP('Siapa yang ulang tahun?').attribute('role', 'text'))
         modalContent.child(inputName)
         modalContent.child(inputPhone)
         modalContent.child(button)
