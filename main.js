@@ -126,6 +126,8 @@ function createModal() {
         button.style('padding', '10px 30px')
         button.style('background-color', '#4CAF50')
         button.attribute('accesskey','n')
+        button.attribute('type','submit')
+        button.attribute('role','button')
         if (!isDragging) {
             startButton.hide()
         }
@@ -244,7 +246,8 @@ function createStartButton() {
     startButton.style('transition', 'all 0.3s ease')
     startButton.style('z-index', '999')
     startButton.style('transform', 'translateX(-5%)')
-    startButton.attribute('role', 'alertdialog')
+    startButton.attribute('role', 'button')
+    startButton.attribute('type', 'button')
     startButton.attribute('aria-labelledby', 'Selamat Ulang Tahun 🎂')
     startButton.attribute('aria-modal', 'true')
     startButton.hide()
@@ -286,8 +289,9 @@ function createShareButton() {
     shareButton.style('background-color', '#25D366');
     shareButton.style('color', 'white');
     shareButton.style('border', 'none');
-    shareButton.style('border-radius', '5px');
+    shareButton.style('border-radius', '10px');
     shareButton.style('cursor', 'pointer');
+    shareButton.style('filter', 'blur(5px)');
     shareButton.style('font-size', '16px');
     shareButton.style('z-index', '1000');
     shareButton.style('position', 'absolute');
@@ -295,8 +299,10 @@ function createShareButton() {
     shareButton.style('bottom', '10px');
     shareButton.style('transform', 'translateX(-50%)');
     shareButton.attribute('role', 'alertdialog')
-    shareButton.attribute('aria-labelledby', 'Share Sosial Media')
+    shareButton.attribute('aria-label', 'Share Sosial Media')
     shareButton.attribute('accesskey','s')
+    shareButton.attribute('role','button')
+    shareButton.attribute('type','button')
     shareButton.attribute('aria-modal', 'true')
     shareButton.hide();
 
