@@ -210,7 +210,6 @@ async function generateHtml() {
         }
       }
       </script>
-      <!-- Google tag (gtag.js) -->
       <script nonce="${nonce}" async src="https://www.googletagmanager.com/gtag/js?id=G-10CPK9SS6N"></script>
       <script>
         window.dataLayer = window.dataLayer || [];
