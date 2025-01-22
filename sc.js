@@ -159,6 +159,7 @@ async function generateHtml() {
       <meta prefix="og: http://ogp.me/ns#" property="og:audio" content="https://4211421036.github.io/hbd/hbd.mp3">
       <meta prefix="og: http://ogp.me/ns#" property="og:audio:secure_url" content="https://4211421036.github.io/hbd/hbd.mp3">
       <meta prefix="og: http://ogp.me/ns#" property="og:audio:type" content="audio/mpeg">
+      <meta name="google-site-verification" content="OYdjPwgIjGMAbQd3CGwM_l20jLNRRp84mEl3kw06DMg" />
       <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:title" content="Selamat Ulang Tahun">
       <meta name="twitter:description" content="Selamat Ulang Tahun!">
@@ -209,6 +210,15 @@ async function generateHtml() {
         }
       }
       </script>
+      <!-- Google tag (gtag.js) -->
+      <script nonce="${nonce}" async src="https://www.googletagmanager.com/gtag/js?id=G-10CPK9SS6N"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+        gtag('config', 'G-10CPK9SS6N');
+      </script>
       <script type="application/ld+json" nonce="${nonce}">
         ${JSON.stringify(structuredData, null, 2)}
       </script>
@@ -242,8 +252,19 @@ async function generateHtml() {
           overflow: hidden;
         }
       </style>
+      <!-- Google Tag Manager -->
+      <script nonce="${nonce}">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-NN8S46CR');</script>
+      <!-- End Google Tag Manager -->
     </head>
     <body>
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NN8S46CR"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
       <script nonce="${nonce}">
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.register('/hbd/sw.js')
