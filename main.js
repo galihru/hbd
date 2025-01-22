@@ -108,6 +108,7 @@ function createModal() {
         inputName.style('border', '1px solid #ddd')
         inputName.style('border-radius', '5px')
         inputName.style('font-size', '16px')
+        inputName.attribute('autofocus', 'true') 
 
         // Input untuk nomor WhatsApp
         const inputPhone = createInput('')
@@ -118,6 +119,7 @@ function createModal() {
         inputPhone.style('border', '1px solid #ddd')
         inputPhone.style('border-radius', '5px')
         inputPhone.style('font-size', '16px')
+        inputPhone.attribute('autofocus', 'true') 
 
         const button = createButton('OK')
         button.style('margin', '10px')
