@@ -65,14 +65,14 @@ async function generateHtml() {
     `style-src 'self' 'nonce-${nonce}'`,
     "object-src 'none'",
     "base-uri 'self'",
-    "img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://4211421036.github.io http://4211421036.github.io",
+    "img-src 'self' data: https://4211421036.github.io http://4211421036.github.io",
     "default-src 'self' https://4211421036.github.io http://4211421036.github.io",
-    `script-src 'self' 'nonce-${nonce}' ${swHash} 'strict-dynamic' https://www.googletagmanager.com https://www.google-analytics.com https://4211421036.github.io http://4211421036.github.io ${hashedJsFiles
+    `script-src 'self' 'nonce-${nonce}' ${swHash} 'strict-dynamic' https://4211421036.github.io http://4211421036.github.io ${hashedJsFiles
       .map((file) => `'sha384-${generateIntegrityHash(path.join(process.cwd(), file))}'`)
       .join(' ')}`,
     "font-src 'self' https://4211421036.github.io http://4211421036.github.io",
     "media-src 'self' https://4211421036.github.io http://4211421036.github.io",
-    "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://4211421036.github.io http://4211421036.github.io",
+    "connect-src 'self' https://4211421036.github.io http://4211421036.github.io",
     "form-action 'self'",
     "manifest-src 'self'",
     "worker-src 'self' blob:"
