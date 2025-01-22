@@ -9,7 +9,7 @@
       '/sw.js',
       // Dynamically add each hashed JS file to the cache list
       '/99a5361b.js',
-'/276b2904.js',
+'/4b549d9e.js',
 '/58fcdf02.js'
   ];
 
