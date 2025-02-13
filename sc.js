@@ -22,9 +22,71 @@ function generateHashedFileName(filePath) {
 
   return newFileName;
 }
+// Function to generate consistent hashed IDs
 function generateHashedId(originalId) {
   const hash = crypto.createHash('sha256').update(originalId).digest('hex');
   return `id-${hash.substring(0, 8)}`;
+}
+
+// Automatically find and hash IDs from JavaScript files
+function extractAndHashIds(jsContent) {
+  // Regex pattern to find potential ID usages in JavaScript
+  const idPatterns = [
+    /\.getElementById\(['"]([^'"]+)['"]\)/g,
+    /\.querySelector\(['"]#([^'"]+)['"]\)/g,
+    /id=['"]([^'"]+)['"]/g,
+    /\.id\s*=\s*['"]([^'"]+)['"]/g
+  ];
+
+  let foundIds = new Set();
+  
+  // Find all potential IDs
+  idPatterns.forEach(pattern => {
+    let match;
+    while ((match = pattern.exec(jsContent)) !== null) {
+      foundIds.add(match[1]);
+    }
+  });
+
+  // Create ID mapping
+  const idMap = {};
+  foundIds.forEach(id => {
+    idMap[id] = generateHashedId(id);
+  });
+
+  return idMap;
+}
+
+// Function to update JavaScript content with hashed IDs
+function updateJsContent(jsContent, idMap) {
+  let updatedContent = jsContent;
+  
+  for (const [originalId, hashedId] of Object.entries(idMap)) {
+    // Replace various forms of ID usage
+    const patterns = [
+      new RegExp(`getElementById\\(['"]${originalId}['"]\\)`, 'g'),
+      new RegExp(`querySelector\\(['"]#${originalId}['"]\\)`, 'g'),
+      new RegExp(`id=['"]${originalId}['"]`, 'g'),
+      new RegExp(`\\.id\\s*=\\s*['"]${originalId}['"]`, 'g')
+    ];
+
+    patterns.forEach(pattern => {
+      updatedContent = updatedContent.replace(pattern, (match) => {
+        if (match.includes('getElementById')) {
+          return `getElementById('${hashedId}')`;
+        } else if (match.includes('querySelector')) {
+          return `querySelector('#${hashedId}')`;
+        } else if (match.includes('id=')) {
+          return `id="${hashedId}"`;
+        } else if (match.includes('.id')) {
+          return `.id = "${hashedId}"`;
+        }
+        return match;
+      });
+    });
+  }
+
+  return updatedContent;
 }
 const idMap = {
   'modal': generateHashedId('modal'),
@@ -45,61 +107,6 @@ function generateInlineScriptHash(scriptContent) {
   hash.update(scriptContent);
   return `'sha256-${hash.digest('base64')}'`;
 }
-const bfcacheScript = `
-document.addEventListener("DOMContentLoaded", () => {
-    if (!document.querySelector("#${idMap['modal']}")) {
-        const skipLink = document.createElement("a");
-        skipLink.href = "#${idMap['modal']}";
-        skipLink.id = "${idMap['skip-link']}";
-        skipLink.textContent = "Skip to main content";
-        skipLink.style.position = "absolute";
-        skipLink.style.top = "-40px";
-        skipLink.style.left = "10px";
-        skipLink.style.background = "#fff";
-        skipLink.style.color = "#000";
-        skipLink.style.padding = "5px";
-        skipLink.style.zIndex = "1004";
-        skipLink.style.transition = "top 0.3s";
-        skipLink.addEventListener("focus", () => {
-            skipLink.style.top = "10px";
-        });
-        skipLink.addEventListener("blur", () => {
-            skipLink.style.top = "-40px";
-        });
-        document.body.prepend(skipLink);
-    }
-
-    const progress = document.createElement("div");
-    progress.id = "${idMap['progress-bar']}";
-    progress.role= "progressbar";
-    progress.title= "progressbar";
-    progress.style.position = "fixed";
-    progress.style.top = "0";
-    progress.style.left = "0";
-    progress.style.width = "0%";
-    progress.style.height = "3px";
-    progress.style.background = "#29d";
-    progress.style.zIndex = "9999";
-    progress.style.transition = "width 0.2s ease-in-out";
-    document.body.appendChild(progress);
-
-    let progressWidth = 0;
-    const interval = setInterval(() => {
-        progressWidth += Math.random() * 10;
-        if (progressWidth < 90) {
-            progress.style.width = progressWidth + "%";
-        }
-    }, 200);
-
-    window.addEventListener("load", () => {
-        clearInterval(interval);
-        progress.style.width = "100%";
-        setTimeout(() => {
-            progress.style.opacity = "0";
-        }, 500);
-    });
-});
-`;
 
 async function generateHtml() {
   // Generate nonce untuk setiap elemen
@@ -107,6 +114,21 @@ async function generateHtml() {
 
   // Daftar file JavaScript yang digunakan
   const jsFiles = ['p5.js', 'main.js', 'firework.js'];
+
+  // Read and process main.js to extract IDs
+  const mainJsPath = path.join(process.cwd(), 'main.js');
+  const mainJsContent = fs.readFileSync(mainJsPath, 'utf8');
+  const extractedIdMap = extractAndHashIds(mainJsContent);
+
+  // Update the JavaScript content with hashed IDs
+  const updatedMainJsContent = updateJsContent(mainJsContent, extractedIdMap);
+  fs.writeFileSync(mainJsPath, updatedMainJsContent);
+
+  // Create a script to inject the ID mapping
+  const idMapScript = `
+    const idMap = ${JSON.stringify(extractedIdMap, null, 2)};
+    window.idMap = idMap; // Make available globally if needed
+  `;
 
   const hashedJsFiles = jsFiles.map(file => {
     const originalPath = path.join(process.cwd(), file);
@@ -201,6 +223,62 @@ async function generateHtml() {
       }
     ]
   };
+
+  const bfcacheScript = `
+  document.addEventListener("DOMContentLoaded", () => {
+      if (!document.querySelector("#${idMap['modal']}")) {
+          const skipLink = document.createElement("a");
+          skipLink.href = "#${idMap['modal']}";
+          skipLink.id = "${idMap['skip-link']}";
+          skipLink.textContent = "Skip to main content";
+          skipLink.style.position = "absolute";
+          skipLink.style.top = "-40px";
+          skipLink.style.left = "10px";
+          skipLink.style.background = "#fff";
+          skipLink.style.color = "#000";
+          skipLink.style.padding = "5px";
+          skipLink.style.zIndex = "1004";
+          skipLink.style.transition = "top 0.3s";
+          skipLink.addEventListener("focus", () => {
+              skipLink.style.top = "10px";
+          });
+          skipLink.addEventListener("blur", () => {
+              skipLink.style.top = "-40px";
+          });
+          document.body.prepend(skipLink);
+      }
+  
+      const progress = document.createElement("div");
+      progress.id = "${idMap['progress-bar']}";
+      progress.role= "progressbar";
+      progress.title= "progressbar";
+      progress.style.position = "fixed";
+      progress.style.top = "0";
+      progress.style.left = "0";
+      progress.style.width = "0%";
+      progress.style.height = "3px";
+      progress.style.background = "#29d";
+      progress.style.zIndex = "9999";
+      progress.style.transition = "width 0.2s ease-in-out";
+      document.body.appendChild(progress);
+  
+      let progressWidth = 0;
+      const interval = setInterval(() => {
+          progressWidth += Math.random() * 10;
+          if (progressWidth < 90) {
+              progress.style.width = progressWidth + "%";
+          }
+      }, 200);
+  
+      window.addEventListener("load", () => {
+          clearInterval(interval);
+          progress.style.width = "100%";
+          setTimeout(() => {
+              progress.style.opacity = "0";
+          }, 500);
+      });
+  });
+  `;
 
 
   let htmlContent = `<!DOCTYPE html>
