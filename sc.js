@@ -322,14 +322,12 @@ async function generateHtml() {
   htmlContent += `
       <style nonce="${nonce}">
         :root {
-            /* Light theme colors */
             --background: radial-gradient(100% 193.51% at 100% 0%, rgb(237, 244, 248) 0%, rgb(239, 242, 250) 16.92%, rgb(250, 239, 246) 34.8%, rgb(250, 230, 242) 48.8%, rgb(250, 240, 247) 63.79%, rgb(241, 241, 251) 81.34%, rgb(240, 244, 248) 100%);
             --text-light: #333333;
             --input-border-light: #dddddd;
             --input-bg-light: #ffffff;
             --placeholder-light: #757575;
         
-            /* Dark theme colors */
             --background-dark: #1e1e1e;
             --text-dark: #ffffff;
             --input-border-dark: #404040;
