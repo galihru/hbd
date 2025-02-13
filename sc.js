@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const progress = document.createElement("div");
     progress.id = "progress-bar";
     progress.role= "progressbar";
+    progress.title= "progressbar";
     progress.style.position = "fixed";
     progress.style.top = "0";
     progress.style.left = "0";
