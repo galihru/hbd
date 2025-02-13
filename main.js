@@ -331,26 +331,25 @@ function createModal() {
                 modalContent.style('opacity', '1')  // Fade-in efek
                 modalContent.style('transform', 'translateY(0)')
             }, 50)
+            function submitName() {
+              userName = inputName.value();
+              nomorWA = inputPhone.value();
+          
+              if (userName.trim() !== '' && nomorWA.startsWith('62')) {
+                  showModal = false;
+                  clicked = true;
+                  select(`#${idMap.modal}`).remove();
+                  startButton.remove();
+                  
+                  initAudio();
+                  birthdayAudio.play().catch(error => {
+                      console.log('Audio playback failed:', error);
+                  });
+              } else {
+                  alert("Pastikan nomor WA dimulai dengan 62.");
+              }
+          }
         }, 800); // Adjust timeout as needed
-
-        function submitName() {
-            userName = inputName.value();
-            nomorWA = inputPhone.value();
-        
-            if (userName.trim() !== '' && nomorWA.startsWith('62')) {
-                showModal = false;
-                clicked = true;
-                select(`#${idMap.modal}`).remove();
-                startButton.remove();
-                
-                initAudio();
-                birthdayAudio.play().catch(error => {
-                    console.log('Audio playback failed:', error);
-                });
-            } else {
-                alert("Pastikan nomor WA dimulai dengan 62.");
-            }
-        }
     }
 }
 
