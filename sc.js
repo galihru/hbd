@@ -389,7 +389,7 @@ async function generateHtml() {
         .skeleton-animation {
             animation: skeletonLoading 1.5s infinite;
         }
-        /* Optimized Placeholder Styles */
+        
         .input-field::placeholder {
             color: var(--placeholder);
             opacity: 1;
