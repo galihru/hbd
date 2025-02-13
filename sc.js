@@ -92,7 +92,6 @@ const idMap = {
   'modal': generateHashedId('modal'),
   'skip-link': generateHashedId('skip-link'),
   'progress-bar': generateHashedId('progress-bar'),
-  'inputName': generateHashedId('inputName'),
   'progress': generateHashedId('progress')
 };
 function generateIntegrityHash(filePath) {
@@ -479,7 +478,7 @@ async function generateHtml() {
         }
         
         // Di dalam bagian style
-      input#${idMap['inputName']}::placeholder {
+      input::placeholder {
         color: var(--placeholder);
         opacity: 1;
         transition: opacity var(--transition-speed) ease;
@@ -488,11 +487,11 @@ async function generateHtml() {
         font-display: swap;
       }
       
-      input#${idMap['inputName']}:focus::placeholder {
+      input:focus::placeholder {
         opacity: 0.7;
       }
       
-      input#${idMap['inputName']}:focus {
+      input:focus {
         outline: none;
         border-color: var(--button-bg);
         box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
