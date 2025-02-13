@@ -22,7 +22,17 @@ function generateHashedFileName(filePath) {
 
   return newFileName;
 }
-
+function generateHashedId(originalId) {
+  const hash = crypto.createHash('sha256').update(originalId).digest('hex');
+  return `id-${hash.substring(0, 8)}`;
+}
+const idMap = {
+  'modal': generateHashedId('modal'),
+  'skip-link': generateHashedId('skip-link'),
+  'progress-bar': generateHashedId('progress-bar'),
+  'inputName': generateHashedId('inputName'),
+  'progress': generateHashedId('progress')
+};
 function generateIntegrityHash(filePath) {
   const fileBuffer = fs.readFileSync(filePath);
   const hash = crypto.createHash('sha384');
@@ -37,10 +47,10 @@ function generateInlineScriptHash(scriptContent) {
 }
 const bfcacheScript = `
 document.addEventListener("DOMContentLoaded", () => {
-    if (!document.querySelector("#modal")) {
+    if (!document.querySelector("#${idMap['modal']}")) {
         const skipLink = document.createElement("a");
-        skipLink.href = "#modal";
-        skipLink.id = "skip-link";
+        skipLink.href = "#${idMap['modal']}";
+        skipLink.id = "${idMap['skip-link']}";
         skipLink.textContent = "Skip to main content";
         skipLink.style.position = "absolute";
         skipLink.style.top = "-40px";
@@ -60,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const progress = document.createElement("div");
-    progress.id = "progress-bar";
+    progress.id = "${idMap['progress-bar']}";
     progress.role= "progressbar";
     progress.title= "progressbar";
     progress.style.position = "fixed";
@@ -390,22 +400,25 @@ async function generateHtml() {
             animation: skeletonLoading 1.5s infinite;
         }
         
-        #inputName::placeholder {
-            color: var(--placeholder);
-            opacity: 1;
-            transition: opacity var(--transition-speed) ease;
-        }
-        
-        #inputName:focus::placeholder {
-            opacity: 0.7;
-        }
-        
-        /* Optimized Focus States */
-        #inputName:focus {
-            outline: none;
-            border-color: var(--button-bg);
-            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
-        }
+        // Di dalam bagian style
+      #${idMap['inputName']}::placeholder {
+        color: var(--placeholder);
+        opacity: 1;
+        transition: opacity var(--transition-speed) ease;
+        contain: style layout;
+        content-visibility: auto;
+        font-display: swap;
+      }
+      
+      #${idMap['inputName']}:focus::placeholder {
+        opacity: 0.7;
+      }
+      
+      #${idMap['inputName']}:focus {
+        outline: none;
+        border-color: var(--button-bg);
+        box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+      }
         /* Performance Optimizations */
         @media (prefers-reduced-motion: reduce) {
             * {
@@ -416,13 +429,6 @@ async function generateHtml() {
             }
         }
         
-        /* Critical CSS for LCP */
-        #inputName::placeholder {
-            contain: style layout;
-            content-visibility: auto;
-            font-display: swap;
-        }
-
       </style>
     </head>
     <body translate="no" data-new-gr-c-s-check-loaded="14.1147.0">
