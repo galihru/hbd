@@ -108,25 +108,6 @@ function createSkeletonLoader() {
     return skeletonModal;
 }
 
-// Add this CSS to your stylesheet or create a new style tag
-const skeletonStyles = `
-    @keyframes skeletonLoading {
-        0% {
-            opacity: 0.7;
-        }
-        50% {
-            opacity: 0.5;
-        }
-        100% {
-            opacity: 0.7;
-        }
-    }
-
-    .skeleton-animation {
-        animation: skeletonLoading 1.5s infinite;
-    }
-`;
-
 // Initialize audio properly
 function initAudio() {
     if (!audioContext) {
@@ -204,10 +185,6 @@ function createModal() {
         // Create and show skeleton first
         const skeletonLoader = createSkeletonLoader();
         
-        // Add skeleton styles
-        const styleElement = createElement('style');
-        styleElement.html(skeletonStyles);
-        document.head.appendChild(styleElement);
         skeletonTimeout = setTimeout(() => {
             isLoading = false;
             skeletonLoader.remove();
