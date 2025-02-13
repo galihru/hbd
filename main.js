@@ -274,6 +274,42 @@ function createModal() {
             button.style('font-size', '16px')
     
             button.mousePressed(() => submitName())
+            modalContent.child(swipeIndicator)
+            modalContent.child(createP('Siapa yang ulang tahun?').attribute('role', 'text'))
+            modalContent.child(inputName)
+            modalContent.child(inputPhone)
+            modalContent.child(button)
+            modal.child(modalContent)
+            
+            let modalContentElem = select('#modalContent').elt
+            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            modalContentElem.addEventListener('touchstart', handleTouchStart, false)
+            modalContentElem.addEventListener('touchmove', handleTouchMove, false)
+            modalContentElem.addEventListener('touchend', handleTouchEnd, false)
+            if (window.innerWidth <= 768) {
+                modalContent.style('position', 'absolute');
+                modalContent.style('bottom', '10px');
+                swipeIndicator.style('display', 'block');
+            } else {
+                swipeIndicator.style('display', 'none');
+            }
+            if (isDarkMode) {
+                modal.style('background', 'rgba(0,0,0,0.8)');
+                modalContent.style('backgroundColor', '#1e1e1e');
+                modalContent.style('color', '#ffffff');
+                swipeIndicator.style('backgroundColor', '#333');
+            } else {
+                modal.style('background', 'rgba(255, 246, 246, 0.8)');
+                modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%)');
+                modalContent.style('color', '#000000');
+                swipeIndicator.style('backgroundColor', 'rgb(205 205 205)');
+            }
+            // Menambahkan efek setelah modal dibuat
+            setTimeout(() => {
+                modal.style('opacity', '1')  // Fade-in efek
+                modalContent.style('opacity', '1')  // Fade-in efek
+                modalContent.style('transform', 'translateY(0)')
+            }, 50)
         }, 800); // Adjust timeout as needed
 
         function submitName() {
@@ -294,43 +330,6 @@ function createModal() {
                 alert("Pastikan nomor WA dimulai dengan 62.");
             }
         }
-
-        modalContent.child(swipeIndicator)
-        modalContent.child(createP('Siapa yang ulang tahun?').attribute('role', 'text'))
-        modalContent.child(inputName)
-        modalContent.child(inputPhone)
-        modalContent.child(button)
-        modal.child(modalContent)
-        
-        let modalContentElem = select('#modalContent').elt
-        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        modalContentElem.addEventListener('touchstart', handleTouchStart, false)
-        modalContentElem.addEventListener('touchmove', handleTouchMove, false)
-        modalContentElem.addEventListener('touchend', handleTouchEnd, false)
-        if (window.innerWidth <= 768) {
-            modalContent.style('position', 'absolute');
-            modalContent.style('bottom', '10px');
-            swipeIndicator.style('display', 'block');
-        } else {
-            swipeIndicator.style('display', 'none');
-        }
-        if (isDarkMode) {
-            modal.style('background', 'rgba(0,0,0,0.8)');
-            modalContent.style('backgroundColor', '#1e1e1e');
-            modalContent.style('color', '#ffffff');
-            swipeIndicator.style('backgroundColor', '#333');
-        } else {
-            modal.style('background', 'rgba(255, 246, 246, 0.8)');
-            modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%)');
-            modalContent.style('color', '#000000');
-            swipeIndicator.style('backgroundColor', 'rgb(205 205 205)');
-        }
-        // Menambahkan efek setelah modal dibuat
-        setTimeout(() => {
-            modal.style('opacity', '1')  // Fade-in efek
-            modalContent.style('opacity', '1')  // Fade-in efek
-            modalContent.style('transform', 'translateY(0)')
-        }, 50)
     }
 }
 
