@@ -21,24 +21,35 @@ const wishes = [
     "Selamat bertambah usia! Tetap semangat! 💪"
 ]
 
-window.addEventListener('pageshow', (event) => {
-    if (event.persisted) {
-        console.log('Halaman dimuat dari bfcache');
-        // Restart animasi atau audio
-        if (window.birthdayAudio) {
-            window.birthdayAudio.play().catch(error => {
-                console.log('Audio playback failed:', error);
-            });
-        }
+let audioContext;
+let birthdayAudio;
+
+// Initialize audio properly
+function initAudio() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        birthdayAudio = new Audio('./hbd.mp3');
+        birthdayAudio.loop = true;
+    }
+}
+
+// Handle page visibility
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        if (birthdayAudio) birthdayAudio.pause();
+    } else {
+        if (clicked && birthdayAudio) birthdayAudio.play().catch(console.error);
     }
 });
 
-window.addEventListener('pagehide', (event) => {
+// Replace the existing pageshow and pagehide event listeners with:
+window.addEventListener('pageshow', (event) => {
     if (event.persisted) {
-        console.log('Halaman disimpan ke bfcache');
-        // Hentikan audio
-        if (window.birthdayAudio) {
-            window.birthdayAudio.pause();
+        // Reset necessary state
+        fireworks = [];
+        confetti = [];
+        if (clicked && birthdayAudio) {
+            birthdayAudio.play().catch(console.error);
         }
     }
 });
@@ -170,26 +181,21 @@ function createModal() {
         button.mousePressed(() => submitName())
 
         function submitName() {
-            userName = inputName.value()
-            nomorWA = inputPhone.value()
+            userName = inputName.value();
+            nomorWA = inputPhone.value();
         
             if (userName.trim() !== '' && nomorWA.startsWith('62')) {
-                showModal = false
-                clicked = true
-                select('#modal').remove()
-                startButton.remove()
+                showModal = false;
+                clicked = true;
+                select('#modal').remove();
+                startButton.remove();
                 
-                // Menggunakan singleton pattern untuk audio
-                if (!window.birthdayAudio) {
-                    window.birthdayAudio = new Audio('./hbd.mp3');
-                    window.birthdayAudio.loop = true;
-                }
-                
-                window.birthdayAudio.play().catch(error => {
+                initAudio();
+                birthdayAudio.play().catch(error => {
                     console.log('Audio playback failed:', error);
                 });
             } else {
-                alert("Pastikan nomor WA dimulai dengan 62.")
+                alert("Pastikan nomor WA dimulai dengan 62.");
             }
         }
 
@@ -434,7 +440,7 @@ function draw() {
 
 
 function mouseReleased() {
-    if (clicked) {
+    if (clicked && mouseY < windowHeight && mouseX < windowWidth) {
         let target = {
             x: mouseX,
             y: mouseY
