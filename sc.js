@@ -36,64 +36,69 @@ function generateInlineScriptHash(scriptContent) {
   return `'sha256-${hash.digest('base64')}'`;
 }
 const bfcacheScript = `
-window.addEventListener("pageshow", (event) => {
-    if (event.persisted) {
-        console.log("Halaman dipulihkan dari cache, memulihkan state...");
-        restoreState();
-    }
-});
-
-window.addEventListener("pagehide", (event) => {
-    if (event.persisted) {
-        console.log("Menyimpan state sebelum halaman di-cache...");
-        saveState();
-    }
-});
-
-// Fungsi untuk menyimpan state sebelum cache
-function saveState() {
-    sessionStorage.setItem("state", JSON.stringify({ 
-        message: "Selamat Ulang Tahun!" 
-    }));
-}
-
-// Fungsi untuk mengembalikan state setelah cache
-function restoreState() {
-    const savedState = sessionStorage.getItem("state");
-    if (savedState) {
-        console.log("Memulihkan state:", JSON.parse(savedState));
-    }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
-    if (window.DeviceOrientationEvent || window.DeviceMotionEvent) {
-        console.log("Sensor tersedia, tetapi tidak meminta izin otomatis.");
-    }
-});
-
-// Hapus kode berikut jika ada di skrip Anda!
-/*
-if (typeof DeviceOrientationEvent.requestPermission === "function") {
-    DeviceOrientationEvent.requestPermission().then(response => {
-        if (response === "granted") {
-            window.addEventListener("deviceorientation", (event) => {
-                console.log(event.alpha, event.beta, event.gamma);
-            });
+    // Ensure BFCache support for faster page restoration
+    window.addEventListener("pageshow", (event) => {
+        if (event.persisted) {
+            console.log("Restored from BFCache");
+            document.body.classList.remove("loading");
         }
     });
-}
-*/
 
-// Event listener untuk mengoptimalkan halaman agar mendukung bfcache
-document.addEventListener("freeze", () => {
-    console.log("Halaman sedang dibekukan oleh browser, menyimpan state...");
-    saveState();
+    // Auto-create skip link for accessibility
+    if (!document.querySelector("#skip-link")) {
+        const skipLink = document.createElement("a");
+        skipLink.href = "#main-content";
+        skipLink.id = "skip-link";
+        skipLink.textContent = "Skip to main content";
+        skipLink.style.position = "absolute";
+        skipLink.style.top = "-40px";
+        skipLink.style.left = "10px";
+        skipLink.style.background = "#000";
+        skipLink.style.color = "#fff";
+        skipLink.style.padding = "5px";
+        skipLink.style.zIndex = "1000";
+        skipLink.style.transition = "top 0.3s";
+
+        skipLink.addEventListener("focus", () => {
+            skipLink.style.top = "10px";
+        });
+        skipLink.addEventListener("blur", () => {
+            skipLink.style.top = "-40px";
+        });
+        document.body.prepend(skipLink);
+    }
+
+    // Page load progress indicator
+    const progress = document.createElement("div");
+    progress.id = "progress-bar";
+    progress.style.position = "fixed";
+    progress.style.top = "0";
+    progress.style.left = "0";
+    progress.style.width = "0%";
+    progress.style.height = "3px";
+    progress.style.background = "#29d";
+    progress.style.zIndex = "9999";
+    progress.style.transition = "width 0.2s ease-in-out";
+    document.body.appendChild(progress);
+
+    let progressWidth = 0;
+    const interval = setInterval(() => {
+        progressWidth += Math.random() * 10;
+        if (progressWidth < 90) {
+            progress.style.width = progressWidth + "%";
+        }
+    }, 200);
+
+    window.addEventListener("load", () => {
+        clearInterval(interval);
+        progress.style.width = "100%";
+        setTimeout(() => {
+            progress.style.opacity = "0";
+        }, 500);
+    });
 });
 
-document.addEventListener("resume", () => {
-    console.log("Halaman kembali aktif, memulihkan state...");
-    restoreState();
-});
 `;
 async function generateHtml() {
   // Generate nonce untuk setiap elemen
