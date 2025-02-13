@@ -261,7 +261,7 @@ function createModal() {
             const button = createButton('OK')
             button.style('margin', '10px')
             button.style('padding', '10px 30px')
-            button.style('background-color', '#4CAF50')
+            button.style('background', 'rgb(52 127 56)')
             button.attribute('accesskey','n')
             button.attribute('type','submit')
             button.attribute('role','button')
