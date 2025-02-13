@@ -58,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
         skipLink.style.padding = "5px";
         skipLink.style.zIndex = "1000";
         skipLink.style.transition = "top 0.3s";
-
         skipLink.addEventListener("focus", () => {
             skipLink.style.top = "10px";
         });
