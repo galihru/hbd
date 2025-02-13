@@ -201,6 +201,7 @@ async function generateHtml() {
       <link rel="shortcut icon" href="https://4211421036.github.io/g4lihru/987654567.png" type="image/x-icon">
       <link rel="icon" href="https://4211421036.github.io/g4lihru/987654567.png" type="image/x-icon">
       <link rel="preload" as="audio" href="https://4211421036.github.io/hbd/hbd.mp3">
+      <link rel="preload" as="image" href="https://4211421036.github.io/hbd/hbd.jpg" type="image/jpg">
       <link rel="preload" as="image" href="https://4211421036.github.io/g4lihru/987654567.png" type="image/x-icon">
       <link rel="apple-touch-icon" href="https://4211421036.github.io/g4lihru/987654567.png">
       <link rel="canonical" href="https://4211421036.github.io/hbd/">
