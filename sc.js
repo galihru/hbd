@@ -330,6 +330,21 @@ async function generateHtml() {
                 color: rgb(255, 255, 255);
             }
         }
+        @keyframes skeletonLoading {
+            0% {
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 0.7;
+            }
+        }
+    
+        .skeleton-animation {
+            animation: skeletonLoading 1.5s infinite;
+        }
       </style>
     </head>
     <body>
