@@ -36,35 +36,55 @@ function generateInlineScriptHash(scriptContent) {
   return `'sha256-${hash.digest('base64')}'`;
 }
 const bfcacheScript = `
-// Tambahkan di bfcacheScript
-window.addEventListener('unload', () => {
-    // Bersihkan event listener dan objek besar
-    window.observer?.disconnect();
-    delete window.observer;
-});
-window.addEventListener('pageshow', (event) => {
+window.addEventListener("pageshow", (event) => {
     if (event.persisted) {
-        // Bersihkan state yang mungkin mengganggu bfcache
-        window.location.reload();
+        console.log("Halaman dipulihkan dari cache, memulihkan state...");
+        restoreState();
     }
 });
 
-// Nonaktifkan semua sensor jika ada
-if ('DeviceOrientationEvent' in window) {
-    window.DeviceOrientationEvent.requestPermission = null;
-}
-if ('DeviceMotionEvent' in window) {
-    window.DeviceMotionEvent.requestPermission = null;
-}
-
-// Tambahkan event listener untuk page transition
-performance.mark('app-init-start');
-document.addEventListener('freeze', () => {
-    performance.mark('page-freeze');
+window.addEventListener("pagehide", (event) => {
+    if (event.persisted) {
+        console.log("Menyimpan state sebelum halaman di-cache...");
+        saveState();
+    }
 });
 
-document.addEventListener('resume', () => {
-    performance.mark('page-resume');
+// Fungsi untuk menyimpan state sebelum cache
+function saveState() {
+    sessionStorage.setItem("state", JSON.stringify({ 
+        message: "Selamat Ulang Tahun!" 
+    }));
+}
+
+// Fungsi untuk mengembalikan state setelah cache
+function restoreState() {
+    const savedState = sessionStorage.getItem("state");
+    if (savedState) {
+        console.log("Memulihkan state:", JSON.parse(savedState));
+    }
+}
+
+// Pastikan tidak ada permintaan sensor
+if (window.DeviceOrientationEvent) {
+    try {
+        if (typeof DeviceOrientationEvent.requestPermission === "function") {
+            console.log("Menonaktifkan sensor permissions untuk bfcache...");
+        }
+    } catch (error) {
+        console.warn("Gagal memeriksa sensor permissions:", error);
+    }
+}
+
+// Event listener untuk mengoptimalkan halaman agar mendukung bfcache
+document.addEventListener("freeze", () => {
+    console.log("Halaman sedang dibekukan oleh browser, menyimpan state...");
+    saveState();
+});
+
+document.addEventListener("resume", () => {
+    console.log("Halaman kembali aktif, memulihkan state...");
+    restoreState();
 });
 `;
 async function generateHtml() {
