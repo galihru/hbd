@@ -21,6 +21,35 @@ const wishes = [
     "Selamat bertambah usia! Tetap semangat! 💪"
 ]
 
+// Handler untuk bfcache restoration
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        // Restore audio state
+        let audioElement = document.querySelector('audio');
+        if (audioElement) {
+            audioElement.play().catch(error => {
+                console.log('Audio playback failed:', error);
+            });
+        }
+        
+        // Restore UI state
+        clicked = true;
+        showModal = false;
+        startButton.hide();
+    }
+});
+
+// Handler untuk menyiapkan halaman sebelum masuk ke cache
+window.addEventListener('pagehide', function(event) {
+    if (event.persisted) {
+        // Hentikan audio saat halaman di-cache
+        let audioElement = document.querySelector('audio');
+        if (audioElement) {
+            audioElement.pause();
+        }
+    }
+});
+
 class Horn {
     constructor(x, y, isLeft) {
         this.x = x
@@ -151,19 +180,22 @@ function createModal() {
         function submitName() {
             userName = inputName.value()
             nomorWA = inputPhone.value()
-
-            // Memastikan nomor WA dimulai dengan '62'
+        
             if (userName.trim() !== '' && nomorWA.startsWith('62')) {
                 showModal = false
                 clicked = true
                 select('#modal').remove()
                 startButton.remove()
-                let audio = new Audio('./hbd.mp3');
-                audio.addEventListener('ended', function() {
-                    this.currentTime = 0;
-                    this.play();
-                }, false);
-                audio.play();
+                
+                // Menggunakan singleton pattern untuk audio
+                if (!window.birthdayAudio) {
+                    window.birthdayAudio = new Audio('./hbd.mp3');
+                    window.birthdayAudio.loop = true;
+                }
+                
+                window.birthdayAudio.play().catch(error => {
+                    console.log('Audio playback failed:', error);
+                });
             } else {
                 alert("Pastikan nomor WA dimulai dengan 62.")
             }
