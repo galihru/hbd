@@ -37,12 +37,6 @@ function generateInlineScriptHash(scriptContent) {
 }
 const bfcacheScript = `
 document.addEventListener("DOMContentLoaded", () => {
-    window.addEventListener("pageshow", (event) => {
-        if (event.persisted) {
-            console.log("Restored from BFCache");
-            document.body.classList.remove("loading");
-        }
-    });
     if (!document.querySelector("#modal")) {
         const skipLink = document.createElement("a");
         skipLink.href = "#modal";
