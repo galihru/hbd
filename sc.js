@@ -65,7 +65,6 @@ function restoreState() {
     }
 }
 
-// **Pastikan sensor tidak mengganggu bfcache**
 document.addEventListener("DOMContentLoaded", () => {
     if (window.DeviceOrientationEvent || window.DeviceMotionEvent) {
         console.log("Sensor tersedia, tetapi tidak meminta izin otomatis.");
