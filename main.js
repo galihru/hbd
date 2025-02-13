@@ -319,10 +319,12 @@ function createModal() {
                 modalContent.style('backgroundColor', '#1e1e1e');
                 modalContent.style('color', '#ffffff');
                 swipeIndicator.style('backgroundColor', '#333');
+                button.style('background', 'rgb(52 127 56)')
             } else {
                 modal.style('background', 'rgba(255, 246, 246, 0.8)');
                 modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%)');
                 modalContent.style('color', '#000000');
+                button.style('background', 'rgb(115 235 121)')
                 swipeIndicator.style('backgroundColor', 'rgb(205 205 205)');
             }
             // Menambahkan efek setelah modal dibuat
