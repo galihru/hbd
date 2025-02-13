@@ -207,6 +207,7 @@ async function generateHtml() {
       <link rel="manifest" href="manifest.webmanifest" crossorigin="use-credentials">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="application-name" content="HBD">
+      <meta name="generator" content="HBD">
       <meta name="description" content="Selamat Ulang Tahun!">
       <meta name="keywords" content="Selamat Ulang Tahun!">
       <meta name="author" content="GALIH RIDHO UTOMO">
