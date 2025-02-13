@@ -36,6 +36,12 @@ function generateInlineScriptHash(scriptContent) {
   return `'sha256-${hash.digest('base64')}'`;
 }
 const bfcacheScript = `
+// Tambahkan di bfcacheScript
+window.addEventListener('unload', () => {
+    // Bersihkan event listener dan objek besar
+    window.observer?.disconnect();
+    delete window.observer;
+});
 window.addEventListener('pageshow', (event) => {
     if (event.persisted) {
         // Bersihkan state yang mungkin mengganggu bfcache
