@@ -21,35 +21,27 @@ const wishes = [
     "Selamat bertambah usia! Tetap semangat! 💪"
 ]
 
-// Handler untuk bfcache restoration
-window.addEventListener('pageshow', function(event) {
+window.addEventListener('pageshow', (event) => {
     if (event.persisted) {
-        // Restore audio state
-        let audioElement = document.querySelector('audio');
-        if (audioElement) {
-            audioElement.play().catch(error => {
+        console.log('Halaman dimuat dari bfcache');
+        // Restart animasi atau audio
+        if (window.birthdayAudio) {
+            window.birthdayAudio.play().catch(error => {
                 console.log('Audio playback failed:', error);
             });
         }
-        
-        // Restore UI state
-        clicked = true;
-        showModal = false;
-        startButton.hide();
     }
 });
 
-// Handler untuk menyiapkan halaman sebelum masuk ke cache
-window.addEventListener('pagehide', function(event) {
+window.addEventListener('pagehide', (event) => {
     if (event.persisted) {
-        // Hentikan audio saat halaman di-cache
-        let audioElement = document.querySelector('audio');
-        if (audioElement) {
-            audioElement.pause();
+        console.log('Halaman disimpan ke bfcache');
+        // Hentikan audio
+        if (window.birthdayAudio) {
+            window.birthdayAudio.pause();
         }
     }
 });
-
 class Horn {
     constructor(x, y, isLeft) {
         this.x = x
