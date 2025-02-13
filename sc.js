@@ -197,6 +197,7 @@ async function generateHtml() {
   <html lang="id" xml-lang="id">
     <head>
       <meta charset="UTF-8">
+      <title>Selamat Ulang Tahun!</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="description" content="Selamat Ulang Tahun!">
       <meta name="keywords" content="Selamat Ulang Tahun!">
@@ -245,7 +246,6 @@ async function generateHtml() {
       <link rel="canonical" href="https://4211421036.github.io/hbd/">
       <link rel="manifest" href="manifest.webmanifest" crossorigin="use-credentials">
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
-      <title>Selamat Ulang Tahun!</title>
       <script type="application/ld+json" nonce="${nonce}">
       {
         "@context": "https://schema.org",
