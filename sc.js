@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!document.querySelector("#modal")) {
         const skipLink = document.createElement("a");
-        skipLink.href = "#main-content";
+        skipLink.href = "#modal";
         skipLink.id = "skip-link";
         skipLink.textContent = "Skip to main content";
         skipLink.style.position = "absolute";
