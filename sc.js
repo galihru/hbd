@@ -238,6 +238,7 @@ async function generateHtml() {
       <meta http-equiv="Pragma" content="no-cache">
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <meta http-equiv="Expires" content="0">
+      <meta http-equiv="content-language" content="id">
       <meta name="twitter:site" content="@ITBGRU">
       <meta name="twitter:creator" content="@ITBGRU">
       <meta name="twitter:title" content="Selamat Ulang Tahun">
