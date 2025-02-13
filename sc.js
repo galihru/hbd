@@ -36,77 +36,29 @@ function generateInlineScriptHash(scriptContent) {
   return `'sha256-${hash.digest('base64')}'`;
 }
 const bfcacheScript = `
-performance.mark('app-init-start');
-
-function loadThirdParty(element) {
-    const actualSrc = element.dataset.src;
-    const actualType = element.dataset.type;
-    
-    if (actualType === 'script') {
-        const script = document.createElement('script');
-        script.src = actualSrc;
-        script.async = true;
-        element.parentNode.replaceChild(script, element);
-    } else if (actualType === 'iframe') {
-        const iframe = document.createElement('iframe');
-        iframe.src = actualSrc;
-        Object.assign(iframe, {
-            width: element.dataset.width || '100%',
-            height: element.dataset.height || '100%',
-            frameborder: '0'
-        });
-        element.parentNode.replaceChild(iframe, element);
-    }
-    
-    performance.mark('third-party-load-' + actualSrc);
-    performance.measure('third-party-loading', 'app-init-start', 'third-party-load-' + actualSrc);
-}
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            loadThirdParty(entry.target);
-            observer.unobserve(entry.target);
-        }
-    });
-}, {
-    rootMargin: '50px'
-});
-window.addEventListener('pageshow', function(event) {
-    performance.mark('pageshow-start');
+window.addEventListener('pageshow', (event) => {
     if (event.persisted) {
-        console.log('Page restored from bfcache');
-        performance.measure('bfcache-restoration', 'pageshow-start');
+        // Bersihkan state yang mungkin mengganggu bfcache
+        window.location.reload();
     }
 });
 
-window.addEventListener('load', function() {
-    performance.mark('page-load-complete');
-    performance.measure('total-page-load', 'app-init-start', 'page-load-complete');
-    
-    // Initialize lazy loading
-    document.querySelectorAll('[data-lazy]').forEach(element => {
-        observer.observe(element);
-    });
-});
-
-function sendPerformanceMetrics() {
-    const metrics = performance.getEntriesByType('measure');
-    console.log('Performance metrics:', metrics);
+// Nonaktifkan semua sensor jika ada
+if ('DeviceOrientationEvent' in window) {
+    window.DeviceOrientationEvent.requestPermission = null;
+}
+if ('DeviceMotionEvent' in window) {
+    window.DeviceMotionEvent.requestPermission = null;
 }
 
-
-window.addEventListener('pagehide', function(event) {
-    console.log('Page is being unloaded');
+// Tambahkan event listener untuk page transition
+performance.mark('app-init-start');
+document.addEventListener('freeze', () => {
+    performance.mark('page-freeze');
 });
 
-document.addEventListener('visibilitychange', function() {
-    if (document.visibilityState === 'hidden') {
-        performance.mark('page-hide');
-        performance.measure('page-visible-duration', 'app-init-start', 'page-hide');
-        sendPerformanceMetrics();
-        console.log('Page hidden, prepare for restoration');
-    }
+document.addEventListener('resume', () => {
+    performance.mark('page-resume');
 });
 `;
 async function generateHtml() {
@@ -239,6 +191,9 @@ async function generateHtml() {
       <meta prefix="og: http://ogp.me/ns#" property="og:audio:type" content="audio/mpeg">
       <meta name="google-site-verification" content="OYdjPwgIjGMAbQd3CGwM_l20jLNRRp84mEl3kw06DMg" />
       <meta name="twitter:card" content="summary_large_image">
+      <meta name="browsermode" content="no-sensors">
+      <meta name="renderer" content="webkit|ie-comp|ie-stand">
+      <meta http-equiv="Cache-Control" content="no-transform">
       <meta name="twitter:title" content="Selamat Ulang Tahun">
       <meta name="twitter:description" content="Selamat Ulang Tahun">
       <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">      
