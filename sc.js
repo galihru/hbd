@@ -351,7 +351,7 @@ async function generateHtml() {
         }
       </style>
     </head>
-    <body>
+    <body translate="no" data-new-gr-c-s-check-loaded="14.1147.0">
       <script nonce="${nonce}">
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.register('/hbd/sw.js')
