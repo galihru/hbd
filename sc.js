@@ -12,7 +12,7 @@ function generateHashedFileName(filePath) {
   const fileBuffer = fs.readFileSync(filePath);
   hash.update(fileBuffer);
   const fileHash = hash.digest('hex').slice(0, 8);
-  const extname = path.extname(filePath); // Menyimpan ekstensi file (misalnya .js)
+  const extname = path.extname(filePath);
   const newFileName = `${fileHash}${extname}`;
   const newFilePath = path.join(process.cwd(), newFileName);
 
@@ -43,7 +43,6 @@ async function generateHtml() {
   // Daftar file JavaScript yang digunakan
   const jsFiles = ['p5.js', 'main.js', 'firework.js'];
 
-  // Menghasilkan nama file hash untuk setiap file JS
   const hashedJsFiles = jsFiles.map(file => {
     const originalPath = path.join(process.cwd(), file);
     return generateHashedFileName(originalPath); // Nama hash file, tidak perlu membuat salinan
@@ -168,7 +167,7 @@ async function generateHtml() {
       <meta name="google-site-verification" content="OYdjPwgIjGMAbQd3CGwM_l20jLNRRp84mEl3kw06DMg" />
       <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:title" content="Selamat Ulang Tahun">
-      <meta name="twitter:description" content="Selamat Ulang Tahun!">
+      <meta name="twitter:description" content="Selamat Ulang Tahun">
       <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">      
       <link rel="canonical" href="https://4211421036.github.io/hbd/">
       <link rel="manifest" href="manifest.webmanifest" crossorigin="use-credentials">
