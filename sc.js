@@ -107,22 +107,7 @@ function generateInlineScriptHash(scriptContent) {
   hash.update(scriptContent);
   return `'sha256-${hash.digest('base64')}'`;
 }
-function processJsFile(filePath) {
-  // Baca file JavaScript
-  let jsContent = fs.readFileSync(filePath, 'utf-8');
 
-  // Ganti semua ID dengan nilai yang di-hash
-  Object.entries(idMap).forEach(([originalId, hashedId]) => {
-    const regex = new RegExp(`#${originalId}|getElementById\\(['"]${originalId}['"]\\)`, 'g');
-    jsContent = jsContent.replace(regex, `#${hashedId}`);
-  });
-
-  // Tulis file JavaScript yang telah dimodifikasi
-  const hashedFilePath = path.join(process.cwd(), generateHashedFileName(filePath));
-  fs.writeFileSync(hashedFilePath, jsContent);
-
-  return hashedFilePath;
-}
 async function generateHtml() {
   // Generate nonce untuk setiap elemen
   const nonce = generateNonce();
@@ -147,7 +132,6 @@ async function generateHtml() {
 
   const hashedJsFiles = jsFiles.map(file => {
     const originalPath = path.join(process.cwd(), file);
-    return processJsFile(originalPath); // Proses dan hash ID di dalam file JS
   });
 
   // CSP dengan strict-dynamic
