@@ -237,6 +237,7 @@ async function generateHtml() {
       <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
       <meta http-equiv="Pragma" content="no-cache">
       <meta http-equiv="Expires" content="0">
+      <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <meta name="twitter:site" content="@ITBGRU">
       <meta name="twitter:creator" content="@ITBGRU">
       <meta name="twitter:title" content="Selamat Ulang Tahun">
@@ -246,7 +247,6 @@ async function generateHtml() {
       <meta name="twitter:url" content="https://4211421036.github.io/MentalHealth">
       <meta name="twitter:image:src" content="https://4211421036.github.io/g4lihru/987654567.png">
       <meta name="twitter:image:alt" content="Mental Health">
-      <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <script type="application/ld+json" nonce="${nonce}">
       {
         "@context": "https://schema.org",
