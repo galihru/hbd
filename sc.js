@@ -90,11 +90,9 @@ window.addEventListener('load', function() {
     });
 });
 
-// Send performance metrics to analytics
 function sendPerformanceMetrics() {
     const metrics = performance.getEntriesByType('measure');
     console.log('Performance metrics:', metrics);
-    // Here you could send these metrics to your analytics service
 }
 
 
