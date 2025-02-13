@@ -13,6 +13,27 @@ let isDragging = false
 let startY = 0
 let currentY = 0
 
+// Create a consistent ID mapping function
+const generateHashedId = (originalId) => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(originalId);
+  // Use a deterministic approach to generate consistent hashes
+  let hash = 0;
+  for (let i = 0; i < data.length; i++) {
+    hash = ((hash << 5) - hash) + data[i];
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return `id_${Math.abs(hash).toString(16)}`;
+};
+
+// Create a mapping of original IDs to hashed IDs
+const idMap = {
+  modal: generateHashedId('modal'),
+  inputName: generateHashedId('inputName'),
+  inputPhone: generateHashedId('inputPhone'),
+  modalContent: generateHashedId('modal-content')
+};
+
 const wishes = [
     "Semoga panjang umur dan sehat selalu! 🎂",
     "Wish you all the best! May all your dreams come true! 🌟",
@@ -200,7 +221,7 @@ function createModal() {
             modal.style('align-items', 'center')
             modal.style('z-index', '1000')
             modal.style('transition', 'transform 0.3s ease')
-            modal.id('modal')
+            modal.id(idMap.modal);
             modal.attribute('role', 'document')
             modal.attribute('tabindex', '0')
     
@@ -216,7 +237,7 @@ function createModal() {
             modalContent.style('transition', 'transform 0.5s ease')
             modalContent.style('bottom', '0')
             modalContent.style('transform', 'translateY(0)')
-            modalContent.id('modalContent')
+            modalContent.id(idMap.modalContent);
             modalContent.attribute('role', 'document')
     
             const swipeIndicator = createDiv('')
@@ -229,7 +250,7 @@ function createModal() {
             // Input untuk nama
             const inputName = createInput('')
             inputName.attribute('placeholder', 'Masukkan nama yang Ulang Tahun')
-            inputName.attribute('id', 'inputName')
+            inputName.id(idMap.inputName);
             inputName.attribute('aria-label', 'Nama yang Ulang Tahun')
             inputName.attribute('name', 'name')
             inputName.attribute('autocomplete', 'name')
@@ -246,7 +267,7 @@ function createModal() {
             const inputPhone = createInput('')
             inputPhone.attribute('placeholder', 'Masukkan nomor WA (+62)')
             inputPhone.attribute('title', 'Masukkan nomor WA dengan kode negara +62');
-            inputPhone.attribute('id', 'inputPhone')
+            inputPhone.id(idMap.inputPhone);
             inputPhone.attribute('name', 'phone')
             inputPhone.attribute('autocomplete', 'tel')
             inputPhone.attribute('pattern', '\\+62[0-9]{9,}')
@@ -281,7 +302,7 @@ function createModal() {
             modalContent.child(button)
             modal.child(modalContent)
             
-            let modalContentElem = select('#modalContent').elt
+            let modalContentElem = select(`#${idMap.modalContent}`).elt;
             const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
             modalContentElem.addEventListener('touchstart', handleTouchStart, false)
             modalContentElem.addEventListener('touchmove', handleTouchMove, false)
@@ -319,7 +340,7 @@ function createModal() {
             if (userName.trim() !== '' && nomorWA.startsWith('62')) {
                 showModal = false;
                 clicked = true;
-                select('#modal').remove();
+                select(`#${idMap.modal}`).remove();
                 startButton.remove();
                 
                 initAudio();
@@ -356,7 +377,7 @@ function handleTouchMove(event) {
     currentY = event.touches[0].clientY - startY
     if (currentY < 0) currentY = 0
 
-    const modal = select('#modalContent').elt
+    const modal = select(`#${idMap.modalContent}`).elt;
     modal.style.transform = `translateY(${currentY}px)`
 }
 
@@ -367,11 +388,11 @@ function handleTouchEnd() {
     startButton.style('font-size', '16px')
 
     isDragging = false
-    const modal = select('#modalContent').elt
+    const modal = select(`#${idMap.modalContent}`).elt;
 
     if (currentY > 150) {
         showModal = false
-        select('#modal').remove()
+        select(`#${idMap.modal}`).remove();
         startButton.show()
     } else {
         modal.style.transform = 'translateY(0)'
