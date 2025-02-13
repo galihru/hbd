@@ -45,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Auto-create skip link for accessibility
     if (!document.querySelector("#skip-link")) {
         const skipLink = document.createElement("a");
         skipLink.href = "#main-content";
