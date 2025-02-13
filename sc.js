@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.prepend(skipLink);
     }
 
-    // Page load progress indicator
     const progress = document.createElement("div");
     progress.id = "progress-bar";
     progress.role= "progressbar";
