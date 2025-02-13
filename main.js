@@ -483,12 +483,12 @@ function shareToWhatsApp() {
 function createShareButton() {
     shareButton = createButton('Download & Share to WhatsApp 📱');
     shareButton.style('padding', '10px 20px');
-    shareButton.style('background-color', '#25D366');
+    shareButton.style('background', 'rgb(26 157 75 / 50%)');
     shareButton.style('color', 'white');
     shareButton.style('border', 'none');
     shareButton.style('border-radius', '10px');
     shareButton.style('cursor', 'pointer');
-    shareButton.style('filter', 'blur(5px)');
+    shareButton.style('backdrop-filter', 'blur(15px)');
     shareButton.style('font-size', '16px');
     shareButton.style('z-index', '1000');
     shareButton.style('position', 'absolute');
