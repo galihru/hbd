@@ -50,6 +50,7 @@ window.addEventListener("pagehide", (event) => {
     }
 });
 
+// Fungsi untuk menyimpan state sebelum cache
 function saveState() {
     sessionStorage.setItem("state", JSON.stringify({ 
         message: "Selamat Ulang Tahun!" 
@@ -64,16 +65,25 @@ function restoreState() {
     }
 }
 
-// Pastikan tidak ada permintaan sensor
-if (window.DeviceOrientationEvent) {
-    try {
-        if (typeof DeviceOrientationEvent.requestPermission === "function") {
-            console.log("Menonaktifkan sensor permissions untuk bfcache...");
-        }
-    } catch (error) {
-        console.warn("Gagal memeriksa sensor permissions:", error);
+// **Pastikan sensor tidak mengganggu bfcache**
+document.addEventListener("DOMContentLoaded", () => {
+    if (window.DeviceOrientationEvent || window.DeviceMotionEvent) {
+        console.log("Sensor tersedia, tetapi tidak meminta izin otomatis.");
     }
+});
+
+// Hapus kode berikut jika ada di skrip Anda!
+/*
+if (typeof DeviceOrientationEvent.requestPermission === "function") {
+    DeviceOrientationEvent.requestPermission().then(response => {
+        if (response === "granted") {
+            window.addEventListener("deviceorientation", (event) => {
+                console.log(event.alpha, event.beta, event.gamma);
+            });
+        }
+    });
 }
+*/
 
 // Event listener untuk mengoptimalkan halaman agar mendukung bfcache
 document.addEventListener("freeze", () => {
