@@ -230,7 +230,11 @@ async function generateHtml() {
       <meta name="twitter:card" content="summary_large_image">
       <meta name="browsermode" content="no-sensors">
       <meta name="renderer" content="webkit|ie-comp|ie-stand">
-      <meta http-equiv="Cache-Control" content="no-transform">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+      <meta http-equiv="Pragma" content="no-cache">
+      <meta http-equiv="Expires" content="0">
       <meta name="twitter:title" content="Selamat Ulang Tahun">
       <meta name="twitter:description" content="Selamat Ulang Tahun">
       <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">      
