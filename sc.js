@@ -228,7 +228,7 @@ async function generateHtml() {
   document.addEventListener("DOMContentLoaded", () => {
       if (!document.querySelector("#${idMap['modal']}")) {
           const skipLink = document.createElement("a");
-          skipLink.href = "https://4211421036.github.io/hbd";
+          skipLink.href = "#defaultCanvas0";
           skipLink.id = "${idMap['skip-link']}";
           skipLink.textContent = "Skip to main content";
           skipLink.style.position = "absolute";
