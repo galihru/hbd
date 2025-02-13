@@ -321,17 +321,59 @@ async function generateHtml() {
   // Menambahkan style inline dengan nonce
   htmlContent += `
       <style nonce="${nonce}">
+        :root {
+            /* Light theme colors */
+            --background: radial-gradient(100% 193.51% at 100% 0%, rgb(237, 244, 248) 0%, rgb(239, 242, 250) 16.92%, rgb(250, 239, 246) 34.8%, rgb(250, 230, 242) 48.8%, rgb(250, 240, 247) 63.79%, rgb(241, 241, 251) 81.34%, rgb(240, 244, 248) 100%);
+            --text-light: #333333;
+            --input-border-light: #dddddd;
+            --input-bg-light: #ffffff;
+            --placeholder-light: #757575;
+        
+            /* Dark theme colors */
+            --background-dark: #1e1e1e;
+            --text-dark: #ffffff;
+            --input-border-dark: #404040;
+            --input-bg-dark: #2d2d2d;
+            --placeholder-dark: #a0a0a0;
+        
+            /* Animation speeds */
+            --transition-speed: 0.3s;
+        }
+        
+        /* Theme Switching */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                color-scheme: dark;
+                --background: var(--background-dark);
+                --text: var(--text-dark);
+                --input-border: var(--input-border-dark);
+                --input-bg: var(--input-bg-dark);
+                --placeholder: var(--placeholder-dark);
+            }
+        }
+        
+        @media (prefers-color-scheme: light) {
+            :root {
+                color-scheme: light;
+                --background: var(--background-light);
+                --text: var(--text-light);
+                --input-border: var(--input-border-light);
+                --input-bg: var(--input-bg-light);
+                --placeholder: var(--placeholder-light);
+            }
+        }
+        
         body {
             margin: 0;
             overflow: hidden;
-            background: adial-gradient(100% 193.51% at 100% 0%, rgb(237, 244, 248) 0%, rgb(239, 242, 250) 16.92%, rgb(250, 239, 246) 34.8%, rgb(250, 230, 242) 48.8%, rgb(250, 240, 247) 63.79%, rgb(241, 241, 251) 81.34%, rgb(240, 244, 248) 100%);;
-            color: #000000;
+            background: var(--background);
+            color: var(--text);
         }
         
         @media (prefers-color-scheme: dark) {
             body {
-                background: rgb(30, 30, 30);
-                color: rgb(255, 255, 255);
+                background: var(--background);
+                color: var(--text);
             }
         }
         @keyframes skeletonLoading {
@@ -349,6 +391,40 @@ async function generateHtml() {
         .skeleton-animation {
             animation: skeletonLoading 1.5s infinite;
         }
+        /* Optimized Placeholder Styles */
+        .input-field::placeholder {
+            color: var(--placeholder);
+            opacity: 1;
+            transition: opacity var(--transition-speed) ease;
+        }
+        
+        .input-field:focus::placeholder {
+            opacity: 0.7;
+        }
+        
+        /* Optimized Focus States */
+        .input-field:focus {
+            outline: none;
+            border-color: var(--button-bg);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+        /* Performance Optimizations */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+        
+        /* Critical CSS for LCP */
+        .input-field[id="inputName"]::placeholder {
+            contain: style layout;
+            content-visibility: auto;
+            font-display: swap;
+        }
+
       </style>
     </head>
     <body translate="no" data-new-gr-c-s-check-loaded="14.1147.0">
