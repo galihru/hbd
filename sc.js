@@ -390,18 +390,18 @@ async function generateHtml() {
             animation: skeletonLoading 1.5s infinite;
         }
         
-        .input-field::placeholder {
+        #inputName::placeholder {
             color: var(--placeholder);
             opacity: 1;
             transition: opacity var(--transition-speed) ease;
         }
         
-        .input-field:focus::placeholder {
+        #inputName:focus::placeholder {
             opacity: 0.7;
         }
         
         /* Optimized Focus States */
-        .input-field:focus {
+        #inputName:focus {
             outline: none;
             border-color: var(--button-bg);
             box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
@@ -417,7 +417,7 @@ async function generateHtml() {
         }
         
         /* Critical CSS for LCP */
-        .input-field[id="inputName"]::placeholder {
+        #inputName::placeholder {
             contain: style layout;
             content-visibility: auto;
             font-display: swap;
