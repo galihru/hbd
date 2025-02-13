@@ -24,6 +24,108 @@ const wishes = [
 let audioContext;
 let birthdayAudio;
 
+// Add these variables at the top of main.js
+let isLoading = true;
+let skeletonTimeout;
+
+// Add this function to create skeleton loader
+function createSkeletonLoader() {
+    const skeletonModal = createDiv('');
+    skeletonModal.class('skeleton-modal');
+    skeletonModal.style('background', 'rgba(0,0,0,0.8)');
+    skeletonModal.style('position', 'fixed');
+    skeletonModal.style('top', '0');
+    skeletonModal.style('left', '0');
+    skeletonModal.style('width', '100%');
+    skeletonModal.style('height', '100%');
+    skeletonModal.style('display', 'flex');
+    skeletonModal.style('justify-content', 'center');
+    skeletonModal.style('align-items', 'center');
+    skeletonModal.style('z-index', '999');
+
+    const skeletonContent = createDiv('');
+    skeletonContent.class('skeleton-content');
+    skeletonContent.style('padding', '20px');
+    skeletonContent.style('border-radius', '20px');
+    skeletonContent.style('text-align', 'center');
+    skeletonContent.style('width', '80%');
+    skeletonContent.style('max-width', '500px');
+    skeletonContent.style('position', window.innerWidth <= 768 ? 'absolute' : 'relative');
+    skeletonContent.style('bottom', window.innerWidth <= 768 ? '10px' : '0');
+    skeletonContent.style('background-color', isDarkMode ? '#1e1e1e' : '#ffffff');
+
+    // Create skeleton elements
+    const swipeIndicator = createDiv('');
+    swipeIndicator.class('skeleton-swipe');
+    swipeIndicator.style('width', '40px');
+    swipeIndicator.style('height', '4px');
+    swipeIndicator.style('background-color', isDarkMode ? '#333' : '#ddd');
+    swipeIndicator.style('border-radius', '2px');
+    swipeIndicator.style('margin', '0 auto 15px auto');
+    swipeIndicator.style('display', window.innerWidth <= 768 ? 'block' : 'none');
+
+    const titleSkeleton = createDiv('');
+    titleSkeleton.class('skeleton-title skeleton-animation');
+    titleSkeleton.style('height', '24px');
+    titleSkeleton.style('width', '60%');
+    titleSkeleton.style('margin', '15px auto');
+    titleSkeleton.style('background-color', isDarkMode ? '#333' : '#eee');
+    titleSkeleton.style('border-radius', '4px');
+
+    const inputSkeleton1 = createDiv('');
+    inputSkeleton1.class('skeleton-input skeleton-animation');
+    inputSkeleton1.style('height', '45px');
+    inputSkeleton1.style('width', '80%');
+    inputSkeleton1.style('margin', '10px auto');
+    inputSkeleton1.style('background-color', isDarkMode ? '#333' : '#eee');
+    inputSkeleton1.style('border-radius', '5px');
+
+    const inputSkeleton2 = createDiv('');
+    inputSkeleton2.class('skeleton-input skeleton-animation');
+    inputSkeleton2.style('height', '45px');
+    inputSkeleton2.style('width', '80%');
+    inputSkeleton2.style('margin', '10px auto');
+    inputSkeleton2.style('background-color', isDarkMode ? '#333' : '#eee');
+    inputSkeleton2.style('border-radius', '5px');
+
+    const buttonSkeleton = createDiv('');
+    buttonSkeleton.class('skeleton-button skeleton-animation');
+    buttonSkeleton.style('height', '45px');
+    buttonSkeleton.style('width', '120px');
+    buttonSkeleton.style('margin', '10px auto');
+    buttonSkeleton.style('background-color', isDarkMode ? '#333' : '#eee');
+    buttonSkeleton.style('border-radius', '5px');
+
+    // Add skeleton elements to content
+    skeletonContent.child(swipeIndicator);
+    skeletonContent.child(titleSkeleton);
+    skeletonContent.child(inputSkeleton1);
+    skeletonContent.child(inputSkeleton2);
+    skeletonContent.child(buttonSkeleton);
+    skeletonModal.child(skeletonContent);
+
+    return skeletonModal;
+}
+
+// Add this CSS to your stylesheet or create a new style tag
+const skeletonStyles = `
+    @keyframes skeletonLoading {
+        0% {
+            opacity: 0.7;
+        }
+        50% {
+            opacity: 0.5;
+        }
+        100% {
+            opacity: 0.7;
+        }
+    }
+
+    .skeleton-animation {
+        animation: skeletonLoading 1.5s infinite;
+    }
+`;
+
 // Initialize audio properly
 function initAudio() {
     if (!audioContext) {
@@ -93,92 +195,109 @@ class Horn {
 
 function createModal() {
     if (showModal) {
-        const modal = createDiv('')
-        modal.style('background', 'rgba(0,0,0,0.8)')
-        modal.style('position', 'fixed')
-        modal.style('top', '0')
-        modal.style('left', '0')
-        modal.style('width', '100%')
-        modal.style('height', '100%')
-        modal.style('display', 'flex')
-        modal.style('justify-content', 'center')
-        modal.style('align-items', 'center')
-        modal.style('z-index', '1000')
-        modal.style('transition', 'transform 0.3s ease')
-        modal.id('modal')
-        modal.attribute('role', 'document')
-        modal.attribute('tabindex', '0')
-
-        const modalContent = createDiv('')
-        modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%);')
-        modalContent.style('padding', '20px')
-        modalContent.style('border-radius', '20px')
-        modalContent.style('text-align', 'center')
-        modalContent.style('width', '80%')
-        modalContent.style('max-width', '500px')
-        modalContent.style('position', 'relative')
-        modalContent.style('touch-action', 'none')
-        modalContent.style('transition', 'transform 0.5s ease')
-        modalContent.style('bottom', '0')
-        modalContent.style('transform', 'translateY(0)')
-        modalContent.id('modalContent')
-        modalContent.attribute('role', 'document')
-
-        const swipeIndicator = createDiv('')
-        swipeIndicator.style('width', '40px')
-        swipeIndicator.style('height', '4px')
-        swipeIndicator.style('background-color', 'rgb(205 205 205)')
-        swipeIndicator.style('border-radius', '2px')
-        swipeIndicator.style('margin', '0 auto 15px auto')
-
-        // Input untuk nama
-        const inputName = createInput('')
-        inputName.attribute('placeholder', 'Masukkan nama yang Ulang Tahun')
-        inputName.attribute('id', 'inputName')
-        inputName.attribute('aria-label', 'Nama yang Ulang Tahun')
-        inputName.attribute('name', 'name')
-        inputName.attribute('autocomplete', 'name')
-        inputName.attribute('required', 'true')
-        inputName.style('margin', '10px')
-        inputName.style('padding', '10px')
-        inputName.style('width', '80%')
-        inputName.style('border', '1px solid #ddd')
-        inputName.style('border-radius', '5px')
-        inputName.style('font-size', '16px')
-        inputName.attribute('autofocus', 'true') 
-
-        // Input untuk nomor WhatsApp
-        const inputPhone = createInput('')
-        inputPhone.attribute('placeholder', 'Masukkan nomor WA (+62)')
-        inputPhone.attribute('title', 'Masukkan nomor WA dengan kode negara +62');
-        inputPhone.attribute('id', 'inputPhone')
-        inputPhone.attribute('name', 'phone')
-        inputPhone.attribute('autocomplete', 'tel')
-        inputPhone.attribute('pattern', '\\+62[0-9]{9,}')
-        inputPhone.style('margin', '10px')
-        inputPhone.style('padding', '10px')
-        inputPhone.style('width', '80%')
-        inputPhone.style('border', '1px solid #ddd')
-        inputPhone.style('border-radius', '5px')
-        inputPhone.style('font-size', '16px')
-        inputPhone.attribute('autofocus', 'true') 
-
-        const button = createButton('OK')
-        button.style('margin', '10px')
-        button.style('padding', '10px 30px')
-        button.style('background-color', '#4CAF50')
-        button.attribute('accesskey','n')
-        button.attribute('type','submit')
-        button.attribute('role','button')
-        if (!isDragging) {
-            startButton.hide()
+        const existingSkeleton = select('.skeleton-modal');
+        if (existingSkeleton) {
+            existingSkeleton.remove();
         }
-        button.style('border', 'none')
-        button.style('border-radius', '5px')
-        button.style('cursor', 'pointer')
-        button.style('font-size', '16px')
 
-        button.mousePressed(() => submitName())
+        // Create and show skeleton first
+        const skeletonLoader = createSkeletonLoader();
+        
+        // Add skeleton styles
+        const styleElement = createElement('style');
+        styleElement.html(skeletonStyles);
+        document.head.appendChild(styleElement);
+        skeletonTimeout = setTimeout(() => {
+            isLoading = false;
+            skeletonLoader.remove();
+            const modal = createDiv('')
+            modal.style('background', 'rgba(0,0,0,0.8)')
+            modal.style('position', 'fixed')
+            modal.style('top', '0')
+            modal.style('left', '0')
+            modal.style('width', '100%')
+            modal.style('height', '100%')
+            modal.style('display', 'flex')
+            modal.style('justify-content', 'center')
+            modal.style('align-items', 'center')
+            modal.style('z-index', '1000')
+            modal.style('transition', 'transform 0.3s ease')
+            modal.id('modal')
+            modal.attribute('role', 'document')
+            modal.attribute('tabindex', '0')
+    
+            const modalContent = createDiv('')
+            modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%);')
+            modalContent.style('padding', '20px')
+            modalContent.style('border-radius', '20px')
+            modalContent.style('text-align', 'center')
+            modalContent.style('width', '80%')
+            modalContent.style('max-width', '500px')
+            modalContent.style('position', 'relative')
+            modalContent.style('touch-action', 'none')
+            modalContent.style('transition', 'transform 0.5s ease')
+            modalContent.style('bottom', '0')
+            modalContent.style('transform', 'translateY(0)')
+            modalContent.id('modalContent')
+            modalContent.attribute('role', 'document')
+    
+            const swipeIndicator = createDiv('')
+            swipeIndicator.style('width', '40px')
+            swipeIndicator.style('height', '4px')
+            swipeIndicator.style('background-color', 'rgb(205 205 205)')
+            swipeIndicator.style('border-radius', '2px')
+            swipeIndicator.style('margin', '0 auto 15px auto')
+    
+            // Input untuk nama
+            const inputName = createInput('')
+            inputName.attribute('placeholder', 'Masukkan nama yang Ulang Tahun')
+            inputName.attribute('id', 'inputName')
+            inputName.attribute('aria-label', 'Nama yang Ulang Tahun')
+            inputName.attribute('name', 'name')
+            inputName.attribute('autocomplete', 'name')
+            inputName.attribute('required', 'true')
+            inputName.style('margin', '10px')
+            inputName.style('padding', '10px')
+            inputName.style('width', '80%')
+            inputName.style('border', '1px solid #ddd')
+            inputName.style('border-radius', '5px')
+            inputName.style('font-size', '16px')
+            inputName.attribute('autofocus', 'true') 
+    
+            // Input untuk nomor WhatsApp
+            const inputPhone = createInput('')
+            inputPhone.attribute('placeholder', 'Masukkan nomor WA (+62)')
+            inputPhone.attribute('title', 'Masukkan nomor WA dengan kode negara +62');
+            inputPhone.attribute('id', 'inputPhone')
+            inputPhone.attribute('name', 'phone')
+            inputPhone.attribute('autocomplete', 'tel')
+            inputPhone.attribute('pattern', '\\+62[0-9]{9,}')
+            inputPhone.style('margin', '10px')
+            inputPhone.style('padding', '10px')
+            inputPhone.style('width', '80%')
+            inputPhone.style('border', '1px solid #ddd')
+            inputPhone.style('border-radius', '5px')
+            inputPhone.style('font-size', '16px')
+            inputPhone.attribute('autofocus', 'true') 
+    
+            const button = createButton('OK')
+            button.style('margin', '10px')
+            button.style('padding', '10px 30px')
+            button.style('background-color', '#4CAF50')
+            button.attribute('accesskey','n')
+            button.attribute('type','submit')
+            button.attribute('role','button')
+            if (!isDragging) {
+                startButton.hide()
+            }
+            button.style('border', 'none')
+            button.style('border-radius', '5px')
+            button.style('cursor', 'pointer')
+            button.style('font-size', '16px')
+    
+            button.mousePressed(() => submitName())
+            }, 800); // Adjust timeout as needed
+        }
 
         function submitName() {
             userName = inputName.value();
@@ -236,6 +355,17 @@ function createModal() {
             modalContent.style('transform', 'translateY(0)')
         }, 50)
     }
+}
+
+function cleanup() {
+    if (skeletonTimeout) {
+        clearTimeout(skeletonTimeout);
+    }
+    const existingSkeleton = select('.skeleton-modal');
+    if (existingSkeleton) {
+        existingSkeleton.remove();
+    }
+    // ... (rest of your existing cleanup code)
 }
 
 function handleTouchStart(event) {
@@ -361,6 +491,11 @@ function setup() {
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight)
+    const skeletonContent = select('.skeleton-content');
+    if (skeletonContent) {
+        skeletonContent.style('position', window.innerWidth <= 768 ? 'absolute' : 'relative');
+        skeletonContent.style('bottom', window.innerWidth <= 768 ? '10px' : '0');
+    }
     if (shareButton) {
         shareButton.style('left', '50%')
         shareButton.style('transform', 'translateX(-50%)')
