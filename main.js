@@ -296,8 +296,7 @@ function createModal() {
             button.style('font-size', '16px')
     
             button.mousePressed(() => submitName())
-            }, 800); // Adjust timeout as needed
-        }
+        }, 800); // Adjust timeout as needed
 
         function submitName() {
             userName = inputName.value();
