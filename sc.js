@@ -50,7 +50,6 @@ window.addEventListener("pagehide", (event) => {
     }
 });
 
-// Fungsi untuk menyimpan state sebelum cache
 function saveState() {
     sessionStorage.setItem("state", JSON.stringify({ 
         message: "Selamat Ulang Tahun!" 
