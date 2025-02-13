@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    if (!document.querySelector("#skip-link")) {
+    if (!document.querySelector("#modal")) {
         const skipLink = document.createElement("a");
         skipLink.href = "#main-content";
         skipLink.id = "skip-link";
@@ -53,8 +53,8 @@ document.addEventListener("DOMContentLoaded", () => {
         skipLink.style.position = "absolute";
         skipLink.style.top = "-40px";
         skipLink.style.left = "10px";
-        skipLink.style.background = "#000";
-        skipLink.style.color = "#fff";
+        skipLink.style.background = "#fff";
+        skipLink.style.color = "#000";
         skipLink.style.padding = "5px";
         skipLink.style.zIndex = "1000";
         skipLink.style.transition = "top 0.3s";
