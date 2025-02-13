@@ -199,6 +199,17 @@ async function generateHtml() {
       <meta name="twitter:image" content="https://4211421036.github.io/hbd/hbd.jpg">      
       <link rel="canonical" href="https://4211421036.github.io/hbd/">
       <link rel="manifest" href="manifest.webmanifest" crossorigin="use-credentials">
+      <meta name="twitter:site" content="@ITBGRU">
+      <meta name="twitter:creator" content="@ITBGRU">
+      <meta name="twitter:domain" content="4211421036.github.io">
+      <meta name="twitter:url" content="https://4211421036.github.io/MentalHealth">
+      <meta name="twitter:image:src" content="https://4211421036.github.io/g4lihru/987654567.png">
+      <meta name="twitter:image:alt" content="Mental Health">
+      <link rel="preload" href="https://4211421036.github.io/g4lihru/987654567.png" as="image" type="image/x-icon">
+      <link rel="shortcut icon" href="https://4211421036.github.io/g4lihru/987654567.png" type="image/x-icon">
+      <link rel="icon" href="https://4211421036.github.io/g4lihru/987654567.png" type="image/x-icon">
+      <link rel="preload" href="https://4211421036.github.io/MentalHealth/style.css" as="style">
+      <link rel="apple-touch-icon" href="https://4211421036.github.io/g4lihru/987654567.png">
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <title>Selamat Ulang Tahun!</title>
       <script type="application/ld+json" nonce="${nonce}">
