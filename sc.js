@@ -37,7 +37,6 @@ function generateInlineScriptHash(scriptContent) {
 }
 const bfcacheScript = `
 document.addEventListener("DOMContentLoaded", () => {
-    // Ensure BFCache support for faster page restoration
     window.addEventListener("pageshow", (event) => {
         if (event.persisted) {
             console.log("Restored from BFCache");
