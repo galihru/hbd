@@ -132,6 +132,7 @@ async function generateHtml() {
 
   const hashedJsFiles = jsFiles.map(file => {
     const originalPath = path.join(process.cwd(), file);
+    return generateHashedFileName(originalPath);
   });
 
   // CSP dengan strict-dynamic
