@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
         skipLink.style.background = "#fff";
         skipLink.style.color = "#000";
         skipLink.style.padding = "5px";
-        skipLink.style.zIndex = "1000";
+        skipLink.style.zIndex = "1004";
         skipLink.style.transition = "top 0.3s";
         skipLink.addEventListener("focus", () => {
             skipLink.style.top = "10px";
@@ -195,7 +195,7 @@ async function generateHtml() {
 
 
   let htmlContent = `<!DOCTYPE html>
-  <html lang="en">
+  <html lang="id" xml-lang="id">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
