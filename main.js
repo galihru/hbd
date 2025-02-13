@@ -195,7 +195,35 @@ class Horn {
         }
     }
 }
+// Function to update OG metadata dynamically
+function updateOGMetadata(name, wish) {
+    // Create or update OG meta tags
+    const metaTags = {
+        'og:title': `Selamat Ulang Tahun ${name} 🎉`,
+        'og:description': `Selamat Ulang Tahun ${name}! ${wish}`,
+        'og:image': 'https://4211421036.github.io/hbd/hbd.jpg', // Pastikan untuk menambahkan gambar OG yang sesuai
+        'og:url': window.location.href,
+        'og:type': 'website',
+        'twitter:card': 'summary_large_image',
+        'twitter:title': `Selamat Ulang Tahun ${name} 🎉`,
+        'twitter:description': `Selamat Ulang Tahun ${name}! ${wish}`,
+        'twitter:image': 'https://4211421036.github.io/hbd/hbd.jpg'
+    };
 
+    // Update or create meta tags
+    Object.entries(metaTags).forEach(([property, content]) => {
+        let metaTag = document.querySelector(`meta[property="${property}"]`);
+        if (!metaTag) {
+            metaTag = document.createElement('meta');
+            metaTag.setAttribute('property', property);
+            document.head.appendChild(metaTag);
+        }
+        metaTag.setAttribute('content', content);
+    });
+
+    // Update document title
+    document.title = `Selamat Ulang Tahun ${name} 🎉`;
+}
 function createModal() {
     if (showModal) {
         const existingSkeleton = select('.skeleton-modal');
@@ -343,11 +371,12 @@ function createModal() {
                   select(`#${idMap.modal}`).remove();
                   startButton.remove();
 
+                  const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+                  updateOGMetadata(userName, randomWish);
+                  
                   // Generate the shareable URL
                   const shareableUrl = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(userName)}`;
-                  
-                  // Update the sharing functionality
-                  window.shareableUrl = shareableUrl;
+                  window.shareableUrl = shareableUrl;  
                 
                   initAudio();
                   birthdayAudio.play().catch(error => {
@@ -450,9 +479,10 @@ function getUrlParams() {
 function initializeApp() {
     const params = getUrlParams();
     
-    // If we have a name parameter, skip the modal and start the animation
     if (params.name) {
         userName = decodeURIComponent(params.name);
+        const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+        updateOGMetadata(userName, randomWish);
         showModal = false;
         clicked = true;
         initAudio();
