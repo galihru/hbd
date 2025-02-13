@@ -44,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.classList.remove("loading");
         }
     });
-
     if (!document.querySelector("#modal")) {
         const skipLink = document.createElement("a");
         skipLink.href = "#modal";
