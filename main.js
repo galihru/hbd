@@ -342,7 +342,13 @@ function createModal() {
                   clicked = true;
                   select(`#${idMap.modal}`).remove();
                   startButton.remove();
+
+                  // Generate the shareable URL
+                  const shareableUrl = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(userName)}`;
                   
+                  // Update the sharing functionality
+                  window.shareableUrl = shareableUrl;
+                
                   initAudio();
                   birthdayAudio.play().catch(error => {
                       console.log('Audio playback failed:', error);
@@ -434,16 +440,40 @@ function createStartButton() {
     })
 }
 
+function getUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return {
+        name: urlParams.get('name'),
+    };
+}
+
+function initializeApp() {
+    const params = getUrlParams();
+    
+    // If we have a name parameter, skip the modal and start the animation
+    if (params.name) {
+        userName = decodeURIComponent(params.name);
+        showModal = false;
+        clicked = true;
+        initAudio();
+        birthdayAudio.play().catch(error => {
+            console.log('Audio playback failed:', error);
+        });
+        if (startButton) startButton.remove();
+        return true;
+    }
+    return false;
+}
+
 function shareToWhatsApp() {
     const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
     const message = `${randomWish}\nUcapkan selamat ulang tahun untuk ${userName}!`;
 
-    // Gambar yang ingin dibagikan (gunakan URL gambar yang sudah ada)
-    const imageURL = 'https://4211421036.github.io/hbd/'; // Ganti dengan URL gambar yang sesuai
-
-    // Membuat pesan WhatsApp dengan gambar
+   // Use the generated shareable URL instead of the static one
+    const shareableUrl = window.shareableUrl || `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(userName)}`;
+    
     const encodedMessage = encodeURIComponent(message);
-    const shareLink = `https://wa.me/${nomorWA}?text=${encodedMessage}%0A${encodeURIComponent(imageURL)}`;
+    const shareLink = `https://wa.me/${nomorWA}?text=${encodedMessage}%0A${encodeURIComponent(shareableUrl)}`;
 
     // Buka WhatsApp untuk berbagi pesan dan gambar
     window.open(shareLink, '_blank');
@@ -478,12 +508,17 @@ function createShareButton() {
 function setup() {
     createCanvas(windowWidth, windowHeight)
     rectMode(CENTER)
-    createStartButton()
-    createModal()
+  
+    const shouldSkipModal = initializeApp();
+    
+    if (!shouldSkipModal) {
+        createStartButton();
+        createModal();
+    }
 
-    horns.push(new Horn(50, 50, true))
-    horns.push(new Horn(width - 50, 50, false))
-
+    horns.push(new Horn(50, 50, true));
+    horns.push(new Horn(width - 50, 50, false));
+    
     createShareButton()
 }
 
