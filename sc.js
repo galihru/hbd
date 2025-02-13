@@ -22,7 +22,7 @@ function generateHashedFileName(filePath) {
 
   return newFileName;
 }
-// Function to generate consistent hashed IDs
+
 function generateHashedId(originalId) {
   const hash = crypto.createHash('sha256').update(originalId).digest('hex');
   return `id-${hash.substring(0, 8)}`;
@@ -292,8 +292,8 @@ async function generateHtml() {
       <link rel="preload" as="image" href="https://4211421036.github.io/hbd/hbd.jpg" type="image/jpg">
       <link rel="preload" as="image" href="https://4211421036.github.io/g4lihru/987654567.png" type="image/x-icon">
       <link rel="apple-touch-icon" href="https://4211421036.github.io/g4lihru/987654567.png">
-      <link rel="canonical" href="https://4211421036.github.io/hbd/">
       <link rel="manifest" href="manifest.webmanifest" crossorigin="use-credentials">
+      <link rel="canonical" href="https://4211421036.github.io/hbd/">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="application-name" content="HBD">
       <meta name="generator" content="HBD">
