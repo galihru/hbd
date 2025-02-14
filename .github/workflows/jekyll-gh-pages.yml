@@ -37,8 +37,10 @@ jobs:
         with:
           source: ./  # Root of the repository
           destination: ./_site  # Destination folder for the built site
-      - name: Add Customize Headers
+      - name: Add Custom Headers
         run: |
+          mkdir -p _site  # Pastikan direktori _site ada
+          chmod -R 777 _site  # Beri izin penuh ke direktori
           echo "/  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload" > _site/_headers
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
