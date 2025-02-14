@@ -374,6 +374,7 @@ async function generateHtml() {
       <meta http-equiv="Pragma" content="no-cache">
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <meta http-equiv="Expires" content="0">
+      <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
       <meta http-equiv="content-language" content="id">
       <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:site" content="@ITBGRU">
