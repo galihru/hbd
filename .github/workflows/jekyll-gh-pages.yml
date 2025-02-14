@@ -37,6 +37,9 @@ jobs:
           destination: ./_site
       - name: Change ownership of _site directory
         run: sudo chown -R $USER:$USER _site
+      - name: Add Custom Headers
+        run: |
+          echo "/  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload" > _site/_headers
       - name: Copy _headers file
         run: cp _headers _site/_headers
       - name: Upload artifact
