@@ -135,7 +135,6 @@ async function generateHtml() {
   const jsFiles = ['p5.js', 'main.min.js', 'firework.js'];
 
   // Update the JavaScript content with hashed IDs
-  const updatedMainJsContent = updateJsContent(mainJsContent, extractedIdMap);
   fs.writeFileSync(mainJsPath, updatedMainJsContent);
 
   // Create a script to inject the ID mapping
