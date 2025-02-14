@@ -307,8 +307,8 @@ async function generateHtml() {
       <link rel="canonical" href="https://4211421036.github.io/hbd/">
       <meta name="application-name" content="HBD">
       <meta name="description" content="Selamat Ulang Tahun!">
-      <meta name="generator" content="HBD">
       <meta name="bingbot" content="noarchive">
+      <meta name="generator" content="HBD">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="keywords" content="Selamat Ulang Tahun!">
       <meta name="author" content="GALIH RIDHO UTOMO">
