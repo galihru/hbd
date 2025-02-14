@@ -37,6 +37,8 @@ jobs:
         with:
           source: ./  # Root of the repository
           destination: ./_site  # Destination folder for the built site
+      - name: Fix permissions
+        run: sudo chmod -R 777 _site
       - name: Add Custom Headers
         run: |
           mkdir -p _site  # Pastikan direktori _site ada
