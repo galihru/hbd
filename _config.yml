@@ -1,0 +1,62 @@
+title: HBD
+description: HBD
+
+# Tambahkan ini supaya file `_headers` tidak diabaikan
+include:
+  - "_headers"
+
+plugins:
+  - jekyll-content-security-policy-generator
+
+# Konfigurasi untuk jekyll-content-security-policy-generator
+content_security_policy:
+  enabled: true
+  
+  # Konfigurasi CSP level "low"
+  directives:
+    default-src: 
+      - "'self'"
+      - "*"
+    script-src: 
+      - "'self'"
+      - "'unsafe-inline'"
+      - "'unsafe-eval'"
+      - "*"
+    style-src: 
+      - "'self'"
+      - "'unsafe-inline'"
+      - "*"
+    img-src: 
+      - "'self'"
+      - "data:"
+      - "blob:"
+      - "*"
+    font-src: 
+      - "'self'"
+      - "*"
+    connect-src: 
+      - "'self'"
+      - "*"
+    media-src: 
+      - "'self'"
+      - "*"
+    frame-src: 
+      - "'self'"
+      - "*"
+    worker-src:
+      - "'self'"
+      - "blob:"
+      - "*"
+    form-action:
+      - "'self'"
+      - "*"
+  
+  # Nonaktifkan pembuatan hash otomatis untuk level "low"
+  auto_hash: false
+
+# Tambahkan konfigurasi tambahan untuk header keamanan
+security_headers:
+  Cross-Origin-Opener-Policy: "same-origin-allow-popups"
+  Strict-Transport-Security: "max-age=86400"
+  X-Content-Type-Options: "nosniff"
+  Referrer-Policy: "no-referrer-when-downgrade"
