@@ -234,6 +234,12 @@ function createModal() {
         // Create and show skeleton first
         const skeletonLoader = createSkeletonLoader();
         
+        // Preload font terlebih dahulu jika digunakan
+        if (document.fonts) {
+            document.fonts.load('16px Arial');
+        }
+        
+        // Reduce timeout for skeleton
         skeletonTimeout = setTimeout(() => {
             isLoading = false;
             skeletonLoader.remove();
@@ -275,8 +281,13 @@ function createModal() {
             swipeIndicator.style('border-radius', '2px')
             swipeIndicator.style('margin', '0 auto 15px auto')
     
+            // Deteksi mode gelap untuk styling placeholder
+            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
             // Input untuk nama
             const inputName = createInput('')
+            // Custom placeholder warna yang sesuai dengan tema
+            const placeholderColor = isDarkMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)';
             inputName.attribute('placeholder', 'Masukkan nama yang Ulang Tahun')
             inputName.id(idMap.inputName);
             inputName.attribute('aria-label', 'Nama yang Ulang Tahun')
@@ -289,7 +300,17 @@ function createModal() {
             inputName.style('border', '1px solid #ddd')
             inputName.style('border-radius', '5px')
             inputName.style('font-size', '16px')
-            inputName.attribute('autofocus', 'true') 
+            // Hapus autofocus dari sini
+            
+            // Set placeholder color menggunakan stylesheet
+            let style = document.createElement('style');
+            style.innerHTML = `
+                #${idMap.inputName}::placeholder, #${idMap.inputPhone}::placeholder {
+                    color: ${placeholderColor};
+                    opacity: 1;
+                }
+            `;
+            document.head.appendChild(style);
     
             // Input untuk nomor WhatsApp
             const inputPhone = createInput('')
@@ -305,7 +326,8 @@ function createModal() {
             inputPhone.style('border', '1px solid #ddd')
             inputPhone.style('border-radius', '5px')
             inputPhone.style('font-size', '16px')
-            inputPhone.attribute('autofocus', 'true') 
+            // Autofocus hanya pada elemen pertama
+            inputName.attribute('autofocus', 'true')
     
             const button = createButton('OK')
             button.style('margin', '10px')
@@ -331,7 +353,7 @@ function createModal() {
             modal.child(modalContent)
             
             let modalContentElem = select(`#${idMap.modalContent}`).elt;
-            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
             modalContentElem.addEventListener('touchstart', handleTouchStart, false)
             modalContentElem.addEventListener('touchmove', handleTouchMove, false)
             modalContentElem.addEventListener('touchend', handleTouchEnd, false)
@@ -342,25 +364,39 @@ function createModal() {
             } else {
                 swipeIndicator.style('display', 'none');
             }
+            
+            // Update styles for dark/light mode
             if (isDarkMode) {
                 modal.style('background', 'rgba(0,0,0,0.8)');
                 modalContent.style('backgroundColor', '#1e1e1e');
                 modalContent.style('color', '#ffffff');
                 swipeIndicator.style('backgroundColor', '#333');
                 button.style('background', 'rgb(52 127 56)')
+                inputName.style('background', '#2c2c2c')
+                inputName.style('color', '#ffffff')
+                inputName.style('border', '1px solid #444')
+                inputPhone.style('background', '#2c2c2c')
+                inputPhone.style('color', '#ffffff')
+                inputPhone.style('border', '1px solid #444')
             } else {
                 modal.style('background', 'rgba(255, 246, 246, 0.8)');
                 modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%)');
                 modalContent.style('color', '#000000');
                 button.style('background', 'rgb(115 235 121)')
                 swipeIndicator.style('backgroundColor', 'rgb(205 205 205)');
+                inputName.style('background', '#ffffff')
+                inputName.style('color', '#000000')
+                inputPhone.style('background', '#ffffff')
+                inputPhone.style('color', '#000000')
             }
+            
             // Menambahkan efek setelah modal dibuat
             setTimeout(() => {
                 modal.style('opacity', '1')  // Fade-in efek
                 modalContent.style('opacity', '1')  // Fade-in efek
                 modalContent.style('transform', 'translateY(0)')
             }, 50)
+            
             function submitName() {
               userName = inputName.value();
               nomorWA = inputPhone.value();
