@@ -37,7 +37,7 @@ jobs:
         with:
           source: ./  # Root of the repository
           destination: ./_site  # Destination folder for the built site
-      - name: Add Custom Headers
+      - name: Add Customize Headers
         run: |
           echo "/  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload" > _site/_headers
       - name: Upload artifact
