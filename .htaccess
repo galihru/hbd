@@ -3,7 +3,7 @@ RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 ExpiresActive On
 ExpiresByType image/gif A2592000
-ExpiresDefault "modification plus 1 day"
+ExpiresDefault "modification plus 2 day"
 <Files index.html>
 Header append Cache-Control "public, must-revalidate"
 </Files>
