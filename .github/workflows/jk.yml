@@ -35,6 +35,9 @@ jobs:
       - name: Debug Gem Files
         run: ls -R $(bundle show jekyll-content-security-policy-generator)
 
+      - name: Generate Content Security Policy
+        run: ruby -r jekyll-content-security-policy-generator -e 'puts "Gem Loaded Successfully"'
+
       - name: Build Jekyll site
         run: JEKYLL_ENV=production bundle exec jekyll build
         
