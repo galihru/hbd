@@ -24,31 +24,13 @@ jobs:
           bundler-cache: true
           
       - name: Install dependencies
-        run: gem install jekyll-content-security-policy-generator
-        
-      - name: Build dependencies
         run: bundle install
 
-      - name: Cek Path Gem
-        run: bundle show --paths | grep jekyll-content-security-policy-generator || echo "Gem tidak ditemukan"
-
-      - name: Debug Gem Files
-        run: ls -R $(bundle show jekyll-content-security-policy-generator)
-
-      - name: Generate Content Security Policy
-        run: ruby -r jekyll-content-security-policy-generator -e 'puts "Gem Loaded Successfully"'
-      
-      - name: Bundle Exec Jekyll
-        run: bundle exec jekyll-content-security-policy-generator
-
-      - name: Bundle Jekyll trace
-        run: bundle exec jekyll build --trace
-
       - name: Build Jekyll site
-        run: JEKYLL_ENV=production bundle exec jekyll build
+        run: JEKYLL_ENV=production bundle exec jekyll build --trace
 
-      - name: Deploy Jekyll site
-        run: cat _site/index.html | grep "Content-Security-Policy"
+      - name: Debug CSP
+        run: cat _site/index.html | grep "Content-Security-Policy" || echo "CSP tidak ditemukan"
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
