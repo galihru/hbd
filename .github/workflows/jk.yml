@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/upload-artifact@v4
 
       - name: Install Ruby and Jekyll
         run: |
