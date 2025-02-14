@@ -12,7 +12,7 @@ export default {
     }
 
     const url = new URL(request.url);
-    const githubBaseUrl = 'https://4211421036.github.io/MentalHealth/';
+    const githubBaseUrl = 'https://4211421036.github.io/hbd/';
     
     // Pastikan path tidak dimanipulasi agar menghindari SSRF
     if (!url.pathname.startsWith('/')) {
