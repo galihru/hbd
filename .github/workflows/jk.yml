@@ -30,7 +30,7 @@ jobs:
         run: bundle install
 
       - name: Generate Content Security Policy
-        run: bundle exec jekyll-content-security-policy-generator
+        run: jekyll-content-security-policy-generator
 
       - name: Build Jekyll site
         run: JEKYLL_ENV=production bundle exec jekyll build
