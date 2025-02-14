@@ -14,9 +14,13 @@ let startY = 0
 let currentY = 0
 
 function generateNonce() {
-  return crypto.randomBytes(16).toString('base64');
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let nonce = '';
+    for (let i = 0; i <16; i++) {
+        nonce += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return nonce;
 }
-
 // Create a consistent ID mapping function
 const generateHashedId = (originalId) => {
   const encoder = new TextEncoder();
