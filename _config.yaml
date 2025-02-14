@@ -4,3 +4,5 @@ description: HBD
 # Tambahkan ini supaya file `_headers` tidak diabaikan
 include:
   - "_headers"
+plugins:
+  - jekyll-content-security-policy-generator
