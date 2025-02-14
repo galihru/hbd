@@ -372,8 +372,8 @@ async function generateHtml() {
       <meta name="mobile-web-app-capable" content="yes">
       <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
       <meta http-equiv="Pragma" content="no-cache">
-      <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+      <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <meta http-equiv="Expires" content="0">
       <meta http-equiv="content-language" content="id">
       <meta name="twitter:card" content="summary_large_image">
