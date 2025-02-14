@@ -1,5 +1,5 @@
 source "https://rubygems.org"
-ruby "3.1.6" # Sesuaikan ke versi yang tersedia di GitHub Actions
+ruby "3.1.6"
 gem "jekyll", "~> 4.3"
 
 # Plugins
