@@ -1,38 +1,35 @@
 name: Deploy GitHub Pages
-
 on:
   push:
     branches:
       - main
-
 permissions:
   contents: write
   pages: write
   id-token: write
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+        
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1 # Sesuaikan dengan versi di Gemfile
           bundler-cache: true
-
+          
       - name: Install dependencies
         run: bundle install
-
+        
       - name: Build Jekyll site
         run: JEKYLL_ENV=production bundle exec jekyll build
-
+        
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3 # Perbarui ke v3
         with:
           path: ./_site
-
+          
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v2
