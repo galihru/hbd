@@ -234,12 +234,6 @@ function createModal() {
         // Create and show skeleton first
         const skeletonLoader = createSkeletonLoader();
         
-        // Preload font terlebih dahulu jika digunakan
-        if (document.fonts) {
-            document.fonts.load('16px Arial');
-        }
-        
-        // Reduce timeout for skeleton
         skeletonTimeout = setTimeout(() => {
             isLoading = false;
             skeletonLoader.remove();
@@ -281,52 +275,66 @@ function createModal() {
             swipeIndicator.style('border-radius', '2px')
             swipeIndicator.style('margin', '0 auto 15px auto')
     
-            // Deteksi mode gelap untuk styling placeholder
+            // Deteksi mode gelap
             const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
             
-            // Input untuk nama
+            // Input untuk nama dengan label sebagai pengganti placeholder
+            const nameLabel = createDiv('')
+            nameLabel.html('Nama yang Ulang Tahun')
+            nameLabel.style('margin-top', '10px')
+            nameLabel.style('font-size', '14px')
+            nameLabel.style('text-align', 'left')
+            nameLabel.style('margin-left', '10%')
+            nameLabel.style('margin-bottom', '5px')
+            
             const inputName = createInput('')
-            // Custom placeholder warna yang sesuai dengan tema
-            const placeholderColor = isDarkMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)';
-            inputName.attribute('placeholder', 'Masukkan nama yang Ulang Tahun')
             inputName.id(idMap.inputName);
             inputName.attribute('aria-label', 'Nama yang Ulang Tahun')
             inputName.attribute('name', 'name')
             inputName.attribute('autocomplete', 'name')
             inputName.attribute('required', 'true')
-            inputName.style('margin', '10px')
+            inputName.style('margin', '0 10px 10px 10px')
             inputName.style('padding', '10px')
             inputName.style('width', '80%')
             inputName.style('border', '1px solid #ddd')
             inputName.style('border-radius', '5px')
             inputName.style('font-size', '16px')
-            // Hapus autofocus dari sini
             
-            // Set placeholder color menggunakan stylesheet
-            let style = document.createElement('style');
-            style.innerHTML = `
-                #${idMap.inputName}::placeholder, #${idMap.inputPhone}::placeholder {
-                    color: ${placeholderColor};
-                    opacity: 1;
-                }
-            `;
-            document.head.appendChild(style);
-    
-            // Input untuk nomor WhatsApp
+            // Input label untuk nomor WhatsApp
+            const phoneLabel = createDiv('')
+            phoneLabel.html('Nomor WA (dimulai dengan 62)')
+            phoneLabel.style('margin-top', '10px')
+            phoneLabel.style('font-size', '14px')
+            phoneLabel.style('text-align', 'left')
+            phoneLabel.style('margin-left', '10%')
+            phoneLabel.style('margin-bottom', '5px')
+            
             const inputPhone = createInput('')
-            inputPhone.attribute('placeholder', 'Masukkan nomor WA (+62)')
-            inputPhone.attribute('title', 'Masukkan nomor WA dengan kode negara +62');
             inputPhone.id(idMap.inputPhone);
             inputPhone.attribute('name', 'phone')
             inputPhone.attribute('autocomplete', 'tel')
             inputPhone.attribute('pattern', '\\+62[0-9]{9,}')
-            inputPhone.style('margin', '10px')
+            inputPhone.style('margin', '0 10px 10px 10px')
             inputPhone.style('padding', '10px')
             inputPhone.style('width', '80%')
             inputPhone.style('border', '1px solid #ddd')
             inputPhone.style('border-radius', '5px')
             inputPhone.style('font-size', '16px')
-            // Autofocus hanya pada elemen pertama
+            
+            // Tambahkan placeholder setelah fokus pertama
+            inputName.elt.addEventListener('focus', function() {
+                if (!this.placeholder) {
+                    this.placeholder = 'Masukkan nama yang Ulang Tahun';
+                }
+            });
+            
+            inputPhone.elt.addEventListener('focus', function() {
+                if (!this.placeholder) {
+                    this.placeholder = 'Masukkan nomor WA (+62)';
+                }
+            });
+            
+            // Autofocus pada elemen pertama
             inputName.attribute('autofocus', 'true')
     
             const button = createButton('OK')
@@ -347,7 +355,9 @@ function createModal() {
             button.mousePressed(() => submitName())
             modalContent.child(swipeIndicator)
             modalContent.child(createP('Siapa yang ulang tahun?').attribute('role', 'text'))
+            modalContent.child(nameLabel)
             modalContent.child(inputName)
+            modalContent.child(phoneLabel)
             modalContent.child(inputPhone)
             modalContent.child(button)
             modal.child(modalContent)
@@ -370,6 +380,8 @@ function createModal() {
                 modal.style('background', 'rgba(0,0,0,0.8)');
                 modalContent.style('backgroundColor', '#1e1e1e');
                 modalContent.style('color', '#ffffff');
+                nameLabel.style('color', '#ffffff');
+                phoneLabel.style('color', '#ffffff');
                 swipeIndicator.style('backgroundColor', '#333');
                 button.style('background', 'rgb(52 127 56)')
                 inputName.style('background', '#2c2c2c')
@@ -378,16 +390,38 @@ function createModal() {
                 inputPhone.style('background', '#2c2c2c')
                 inputPhone.style('color', '#ffffff')
                 inputPhone.style('border', '1px solid #444')
+                
+                // Add placeholder style but keep it empty initially
+                let style = document.createElement('style');
+                style.innerHTML = `
+                    #${idMap.inputName}::placeholder, #${idMap.inputPhone}::placeholder {
+                        color: rgba(255,255,255,0.6);
+                        opacity: 1;
+                    }
+                `;
+                document.head.appendChild(style);
             } else {
                 modal.style('background', 'rgba(255, 246, 246, 0.8)');
                 modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%)');
                 modalContent.style('color', '#000000');
+                nameLabel.style('color', '#000000');
+                phoneLabel.style('color', '#000000');
                 button.style('background', 'rgb(115 235 121)')
                 swipeIndicator.style('backgroundColor', 'rgb(205 205 205)');
                 inputName.style('background', '#ffffff')
                 inputName.style('color', '#000000')
                 inputPhone.style('background', '#ffffff')
                 inputPhone.style('color', '#000000')
+                
+                // Add placeholder style but keep it empty initially
+                let style = document.createElement('style');
+                style.innerHTML = `
+                    #${idMap.inputName}::placeholder, #${idMap.inputPhone}::placeholder {
+                        color: rgba(0,0,0,0.6);
+                        opacity: 1;
+                    }
+                `;
+                document.head.appendChild(style);
             }
             
             // Menambahkan efek setelah modal dibuat
@@ -422,7 +456,7 @@ function createModal() {
                   alert("Pastikan nomor WA dimulai dengan 62.");
               }
           }
-        }, 800); // Adjust timeout as needed
+        }, 500); // Reduced timeout for faster appearance
     }
 }
 
