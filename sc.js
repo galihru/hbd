@@ -147,6 +147,22 @@ async function generateHtml() {
   const p5MinJsPath = path.join(process.cwd(), 'p5.min.js');
   fs.writeFileSync(p5MinJsPath, minifiedP5Js.code);
 
+  const ccJsPath = path.join(process.cwd(), ' 126693cc.js');
+  const ccJsContent = fs.readFileSync(p5JsPath, 'utf8');
+
+  // Minify p5.js 126693cc.js
+  const minifiedccJs = await minifyJs(ccJsContent, {
+    compress: true,
+    mangle: true,
+    format: { comments: false },
+  });
+  if (minifiedccJs.error) throw new Error(`Gagal minify p5.js: ${minifiedccJs.error}`);
+
+  // Tulis ke p5.min.js
+  const ccMinJsPath = path.join(process.cwd(), ' 126693cc.js');
+  fs.writeFileSync(ccMinJsPath, minifiedccJs.code);
+
+
   // Daftar file JS yang sudah termasuk main.min.js
   const jsFiles = ['p5.min.js', 'main.min.js', 'firework.js'];
 
