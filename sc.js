@@ -497,6 +497,10 @@ async function generateHtml() {
         content-visibility: auto;
         font-display: swap;
       }
+      input#placeholder::-webkit-input-placeholder {
+          display: block;
+          color: transparent;
+      }
 
       input[type="text" i]:focus::placeholder {
         opacity: 0.7;
