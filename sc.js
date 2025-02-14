@@ -491,14 +491,14 @@ async function generateHtml() {
         // Di dalam bagian style
       input[type="text" i]::placeholder {
         color: var(--placeholder);
-        opacity: 1;
+        opacity: 0.1;
         transition: opacity var(--transition-speed) ease;
         contain: style layout;
         content-visibility: auto;
         font-display: swap;
       }
       input#placeholder::-webkit-input-placeholder {
-          display: block;
+          display: none!important;
           color: transparent;
       }
 
