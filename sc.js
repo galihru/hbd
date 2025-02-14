@@ -373,6 +373,9 @@ async function generateHtml() {
       <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
       <meta http-equiv="Pragma" content="no-cache">
       <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+      <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload">
+      <meta http-equiv="X-Content-Type-Options" content="nosniff">
+      <meta http-equiv="Referrer-Policy" content="strict-origin">
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <meta http-equiv="Expires" content="0">
       <meta http-equiv="content-language" content="id">
