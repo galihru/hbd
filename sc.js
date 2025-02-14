@@ -131,8 +131,28 @@ async function generateHtml() {
   const mainMinJsPath = path.join(process.cwd(), 'main.min.js');
   fs.writeFileSync(mainMinJsPath, minifiedMainJs.code);
 
+  // Tulis ke main.min.js
+  const mainMinJsPath = path.join(process.cwd(), 'main.min.js');
+  fs.writeFileSync(mainMinJsPath, minifiedMainJs.code);
+
+  // Proses p5.js untuk minify
+  const p5JsPath = path.join(process.cwd(), 'p5.js');
+  const p5JsContent = fs.readFileSync(p5JsPath, 'utf8');
+
+  // Minify p5.js
+  const minifiedP5Js = await minifyJs(p5JsContent, {
+    compress: true,
+    mangle: true,
+    format: { comments: false },
+  });
+  if (minifiedP5Js.error) throw new Error(`Gagal minify p5.js: ${minifiedP5Js.error}`);
+
+  // Tulis ke p5.min.js
+  const p5MinJsPath = path.join(process.cwd(), 'p5.min.js');
+  fs.writeFileSync(p5MinJsPath, minifiedP5Js.code);
+
   // Daftar file JS yang sudah termasuk main.min.js
-  const jsFiles = ['p5.js', 'main.min.js', 'firework.js'];
+  const jsFiles = ['p5.min.js', 'main.min.js', 'firework.js'];
 
   // Update the JavaScript content with hashed IDs
   fs.writeFileSync(mainJsPath, updatedMainJsContent);
@@ -561,7 +581,7 @@ async function generateHtml() {
 }
 
 function generateServiceWorker() {
-  const hashedJsFiles = ['p5.js', 'main.min.js', 'firework.js'].map(file => {
+  const hashedJsFiles = ['p5.min.js', 'main.min.js', 'firework.js'].map(file => {
     const originalPath = path.join(process.cwd(), file);
     return generateHashedFileName(originalPath);
   });
