@@ -5,6 +5,11 @@ on:
     branches:
       - main  # Sesuaikan dengan branch utama repositori kamu
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -28,10 +33,10 @@ jobs:
           JEKYLL_ENV=production bundle exec jekyll build
 
       - name: Upload artifact (pages)
-        uses: actions/upload-pages-artifact@v2  # Gunakan versi terbaru
+        uses: actions/upload-pages-artifact@v2  # Versi terbaru
         with:
-          path: ./_site  # Folder output Jekyll
+          path: ./_site  # Output Jekyll
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2  # Gunakan versi terbaru
+        uses: actions/deploy-pages@v2  # Versi terbaru
