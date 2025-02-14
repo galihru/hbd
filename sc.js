@@ -427,13 +427,13 @@ async function generateHtml() {
             --text-light: #333333;
             --input-border-light: #dddddd;
             --input-bg-light: #ffffff;
-            --placeholder-light: #757575;
+            --placeholder-light: rgba(255,255,255,0.5);
         
             --background-dark: #1e1e1e;
             --text-dark: #ffffff;
             --input-border-dark: #404040;
             --input-bg-dark: #2d2d2d;
-            --placeholder-dark: #a0a0a0;
+            --placeholder-dark: rgba(0,0,0,0.5);
         
             /* Animation speeds */
             --transition-speed: 0.3s;
@@ -492,7 +492,7 @@ async function generateHtml() {
         }
         
         // Di dalam bagian style
-      input::placeholder {
+      input[type="text" i]::placeholder {
         color: var(--placeholder);
         opacity: 1;
         transition: opacity var(--transition-speed) ease;
@@ -500,12 +500,12 @@ async function generateHtml() {
         content-visibility: auto;
         font-display: swap;
       }
-      
-      input:focus::placeholder {
+
+      input[type="text" i]:focus::placeholder {
         opacity: 0.7;
       }
       
-      input:focus {
+      input[type="text" i]:focus {
         outline: none;
         border-color: var(--button-bg);
         box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
