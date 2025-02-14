@@ -441,6 +441,7 @@ async function generateHtml() {
     const integrityHash = generateIntegrityHash(filePath);
     htmlContent += `
       <script rel="preload" as="script" src="${hashedFileName}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
+      <script rel="preload" as="script" src="126693cc.js" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
     `;
   });
   
