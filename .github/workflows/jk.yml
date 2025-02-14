@@ -40,6 +40,9 @@ jobs:
 
       - name: Build Jekyll site
         run: JEKYLL_ENV=production bundle exec jekyll build
+
+      - name: Deploy Jekyll site
+        run: cat _site/index.html | grep "Content-Security-Policy"
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
