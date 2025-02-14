@@ -512,7 +512,7 @@ function shareToWhatsApp() {
 
 function createShareButton() {
     shareButton = createButton('Download & Share to WhatsApp 📱');
-    shareButton.style('padding', '10px 20px');
+    shareButton.style('padding', '20px 10px');
     shareButton.style('background', 'rgb(12 77 36 / 50%)');
     shareButton.style('color', 'white');
     shareButton.style('border', 'none');
