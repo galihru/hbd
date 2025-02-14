@@ -1,0 +1,14 @@
+name = "hbd"
+main = "worker.js"
+compatibility_date = "2024-02-13"
+
+# Exclude files yang tidak perlu
+exclude_files = [
+  ".git*",
+  "*.md",
+  "node_modules/**",
+  "*.toml"
+]
+
+[env.production]
+routes = ["4211421036.github.io/hbd/*"]
