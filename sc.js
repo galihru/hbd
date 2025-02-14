@@ -134,11 +134,6 @@ async function generateHtml() {
   // Daftar file JS yang sudah termasuk main.min.js
   const jsFiles = ['p5.js', 'main.min.js', 'firework.js'];
 
-  // Read and process main.js to extract IDs
-  const mainJsPath = path.join(process.cwd(), 'main.js');
-  const mainJsContent = fs.readFileSync(mainJsPath, 'utf8');
-  const extractedIdMap = extractAndHashIds(mainJsContent);
-
   // Update the JavaScript content with hashed IDs
   const updatedMainJsContent = updateJsContent(mainJsContent, extractedIdMap);
   fs.writeFileSync(mainJsPath, updatedMainJsContent);
