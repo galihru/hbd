@@ -366,7 +366,6 @@ async function generateHtml() {
       <meta prefix="og: http://ogp.me/ns#" property="og:audio" content="https://4211421036.github.io/hbd/hbd.mp3">
       <meta prefix="og: http://ogp.me/ns#" property="og:audio:type" content="audio/mpeg">
       <meta name="google-site-verification" content="OYdjPwgIjGMAbQd3CGwM_l20jLNRRp84mEl3kw06DMg" />
-      <meta name="twitter:card" content="summary_large_image">
       <meta name="browsermode" content="no-sensors">
       <meta name="renderer" content="webkit|ie-comp|ie-stand">
       <meta name="mobile-web-app-capable" content="yes">
@@ -376,6 +375,7 @@ async function generateHtml() {
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
       <meta http-equiv="Expires" content="0">
       <meta http-equiv="content-language" content="id">
+      <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:site" content="@ITBGRU">
       <meta name="twitter:creator" content="@ITBGRU">
       <meta name="twitter:title" content="Selamat Ulang Tahun">
