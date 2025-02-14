@@ -11,8 +11,8 @@ plugins:
 # Konfigurasi untuk jekyll-content-security-policy-generator
 content_security_policy:
   enabled: true
+  mode: enforce
   
-  # Konfigurasi CSP level "low"
   directives:
     default-src: 
       - "'self'"
@@ -29,7 +29,6 @@ content_security_policy:
     img-src: 
       - "'self'"
       - "data:"
-      - "blob:"
       - "*"
     font-src: 
       - "'self'"
@@ -43,16 +42,9 @@ content_security_policy:
     frame-src: 
       - "'self'"
       - "*"
-    worker-src:
-      - "'self'"
-      - "blob:"
-      - "*"
-    form-action:
-      - "'self'"
-      - "*"
-  
-  # Nonaktifkan pembuatan hash otomatis untuk level "low"
-  auto_hash: false
+    
+  auto_nonce: true
+  auto_hash: true
 
 # Tambahkan konfigurasi tambahan untuk header keamanan
 security_headers:
