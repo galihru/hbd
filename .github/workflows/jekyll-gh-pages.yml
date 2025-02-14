@@ -35,9 +35,10 @@ jobs:
         with:
           source: ./
           destination: ./_site
+      - name: Change ownership of _site directory
+        run: sudo chown -R $USER:$USER _site
       - name: Copy _headers file
-        run: |
-          cp _headers _site/_headers
+        run: cp _headers _site/_headers
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
