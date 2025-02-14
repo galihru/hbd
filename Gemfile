@@ -1,4 +1,5 @@
 source "https://rubygems.org"
+ruby "3.1.0" # Sesuaikan dengan versi yang Anda inginkan
 
 gem "jekyll", "~> 4.3" # Sesuaikan versi Jekyll yang Anda gunakan
 gem "jekyll-content-security-policy-generator"
