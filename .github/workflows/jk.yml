@@ -37,6 +37,12 @@ jobs:
 
       - name: Generate Content Security Policy
         run: ruby -r jekyll-content-security-policy-generator -e 'puts "Gem Loaded Successfully"'
+      
+      - name: Bundle Exec
+        run: bundle exec jekyll-content-security-policy-generator
+
+      - name: Bundle Jekyll trace
+        run: bundle exec jekyll build --trace
 
       - name: Build Jekyll site
         run: JEKYLL_ENV=production bundle exec jekyll build
