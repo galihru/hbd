@@ -3,22 +3,23 @@ name: Deploy GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main  # Sesuaikan dengan branch utama repositori kamu
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
-        uses: actions/upload-artifact@v4
+        uses: actions/checkout@v4
 
-      - name: Install Ruby and Jekyll
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ruby-full build-essential
-          gem install bundler jekyll
+      - name: Setup Ruby (untuk Jekyll)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true
 
-      - name: Install dependencies
+      - name: Install Jekyll dependencies
         run: |
           bundle install
 
@@ -26,10 +27,11 @@ jobs:
         run: |
           JEKYLL_ENV=production bundle exec jekyll build
 
-      - name: Deploy to GitHub Pages
-        uses: actions/upload-pages-artifact@v1
+      - name: Upload artifact (pages)
+        uses: actions/upload-pages-artifact@v2  # Gunakan versi terbaru
         with:
-          path: ./_site
+          path: ./_site  # Folder output Jekyll
 
-      - name: Deploy
-        uses: actions/deploy-pages@v1
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2  # Gunakan versi terbaru
