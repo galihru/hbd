@@ -37,13 +37,17 @@ jobs:
         with:
           source: ./  # Root of the repository
           destination: ./_site  # Destination folder for the built site
+      - name: Set working directory permissions
+        run: |
+          chmod -R u+w $GITHUB_WORKSPACE
       - name: Fix permissions
-        run: sudo chmod -R 777 _site
+        run: |
+          chmod -R u+w _site || true
       - name: Add Custom Headers
         run: |
-          mkdir -p _site  # Pastikan direktori _site ada
-          chmod -R 777 _site  # Beri izin penuh ke direktori
-          echo "/  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload" > _site/_headers
+          rm -rf _site  # Hapus folder agar tidak ada permission issue
+          mkdir -p _site  # Buat ulang dengan izin yang benar
+          chmod -R u+w _site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
