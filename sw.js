@@ -8,7 +8,7 @@
       '/512x512.png',
       '/sw.js',
       // Dynamically add each hashed JS file to the cache list
-      '/99a5361b.js',
+      '/533210da.js',
 '/e85802e3.js',
 '/58fcdf02.js'
   ];
