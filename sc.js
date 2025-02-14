@@ -359,8 +359,8 @@ async function generateHtml() {
       <meta prefix="og: http://ogp.me/ns#" property="og:image" content="https://4211421036.github.io/hbd/hbd.jpg">
       <meta prefix="og: http://ogp.me/ns#" property="og:image:secure_url" content="https://4211421036.github.io/hbd/hbd.jpg">
       <meta prefix="og: http://ogp.me/ns#" property="og:image:type" content="image/jpeg">
-      <meta prefix="og: http://ogp.me/ns#" property="og:image:height" content="1280">
       <meta prefix="og: http://ogp.me/ns#" property="og:image:width" content="1280">
+      <meta prefix="og: http://ogp.me/ns#" property="og:image:height" content="1280">
       <meta prefix="og: http://ogp.me/ns#" property="og:image:alt" content="Selamat Ulang Tahun">
       <meta prefix="og: http://ogp.me/ns#" property="og:audio:secure_url" content="https://4211421036.github.io/hbd/hbd.mp3">
       <meta prefix="og: http://ogp.me/ns#" property="og:audio" content="https://4211421036.github.io/hbd/hbd.mp3">
