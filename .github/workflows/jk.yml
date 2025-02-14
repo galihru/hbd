@@ -29,8 +29,11 @@ jobs:
       - name: Build dependencies
         run: bundle install
 
+      - name: Cek Path Gem
+        run: bundle show --paths | grep jekyll-content-security-policy-generator || echo "Gem tidak ditemukan"
+
       - name: Generate Content Security Policy
-        run: jekyll-content-security-policy-generator
+        run: $(bundle show jekyll-content-security-policy-generator)/bin/jekyll-content-security-policy-generator
 
       - name: Build Jekyll site
         run: JEKYLL_ENV=production bundle exec jekyll build
