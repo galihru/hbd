@@ -131,10 +131,6 @@ async function generateHtml() {
   const mainMinJsPath = path.join(process.cwd(), 'main.min.js');
   fs.writeFileSync(mainMinJsPath, minifiedMainJs.code);
 
-  // Tulis ke main.min.js
-  const mainMinJsPath = path.join(process.cwd(), 'main.min.js');
-  fs.writeFileSync(mainMinJsPath, minifiedMainJs.code);
-
   // Proses p5.js untuk minify
   const p5JsPath = path.join(process.cwd(), 'p5.js');
   const p5JsContent = fs.readFileSync(p5JsPath, 'utf8');
