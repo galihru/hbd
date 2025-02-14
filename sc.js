@@ -328,8 +328,8 @@ async function generateHtml() {
       <meta prefix="og: http://ogp.me/ns#" property="og:image:width" content="1280">
       <meta prefix="og: http://ogp.me/ns#" property="og:image:height" content="1280">
       <meta prefix="og: http://ogp.me/ns#" property="og:image:alt" content="Selamat Ulang Tahun">
-      <meta prefix="og: http://ogp.me/ns#" property="og:audio" content="https://4211421036.github.io/hbd/hbd.mp3">
       <meta prefix="og: http://ogp.me/ns#" property="og:audio:secure_url" content="https://4211421036.github.io/hbd/hbd.mp3">
+      <meta prefix="og: http://ogp.me/ns#" property="og:audio" content="https://4211421036.github.io/hbd/hbd.mp3">
       <meta prefix="og: http://ogp.me/ns#" property="og:audio:type" content="audio/mpeg">
       <meta name="google-site-verification" content="OYdjPwgIjGMAbQd3CGwM_l20jLNRRp84mEl3kw06DMg" />
       <meta name="twitter:card" content="summary_large_image">
@@ -438,8 +438,6 @@ async function generateHtml() {
             /* Animation speeds */
             --transition-speed: 0.3s;
         }
-        
-        /* Theme Switching */
         @media (prefers-color-scheme: dark) {
             :root {
                 color-scheme: dark;
@@ -461,7 +459,6 @@ async function generateHtml() {
                 --placeholder: var(--placeholder-light);
             }
         }
-        
         body {
             margin: 0;
             overflow: hidden;
