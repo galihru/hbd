@@ -7,18 +7,6 @@ function generateNonce() {
   return crypto.randomBytes(16).toString('base64');
 }
 
-function addNonceToHtml(htmlContent, nonce) {
-  // Regex untuk mendeteksi <style> dan <script> tanpa nonce
-  const styleRegex = /<style(?![^>]*\snonce\s*=\s*['"][^'"]*['"])/gi;
-  const scriptRegex = /<script(?![^>]*\snonce\s*=\s*['"][^'"]*['"])/gi;
-
-  // Tambahkan nonce ke elemen <style> dan <script> yang belum memiliki nonce
-  htmlContent = htmlContent.replace(styleRegex, `<style nonce="${nonce}"`);
-  htmlContent = htmlContent.replace(scriptRegex, `<script nonce="${nonce}"`);
-
-  return htmlContent;
-}
-
 function generateHashedFileName(filePath) {
   const hash = crypto.createHash('sha256');
   const fileBuffer = fs.readFileSync(filePath);
@@ -316,8 +304,8 @@ async function generateHtml() {
       <meta name="color-scheme" content="dark light">
       <meta name="theme-color" media="(prefers-color-scheme: light)" content="#edf4f8">
       <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1e1e1e">
-      <meta prefix="og: http://ogp.me/ns#" property="og:type" content="website">
       <meta prefix="og: http://ogp.me/ns#" property="og:title" content="Selamat Ulang Tahun!">
+      <meta prefix="og: http://ogp.me/ns#" property="og:type" content="website">
       <meta prefix="og: http://ogp.me/ns#" property="og:description" content="Selamat Ulang Tahun!">
       <meta prefix="og: http://ogp.me/ns#" property="og:site_name" content="Birthday Celebration">
       <meta prefix="og: http://ogp.me/ns#" property="og:locale" content="id_ID">
