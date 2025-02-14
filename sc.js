@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { minify } from 'html-minifier';
+import { minify as minifyJs } from 'terser'; // Import Terser untuk minify JS
 
 function generateNonce() {
   return crypto.randomBytes(16).toString('base64');
@@ -110,9 +111,28 @@ function generateInlineScriptHash(scriptContent) {
 async function generateHtml() {
   // Generate nonce untuk setiap elemen
   const nonce = generateNonce();
+   // Proses main.js untuk ekstrak ID dan minify
+  const mainJsPath = path.join(process.cwd(), 'main.js');
+  const mainJsContent = fs.readFileSync(mainJsPath, 'utf8');
+  const extractedIdMap = extractAndHashIds(mainJsContent);
 
-  // Daftar file JavaScript yang digunakan
-  const jsFiles = ['p5.js', 'main.js', 'firework.js'];
+  // Update konten JS dengan ID yang di-hash
+  const updatedMainJsContent = updateJsContent(mainJsContent, extractedIdMap);
+
+  // Minify JS yang telah di-update
+  const minifiedMainJs = await minifyJs(updatedMainJsContent, {
+    compress: true,
+    mangle: true,
+    format: { comments: false },
+  });
+  if (minifiedMainJs.error) throw new Error(`Gagal minify JS: ${minifiedMainJs.error}`);
+
+  // Tulis ke main.min.js
+  const mainMinJsPath = path.join(process.cwd(), 'main.min.js');
+  fs.writeFileSync(mainMinJsPath, minifiedMainJs.code);
+
+  // Daftar file JS yang sudah termasuk main.min.js
+  const jsFiles = ['p5.js', 'main.min.js', 'firework.js'];
 
   // Read and process main.js to extract IDs
   const mainJsPath = path.join(process.cwd(), 'main.js');
@@ -547,9 +567,9 @@ async function generateHtml() {
 }
 
 function generateServiceWorker() {
-  const hashedJsFiles = ['p5.js', 'main.js', 'firework.js'].map(file => {
+  const hashedJsFiles = ['p5.js', 'main.min.js', 'firework.js'].map(file => {
     const originalPath = path.join(process.cwd(), file);
-    return generateHashedFileName(originalPath); // Get hashed file names
+    return generateHashedFileName(originalPath);
   });
   const swContent = `
   // Service Worker for offline functionality
