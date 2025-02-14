@@ -24,11 +24,11 @@ jobs:
           bundler-cache: true
           
       - name: Install dependencies
-        run: bundle install
-
-      - name: Install dependencies
         run: gem install jekyll-content-security-policy-generator
         
+      - name: Build dependencies
+        run: bundle install
+
       - name: Build Jekyll site
         run: JEKYLL_ENV=production bundle exec jekyll build
         
