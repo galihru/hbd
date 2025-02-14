@@ -385,7 +385,6 @@ async function generateHtml() {
         ${JSON.stringify(structuredData, null, 2)}
       </script>
   `;
-  htmlContent = addNonceToHtml(htmlContent, nonce);
 
   // Mengelola hashed JS files
   hashedJsFiles.forEach((file) => {
