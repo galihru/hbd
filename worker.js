@@ -22,58 +22,46 @@ export default {
     const nonce = crypto.randomUUID();
 
     try {
-      // Sanitize headers sebelum diteruskan
-      const sanitizedHeaders = new Headers();
-      ['accept', 'accept-encoding', 'accept-language', 'user-agent'].forEach(header => {
-        if (request.headers.has(header)) {
-          sanitizedHeaders.set(header, request.headers.get(header));
-        }
-      });
-
       // Fetch dari GitHub dengan timeout
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 10000);
       
       const response = await fetch(githubUrl.toString(), {
-        headers: sanitizedHeaders,
         method: request.method,
         signal: controller.signal
       }).finally(() => clearTimeout(timeout));
 
       const contentType = response.headers.get('content-type');
 
+      // Header keamanan untuk semua respons
+      const securityHeaders = {
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'X-XSS-Protection': '1; mode=block',
+        'Referrer-Policy': 'no-referrer',
+        'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
+        'Content-Security-Policy': `
+          default-src 'self';
+          script-src 'self' 'nonce-${nonce}' https://cdnjs.cloudflare.com ${githubBaseUrl};
+          style-src 'self' https://cdnjs.cloudflare.com ${githubBaseUrl};
+          img-src 'self' data: ${githubBaseUrl};
+          font-src 'self' https://cdnjs.cloudflare.com;
+          connect-src 'self';
+          frame-ancestors 'none';
+          form-action 'self';
+          base-uri 'self';
+          upgrade-insecure-requests;
+        `.replace(/\s+/g, ' ').trim(),
+        'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+        'Cross-Origin-Resource-Policy': 'same-origin',
+        'X-Permitted-Cross-Domain-Policies': 'none'
+      };
+
       // Jika respons adalah HTML, tambahkan keamanan tambahan
       if (contentType?.includes('text/html')) {
         let html = await response.text();
-
-        // Tambahkan header keamanan
-        const securityHeaders = {
-          'Content-Type': 'text/html; charset=utf-8',
-          'X-Content-Type-Options': 'nosniff',
-          'X-Frame-Options': 'DENY',
-          'X-XSS-Protection': '1; mode=block',
-          'Referrer-Policy': 'no-referrer',
-          'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
-          'Content-Security-Policy': `
-            default-src 'self';
-            script-src 'self' 'nonce-${nonce}' https://cdnjs.cloudflare.com ${githubBaseUrl};
-            style-src 'self' https://cdnjs.cloudflare.com ${githubBaseUrl};
-            img-src 'self' data: ${githubBaseUrl};
-            font-src 'self' https://cdnjs.cloudflare.com;
-            connect-src 'self';
-            frame-ancestors 'none';
-            form-action 'self';
-            base-uri 'self';
-            upgrade-insecure-requests;
-          `.replace(/\s+/g, ' ').trim(),
-          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
-          'Cache-Control': 'public, max-age=86400, must-revalidate',
-          'Access-Control-Allow-Origin': '*',
-          'Cross-Origin-Embedder-Policy': 'require-corp',
-          'Cross-Origin-Opener-Policy': 'same-origin',
-          'Cross-Origin-Resource-Policy': 'same-origin',
-          'X-Permitted-Cross-Domain-Policies': 'none'
-        };
 
         // Amankan HTML
         html = '<!DOCTYPE html>\n' + html
@@ -95,10 +83,7 @@ export default {
       }
 
       // Tangani respons non-HTML
-      const headers = new Headers({
-        'X-Content-Type-Options': 'nosniff',
-        'Cross-Origin-Resource-Policy': 'same-origin'
-      });
+      const headers = new Headers(securityHeaders);
 
       // Set cache header berdasarkan ekstensi file
       const fileExtension = url.pathname.split('.').pop()?.toLowerCase();
