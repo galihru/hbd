@@ -394,7 +394,7 @@ async function generateHtml() {
     // Verifikasi hash integritas
     const integrityHash = generateIntegrityHash(filePath);
     htmlContent += `
-      <script src="${hashedFileName}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
+      <script rel="preload" as="script" src="${hashedFileName}" nonce="${nonce}" integrity="sha384-${integrityHash}" crossorigin="anonymous" defer></script>
     `;
   });
   
