@@ -1,5 +1,8 @@
 export default {
   async fetch(request, env) {
+    const url = new URL(request.url);
+    const githubBaseUrl = 'https://4211421036.github.io/hbd/';
+
     // Validasi metode request
     if (!['GET', 'HEAD'].includes(request.method)) {
       return new Response('Method not allowed', { 
@@ -10,14 +13,8 @@ export default {
         }
       });
     }
-    
-    const url = new URL(request.url);
-    const githubBaseUrl = 'https://4211421036.github.io/hbd/';
-    
-    if (!url.pathname.startsWith('/')) {
-      return new Response('Invalid request', { status: 400 });
-    }
 
+    // Arahkan permintaan ke GitHub Pages
     const githubUrl = new URL(url.pathname, githubBaseUrl);
     const nonce = crypto.randomUUID();
 
@@ -31,15 +28,8 @@ export default {
         signal: controller.signal
       }).finally(() => clearTimeout(timeout));
 
-      const contentType = response.headers.get('content-type');
-
       // Header keamanan untuk semua respons
       const securityHeaders = {
-        'X-Content-Type-Options': 'nosniff',
-        'X-Frame-Options': 'DENY',
-        'X-XSS-Protection': '1; mode=block',
-        'Referrer-Policy': 'no-referrer',
-        'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
         'Content-Security-Policy': `
           default-src 'self';
           script-src 'self' 'nonce-${nonce}' https://cdnjs.cloudflare.com ${githubBaseUrl};
@@ -53,6 +43,10 @@ export default {
           upgrade-insecure-requests;
         `.replace(/\s+/g, ' ').trim(),
         'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+        'X-Frame-Options': 'DENY',
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'no-referrer',
+        'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
         'Cross-Origin-Opener-Policy': 'same-origin',
         'Cross-Origin-Embedder-Policy': 'require-corp',
         'Cross-Origin-Resource-Policy': 'same-origin',
@@ -60,6 +54,7 @@ export default {
       };
 
       // Jika respons adalah HTML, tambahkan keamanan tambahan
+      const contentType = response.headers.get('content-type');
       if (contentType?.includes('text/html')) {
         let html = await response.text();
 
