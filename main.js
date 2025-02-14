@@ -13,15 +13,6 @@ let isDragging = false
 let startY = 0
 let currentY = 0
 
-function generateNonce() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let nonce = '';
-    for (let i = 0; i <16; i++) {
-        nonce += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return nonce;
-}
-// Create a consistent ID mapping function
 const generateHashedId = (originalId) => {
   const encoder = new TextEncoder();
   const data = encoder.encode(originalId);
@@ -234,314 +225,229 @@ function updateOGMetadata(name, wish) {
 }
 function createModal() {
     if (showModal) {
-        // Generate nonce untuk CSP
-        const nonce = generateNonce();
-        
         const existingSkeleton = select('.skeleton-modal');
         if (existingSkeleton) {
             existingSkeleton.remove();
         }
 
-        // Create and show skeleton first
-        const skeletonLoader = createSkeletonLoader();
+        // Pre-load font sebelum membuat modal
+        if (document.fonts) {
+            document.fonts.load('14px Arial, sans-serif').then(() => {
+                createModalContent();
+            });
+        } else {
+            createModalContent();
+        }
 
-        // Tambahkan style dengan nonce
-        const styleElement = document.createElement('style');
-        styleElement.nonce = nonce;
-        styleElement.textContent = `
-            .input-wrapper {
-                position: relative;
-                width: 80%;
-                margin: 0 auto 15px auto;
-            }
-            .form-label {
-                position: absolute;
-                left: 10px;
-                top: 10px;
-                font-size: 16px;
-                transition: all 0.2s ease;
-                pointer-events: none;
-                opacity: 0.7;
-            }
-            .form-input:focus + .form-label,
-            .form-input:not(:placeholder-shown) + .form-label {
-                top: -20px;
-                left: 0;
-                font-size: 12px;
-                opacity: 1;
-            }
-            .form-input {
-                width: 100%;
-                padding: 10px;
-                font-size: 16px;
-                border-radius: 5px;
-                border: 1px solid #ddd;
-                background: transparent;
-            }
-            .form-input::placeholder {
-                opacity: 0;
-            }
-            .form-input:focus::placeholder {
-                opacity: 0.5;
-                transition: opacity 0.3s ease;
-            }
-        `;
-        document.head.appendChild(styleElement);
+        function createModalContent() {
+            // Create and show skeleton first
+            const skeletonLoader = createSkeletonLoader();
+            
+            skeletonTimeout = setTimeout(() => {
+                isLoading = false;
+                skeletonLoader.remove();
+                const modal = createDiv('')
+                modal.style('background', 'rgba(0,0,0,0.8)')
+                modal.style('position', 'fixed')
+                modal.style('top', '0')
+                modal.style('left', '0')
+                modal.style('width', '100%')
+                modal.style('height', '100%')
+                modal.style('display', 'flex')
+                modal.style('justify-content', 'center')
+                modal.style('align-items', 'center')
+                modal.style('z-index', '1000')
+                modal.style('transition', 'transform 0.3s ease')
+                modal.id(idMap.modal);
+                modal.attribute('role', 'document')
+                modal.attribute('tabindex', '0')
         
-        skeletonTimeout = setTimeout(() => {
-            isLoading = false;
-            skeletonLoader.remove();
-            const modal = createDiv('')
-            modal.style('background', 'rgba(0,0,0,0.8)')
-            modal.style('position', 'fixed')
-            modal.style('top', '0')
-            modal.style('left', '0')
-            modal.style('width', '100%')
-            modal.style('height', '100%')
-            modal.style('display', 'flex')
-            modal.style('justify-content', 'center')
-            modal.style('align-items', 'center')
-            modal.style('z-index', '1000')
-            modal.id(idMap.modal);
-            modal.attribute('role', 'document')
-            modal.attribute('tabindex', '0')
-    
-            const modalContent = createDiv('')
-            modalContent.style('padding', '20px')
-            modalContent.style('border-radius', '20px')
-            modalContent.style('text-align', 'center')
-            modalContent.style('width', '80%')
-            modalContent.style('max-width', '500px')
-            modalContent.style('position', 'relative')
-            modalContent.style('touch-action', 'none')
-            modalContent.style('bottom', '0')
-            modalContent.id(idMap.modalContent);
-            modalContent.attribute('role', 'document')
-    
-            const swipeIndicator = createDiv('')
-            swipeIndicator.style('width', '40px')
-            swipeIndicator.style('height', '4px')
-            swipeIndicator.style('background-color', 'rgb(205 205 205)')
-            swipeIndicator.style('border-radius', '2px')
-            swipeIndicator.style('margin', '0 auto 15px auto')
-    
-            // Deteksi mode gelap
-            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            // Title
-            const title = createP('Siapa yang ulang tahun?')
-            title.attribute('role', 'text')
-            title.style('font-size', '18px')
-            title.style('font-weight', 'bold')
-            title.style('margin-bottom', '20px')
-            
-            // Input nama dengan floating label
-            const nameWrapper = createDiv();
-            nameWrapper.class('input-wrapper');
-            
-            const inputName = createInput('');
-            inputName.id(idMap.inputName);
-            inputName.class('form-input');
-            inputName.attribute('aria-label', 'Nama yang Ulang Tahun');
-            inputName.attribute('name', 'name');
-            inputName.attribute('autocomplete', 'name');
-            inputName.attribute('required', 'true');
-            inputName.attribute('placeholder', ' '); // Space placeholder untuk aktivasi CSS
-            
-            const nameLabel = createSpan('Nama yang Ulang Tahun');
-            nameLabel.class('form-label');
-            
-            nameWrapper.child(inputName);
-            nameWrapper.child(nameLabel);
-            
-            // Input phone dengan floating label
-            const phoneWrapper = createDiv();
-            phoneWrapper.class('input-wrapper');
-            
-            const inputPhone = createInput('');
-            inputPhone.id(idMap.inputPhone);
-            inputPhone.class('form-input');
-            inputPhone.attribute('name', 'phone');
-            inputPhone.attribute('autocomplete', 'tel');
-            inputPhone.attribute('pattern', '\\+62[0-9]{9,}');
-            inputPhone.attribute('placeholder', ' '); // Space placeholder untuk aktivasi CSS
-            
-            const phoneLabel = createSpan('Nomor WA (dimulai dengan 62)');
-            phoneLabel.class('form-label');
-            
-            phoneWrapper.child(inputPhone);
-            phoneWrapper.child(phoneLabel);
-            
-            // Tambahkan event untuk menampilkan placeholder saat focus
-            inputName.elt.addEventListener('focus', function() {
-                if (this.placeholder === ' ') {
-                    this.placeholder = 'Masukkan nama...';
-                }
-            });
-            
-            inputName.elt.addEventListener('blur', function() {
-                if (!this.value) {
-                    this.placeholder = ' ';
-                }
-            });
-            
-            inputPhone.elt.addEventListener('focus', function() {
-                if (this.placeholder === ' ') {
-                    this.placeholder = 'Contoh: 628123456789';
-                }
-            });
-            
-            inputPhone.elt.addEventListener('blur', function() {
-                if (!this.value) {
-                    this.placeholder = ' ';
-                }
-            });
-            
-            // Autofocus pada elemen pertama
-            inputName.attribute('autofocus', 'true');
-    
-            const button = createButton('OK')
-            button.style('margin', '20px auto 10px auto')
-            button.style('display', 'block')
-            button.style('padding', '10px 30px')
-            button.attribute('accesskey', 'n')
-            button.attribute('type', 'submit')
-            button.attribute('role', 'button')
-            button.style('border', 'none')
-            button.style('border-radius', '5px')
-            button.style('cursor', 'pointer')
-            button.style('font-size', '16px')
-            
-            if (!isDragging) {
-                startButton.hide()
-            }
-    
-            button.mousePressed(() => submitName())
-            modalContent.child(swipeIndicator)
-            modalContent.child(title)
-            modalContent.child(nameWrapper)
-            modalContent.child(phoneWrapper)
-            modalContent.child(button)
-            modal.child(modalContent)
-            
-            let modalContentElem = select(`#${idMap.modalContent}`).elt;
-            
-            modalContentElem.addEventListener('touchstart', handleTouchStart, false)
-            modalContentElem.addEventListener('touchmove', handleTouchMove, false)
-            modalContentElem.addEventListener('touchend', handleTouchEnd, false)
-            
-            if (window.innerWidth <= 768) {
-                modalContent.style('position', 'absolute');
-                modalContent.style('bottom', '10px');
-                swipeIndicator.style('display', 'block');
-            } else {
-                swipeIndicator.style('display', 'none');
-            }
-            
-            // Update styles for dark/light mode
-            if (isDarkMode) {
-                modal.style('background', 'rgba(0,0,0,0.8)');
-                modalContent.style('backgroundColor', '#1e1e1e');
-                modalContent.style('color', '#ffffff');
-                swipeIndicator.style('backgroundColor', '#333');
-                button.style('background', 'rgb(52 127 56)');
-                button.style('color', '#ffffff');
+                const modalContent = createDiv('')
+                modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%);')
+                modalContent.style('padding', '20px')
+                modalContent.style('border-radius', '20px')
+                modalContent.style('text-align', 'center')
+                modalContent.style('width', '80%')
+                modalContent.style('max-width', '500px')
+                modalContent.style('position', 'relative')
+                modalContent.style('touch-action', 'none')
+                modalContent.style('transition', 'transform 0.5s ease')
+                modalContent.style('bottom', '0')
+                modalContent.style('transform', 'translateY(0)')
+                modalContent.id(idMap.modalContent);
+                modalContent.attribute('role', 'document')
+        
+                const swipeIndicator = createDiv('')
+                swipeIndicator.style('width', '40px')
+                swipeIndicator.style('height', '4px')
+                swipeIndicator.style('background-color', 'rgb(205 205 205)')
+                swipeIndicator.style('border-radius', '2px')
+                swipeIndicator.style('margin', '0 auto 15px auto')
+        
+                // Deteksi mode gelap
+                const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 
-                // Update style untuk dark mode
-                const darkStyles = document.createElement('style');
-                darkStyles.nonce = nonce;
-                darkStyles.textContent = `
-                    .form-input {
-                        background: #2c2c2c !important;
-                        color: #ffffff !important;
-                        border: 1px solid #444 !important;
-                    }
-                    .form-label {
-                        color: rgba(255,255,255,0.7) !important;
-                    }
-                    .form-input:focus + .form-label,
-                    .form-input:not(:placeholder-shown) + .form-label {
-                        color: rgba(255,255,255,1) !important;
-                    }
-                    .form-input:focus::placeholder {
-                        color: rgba(255,255,255,0.3) !important;
-                    }
-                `;
-                document.head.appendChild(darkStyles);
-            } else {
-                modal.style('background', 'rgba(255, 246, 246, 0.8)');
-                modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%)');
-                modalContent.style('color', '#000000');
-                button.style('background', 'rgb(115 235 121)');
-                button.style('color', '#000000');
-                swipeIndicator.style('backgroundColor', 'rgb(205 205 205)');
+                // Gunakan fieldset dan legend untuk form semantik
+                const form = createDiv('');
+                form.style('width', '100%');
+                form.style('text-align', 'left');
                 
-                // Update style untuk light mode
-                const lightStyles = document.createElement('style');
-                lightStyles.nonce = nonce;
-                lightStyles.textContent = `
-                    .form-input {
-                        background: #ffffff !important;
-                        color: #000000 !important;
-                        border: 1px solid #ddd !important;
-                    }
-                    .form-label {
-                        color: rgba(0,0,0,0.7) !important;
-                    }
-                    .form-input:focus + .form-label,
-                    .form-input:not(:placeholder-shown) + .form-label {
-                        color: rgba(0,0,0,1) !important;
-                    }
-                    .form-input:focus::placeholder {
-                        color: rgba(0,0,0,0.3) !important;
-                    }
-                `;
-                document.head.appendChild(lightStyles);
-            }
-            
-            // Render terlebih dahulu, tambahkan transisi setelahnya
-            requestAnimationFrame(() => {
-                modalContent.style('transition', 'transform 0.3s ease, opacity 0.3s ease');
-                modal.style('transition', 'opacity 0.3s ease');
+                // Tambahkan judul form sebagai header, bukan sebagai label terpisah
+                const title = createP('Siapa yang ulang tahun?')
+                title.attribute('role', 'text')
+                title.style('font-size', '18px')
+                title.style('font-weight', 'bold')
+                title.style('text-align', 'center')
+                title.style('margin-bottom', '20px')
+                
+                // Input nama dengan ukuran minimal untuk label
+                const nameFieldset = createDiv('')
+                nameFieldset.style('margin', '0 auto')
+                nameFieldset.style('width', '80%')
+                
+                const inputName = createInput('')
+                inputName.id(idMap.inputName);
+                inputName.attribute('aria-label', 'Nama yang Ulang Tahun')
+                inputName.attribute('name', 'name')
+                inputName.attribute('autocomplete', 'name')
+                inputName.attribute('required', 'true')
+                inputName.style('padding', '10px')
+                inputName.style('width', '100%')
+                inputName.style('border', '1px solid #ddd')
+                inputName.style('border-radius', '5px')
+                inputName.style('font-size', '16px')
+                inputName.style('margin-bottom', '15px')
+                inputName.attribute('placeholder', 'Nama yang Ulang Tahun')
+                
+                // Input nomor WA dengan ukuran minimal untuk label
+                const phoneFieldset = createDiv('')
+                phoneFieldset.style('margin', '0 auto')
+                phoneFieldset.style('width', '80%')
+                
+                const inputPhone = createInput('')
+                inputPhone.id(idMap.inputPhone);
+                inputPhone.attribute('name', 'phone')
+                inputPhone.attribute('autocomplete', 'tel')
+                inputPhone.attribute('pattern', '\\+62[0-9]{9,}')
+                inputPhone.style('padding', '10px')
+                inputPhone.style('width', '100%')
+                inputPhone.style('border', '1px solid #ddd')
+                inputPhone.style('border-radius', '5px')
+                inputPhone.style('font-size', '16px')
+                inputPhone.style('margin-bottom', '15px')
+                inputPhone.attribute('placeholder', 'Nomor WA (dimulai dengan 62)')
+                
+                // Autofocus pada elemen pertama
+                inputName.attribute('autofocus', 'true')
+        
+                const button = createButton('OK')
+                button.style('margin', '10px auto')
+                button.style('display', 'block')
+                button.style('padding', '10px 30px')
+                button.style('background', 'rgb(52 127 56)')
+                button.attribute('accesskey','n')
+                button.attribute('type','submit')
+                button.attribute('role','button')
+                if (!isDragging) {
+                    startButton.hide()
+                }
+                button.style('border', 'none')
+                button.style('border-radius', '5px')
+                button.style('cursor', 'pointer')
+                button.style('font-size', '16px')
+        
+                button.mousePressed(() => submitName())
+                modalContent.child(swipeIndicator)
+                modalContent.child(title)
+                
+                nameFieldset.child(inputName)
+                phoneFieldset.child(inputPhone)
+                
+                form.child(nameFieldset)
+                form.child(phoneFieldset)
+                form.child(button)
+                
+                modalContent.child(form)
+                modal.child(modalContent)
+                
+                let modalContentElem = select(`#${idMap.modalContent}`).elt;
+                
+                modalContentElem.addEventListener('touchstart', handleTouchStart, false)
+                modalContentElem.addEventListener('touchmove', handleTouchMove, false)
+                modalContentElem.addEventListener('touchend', handleTouchEnd, false)
+                if (window.innerWidth <= 768) {
+                    modalContent.style('position', 'absolute');
+                    modalContent.style('bottom', '10px');
+                    swipeIndicator.style('display', 'block');
+                } else {
+                    swipeIndicator.style('display', 'none');
+                }
+                
+                // Update styles for dark/light mode
+                if (isDarkMode) {
+                    modal.style('background', 'rgba(0,0,0,0.8)');
+                    modalContent.style('backgroundColor', '#1e1e1e');
+                    modalContent.style('color', '#ffffff');
+                    swipeIndicator.style('backgroundColor', '#333');
+                    button.style('background', 'rgb(52 127 56)')
+                    inputName.style('background', '#2c2c2c')
+                    inputName.style('color', '#ffffff')
+                    inputName.style('border', '1px solid #444')
+                    inputPhone.style('background', '#2c2c2c')
+                    inputPhone.style('color', '#ffffff')
+                    inputPhone.style('border', '1px solid #444')
+                } else {
+                    modal.style('background', 'rgba(255, 246, 246, 0.8)');
+                    modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%)');
+                    modalContent.style('color', '#000000');
+                    button.style('background', 'rgb(115 235 121)')
+                    swipeIndicator.style('backgroundColor', 'rgb(205 205 205)');
+                    inputName.style('background', '#ffffff')
+                    inputName.style('color', '#000000')
+                    inputPhone.style('background', '#ffffff')
+                    inputPhone.style('color', '#000000')
+                }
+                
+                // Menambahkan efek setelah modal dibuat
                 modal.style('opacity', '0');
                 modalContent.style('opacity', '0');
-                modalContent.style('transform', 'translateY(20px)');
                 
+                // Render terlebih dahulu, lalu tambahkan efek transisi
                 requestAnimationFrame(() => {
-                    modal.style('opacity', '1');
-                    modalContent.style('opacity', '1');
-                    modalContent.style('transform', 'translateY(0)');
+                    requestAnimationFrame(() => {
+                        modal.style('opacity', '1');
+                        modalContent.style('opacity', '1');
+                        modalContent.style('transform', 'translateY(0)');
+                    });
                 });
-            });
-            
-            function submitName() {
-              userName = inputName.value();
-              nomorWA = inputPhone.value();
-          
-              if (userName.trim() !== '' && nomorWA.trim() !== '' && nomorWA.startsWith('62')) {
-                  showModal = false;
-                  clicked = true;
-                  select(`#${idMap.modal}`).remove();
-                  if (startButton) {
-                      startButton.remove();
-                  }
-
-                  const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
-                  updateOGMetadata(userName, randomWish);
-                  
-                  // Generate the shareable URL
-                  const shareableUrl = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(userName)}`;
-                  window.shareableUrl = shareableUrl;  
                 
-                  initAudio();
-                  birthdayAudio.play().catch(error => {
-                      console.log('Audio playback failed:', error);
-                  });
-              } else {
-                  alert("Pastikan nomor WA dimulai dengan 62 dan nama terisi.");
+                function submitName() {
+                  userName = inputName.value();
+                  nomorWA = inputPhone.value();
+              
+                  if (userName.trim() !== '' && nomorWA.startsWith('62')) {
+                      showModal = false;
+                      clicked = true;
+                      select(`#${idMap.modal}`).remove();
+                      startButton.remove();
+    
+                      const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+                      updateOGMetadata(userName, randomWish);
+                      
+                      // Generate the shareable URL
+                      const shareableUrl = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(userName)}`;
+                      window.shareableUrl = shareableUrl;  
+                    
+                      initAudio();
+                      birthdayAudio.play().catch(error => {
+                          console.log('Audio playback failed:', error);
+                      });
+                  } else {
+                      alert("Pastikan nomor WA dimulai dengan 62.");
+                  }
               }
-            }
-        }, 300);
+            }, 300); // Reduced timeout for faster appearance
+        }
     }
 }
 
