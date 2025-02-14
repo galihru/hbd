@@ -368,8 +368,8 @@ async function generateHtml() {
       <meta name="google-site-verification" content="OYdjPwgIjGMAbQd3CGwM_l20jLNRRp84mEl3kw06DMg" />
       <meta name="browsermode" content="no-sensors">
       <meta name="renderer" content="webkit|ie-comp|ie-stand">
-      <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="mobile-web-app-capable" content="yes">
       <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
       <meta http-equiv="Pragma" content="no-cache">
       <meta http-equiv="Content-Security-Policy" content="${cspContent}">
