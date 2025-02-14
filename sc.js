@@ -300,8 +300,8 @@ async function generateHtml() {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="keywords" content="Selamat Ulang Tahun!">
       <meta name="author" content="GALIH RIDHO UTOMO">
-      <meta name="color-scheme" content="dark light">
       <meta name="robots" content="index, follow">
+      <meta name="color-scheme" content="dark light">
       <meta name="theme-color" media="(prefers-color-scheme: light)" content="#edf4f8">
       <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1e1e1e">
       <meta prefix="og: http://ogp.me/ns#" property="og:title" content="Selamat Ulang Tahun!">
