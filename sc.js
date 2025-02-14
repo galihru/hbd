@@ -305,8 +305,8 @@ async function generateHtml() {
       <link rel="apple-touch-icon" href="https://4211421036.github.io/g4lihru/987654567.png">
       <link rel="manifest" href="manifest.webmanifest" crossorigin="use-credentials">
       <link rel="canonical" href="https://4211421036.github.io/hbd/">
-      <meta name="description" content="Selamat Ulang Tahun!">
       <meta name="application-name" content="HBD">
+      <meta name="description" content="Selamat Ulang Tahun!">
       <meta name="generator" content="HBD">
       <meta name="bingbot" content="noarchive">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
