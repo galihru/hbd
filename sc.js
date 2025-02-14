@@ -7,6 +7,18 @@ function generateNonce() {
   return crypto.randomBytes(16).toString('base64');
 }
 
+function addNonceToHtml(htmlContent, nonce) {
+  // Regex untuk mendeteksi <style> dan <script> tanpa nonce
+  const styleRegex = /<style(?![^>]*\snonce\s*=\s*['"][^'"]*['"])/gi;
+  const scriptRegex = /<script(?![^>]*\snonce\s*=\s*['"][^'"]*['"])/gi;
+
+  // Tambahkan nonce ke elemen <style> dan <script> yang belum memiliki nonce
+  htmlContent = htmlContent.replace(styleRegex, `<style nonce="${nonce}"`);
+  htmlContent = htmlContent.replace(scriptRegex, `<script nonce="${nonce}"`);
+
+  return htmlContent;
+}
+
 function generateHashedFileName(filePath) {
   const hash = crypto.createHash('sha256');
   const fileBuffer = fs.readFileSync(filePath);
@@ -385,6 +397,7 @@ async function generateHtml() {
         ${JSON.stringify(structuredData, null, 2)}
       </script>
   `;
+  htmlContent = addNonceToHtml(htmlContent, nonce);
 
   // Mengelola hashed JS files
   hashedJsFiles.forEach((file) => {
