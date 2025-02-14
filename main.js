@@ -231,232 +231,246 @@ function createModal() {
             existingSkeleton.remove();
         }
 
-        // Create and show skeleton first
-        const skeletonLoader = createSkeletonLoader();
-        
-        skeletonTimeout = setTimeout(() => {
-            isLoading = false;
-            skeletonLoader.remove();
-            const modal = createDiv('')
-            modal.style('background', 'rgba(0,0,0,0.8)')
-            modal.style('position', 'fixed')
-            modal.style('top', '0')
-            modal.style('left', '0')
-            modal.style('width', '100%')
-            modal.style('height', '100%')
-            modal.style('display', 'flex')
-            modal.style('justify-content', 'center')
-            modal.style('align-items', 'center')
-            modal.style('z-index', '1000')
-            modal.style('transition', 'transform 0.3s ease')
-            modal.id(idMap.modal);
-            modal.attribute('role', 'document')
-            modal.attribute('tabindex', '0')
-    
-            const modalContent = createDiv('')
-            modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%);')
-            modalContent.style('padding', '20px')
-            modalContent.style('border-radius', '20px')
-            modalContent.style('text-align', 'center')
-            modalContent.style('width', '80%')
-            modalContent.style('max-width', '500px')
-            modalContent.style('position', 'relative')
-            modalContent.style('touch-action', 'none')
-            modalContent.style('transition', 'transform 0.5s ease')
-            modalContent.style('bottom', '0')
-            modalContent.style('transform', 'translateY(0)')
-            modalContent.id(idMap.modalContent);
-            modalContent.attribute('role', 'document')
-    
-            const swipeIndicator = createDiv('')
-            swipeIndicator.style('width', '40px')
-            swipeIndicator.style('height', '4px')
-            swipeIndicator.style('background-color', 'rgb(205 205 205)')
-            swipeIndicator.style('border-radius', '2px')
-            swipeIndicator.style('margin', '0 auto 15px auto')
-    
-            // Deteksi mode gelap
-            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            // Input untuk nama dengan label sebagai pengganti placeholder
-            const nameLabel = createDiv('')
-            nameLabel.html('Nama yang Ulang Tahun')
-            nameLabel.style('margin-top', '10px')
-            nameLabel.style('font-size', '14px')
-            nameLabel.style('text-align', 'left')
-            nameLabel.style('margin-left', '10%')
-            nameLabel.style('margin-bottom', '5px')
-            
-            const inputName = createInput('')
-            inputName.id(idMap.inputName);
-            inputName.attribute('aria-label', 'Nama yang Ulang Tahun')
-            inputName.attribute('name', 'name')
-            inputName.attribute('autocomplete', 'name')
-            inputName.attribute('required', 'true')
-            inputName.style('margin', '0 10px 10px 10px')
-            inputName.style('padding', '10px')
-            inputName.style('width', '80%')
-            inputName.style('border', '1px solid #ddd')
-            inputName.style('border-radius', '5px')
-            inputName.style('font-size', '16px')
-            
-            // Input label untuk nomor WhatsApp
-            const phoneLabel = createDiv('')
-            phoneLabel.html('Nomor WA (dimulai dengan 62)')
-            phoneLabel.style('margin-top', '10px')
-            phoneLabel.style('font-size', '14px')
-            phoneLabel.style('text-align', 'left')
-            phoneLabel.style('margin-left', '10%')
-            phoneLabel.style('margin-bottom', '5px')
-            
-            const inputPhone = createInput('')
-            inputPhone.id(idMap.inputPhone);
-            inputPhone.attribute('name', 'phone')
-            inputPhone.attribute('autocomplete', 'tel')
-            inputPhone.attribute('pattern', '\\+62[0-9]{9,}')
-            inputPhone.style('margin', '0 10px 10px 10px')
-            inputPhone.style('padding', '10px')
-            inputPhone.style('width', '80%')
-            inputPhone.style('border', '1px solid #ddd')
-            inputPhone.style('border-radius', '5px')
-            inputPhone.style('font-size', '16px')
-            
-            // Tambahkan placeholder setelah fokus pertama
-            inputName.elt.addEventListener('focus', function() {
-                if (!this.placeholder) {
-                    this.placeholder = 'Masukkan nama yang Ulang Tahun';
-                }
+        // Pre-load font sebelum membuat modal
+        if (document.fonts) {
+            document.fonts.load('14px Arial, sans-serif').then(() => {
+                createModalContent();
             });
-            
-            inputPhone.elt.addEventListener('focus', function() {
-                if (!this.placeholder) {
-                    this.placeholder = 'Masukkan nomor WA (+62)';
-                }
-            });
-            
-            // Autofocus pada elemen pertama
-            inputName.attribute('autofocus', 'true')
-    
-            const button = createButton('OK')
-            button.style('margin', '10px')
-            button.style('padding', '10px 30px')
-            button.style('background', 'rgb(52 127 56)')
-            button.attribute('accesskey','n')
-            button.attribute('type','submit')
-            button.attribute('role','button')
-            if (!isDragging) {
-                startButton.hide()
-            }
-            button.style('border', 'none')
-            button.style('border-radius', '5px')
-            button.style('cursor', 'pointer')
-            button.style('font-size', '16px')
-    
-            button.mousePressed(() => submitName())
-            modalContent.child(swipeIndicator)
-            modalContent.child(createP('Siapa yang ulang tahun?').attribute('role', 'text'))
-            modalContent.child(nameLabel)
-            modalContent.child(inputName)
-            modalContent.child(phoneLabel)
-            modalContent.child(inputPhone)
-            modalContent.child(button)
-            modal.child(modalContent)
-            
-            let modalContentElem = select(`#${idMap.modalContent}`).elt;
-            
-            modalContentElem.addEventListener('touchstart', handleTouchStart, false)
-            modalContentElem.addEventListener('touchmove', handleTouchMove, false)
-            modalContentElem.addEventListener('touchend', handleTouchEnd, false)
-            if (window.innerWidth <= 768) {
-                modalContent.style('position', 'absolute');
-                modalContent.style('bottom', '10px');
-                swipeIndicator.style('display', 'block');
-            } else {
-                swipeIndicator.style('display', 'none');
-            }
-            
-            // Update styles for dark/light mode
-            if (isDarkMode) {
-                modal.style('background', 'rgba(0,0,0,0.8)');
-                modalContent.style('backgroundColor', '#1e1e1e');
-                modalContent.style('color', '#ffffff');
-                nameLabel.style('color', '#ffffff');
-                phoneLabel.style('color', '#ffffff');
-                swipeIndicator.style('backgroundColor', '#333');
-                button.style('background', 'rgb(52 127 56)')
-                inputName.style('background', '#2c2c2c')
-                inputName.style('color', '#ffffff')
-                inputName.style('border', '1px solid #444')
-                inputPhone.style('background', '#2c2c2c')
-                inputPhone.style('color', '#ffffff')
-                inputPhone.style('border', '1px solid #444')
-                
-                // Add placeholder style but keep it empty initially
-                let style = document.createElement('style');
-                style.innerHTML = `
-                    #${idMap.inputName}::placeholder, #${idMap.inputPhone}::placeholder {
-                        color: rgba(255,255,255,0.6);
-                        opacity: 1;
-                    }
-                `;
-                document.head.appendChild(style);
-            } else {
-                modal.style('background', 'rgba(255, 246, 246, 0.8)');
-                modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%)');
-                modalContent.style('color', '#000000');
-                nameLabel.style('color', '#000000');
-                phoneLabel.style('color', '#000000');
-                button.style('background', 'rgb(115 235 121)')
-                swipeIndicator.style('backgroundColor', 'rgb(205 205 205)');
-                inputName.style('background', '#ffffff')
-                inputName.style('color', '#000000')
-                inputPhone.style('background', '#ffffff')
-                inputPhone.style('color', '#000000')
-                
-                // Add placeholder style but keep it empty initially
-                let style = document.createElement('style');
-                style.innerHTML = `
-                    #${idMap.inputName}::placeholder, #${idMap.inputPhone}::placeholder {
-                        color: rgba(0,0,0,0.6);
-                        opacity: 1;
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-            
-            // Menambahkan efek setelah modal dibuat
-            setTimeout(() => {
-                modal.style('opacity', '1')  // Fade-in efek
-                modalContent.style('opacity', '1')  // Fade-in efek
-                modalContent.style('transform', 'translateY(0)')
-            }, 50)
-            
-            function submitName() {
-              userName = inputName.value();
-              nomorWA = inputPhone.value();
-          
-              if (userName.trim() !== '' && nomorWA.startsWith('62')) {
-                  showModal = false;
-                  clicked = true;
-                  select(`#${idMap.modal}`).remove();
-                  startButton.remove();
+        } else {
+            createModalContent();
+        }
 
-                  const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
-                  updateOGMetadata(userName, randomWish);
-                  
-                  // Generate the shareable URL
-                  const shareableUrl = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(userName)}`;
-                  window.shareableUrl = shareableUrl;  
+        function createModalContent() {
+            // Create and show skeleton first
+            const skeletonLoader = createSkeletonLoader();
+            
+            skeletonTimeout = setTimeout(() => {
+                isLoading = false;
+                skeletonLoader.remove();
+                const modal = createDiv('')
+                modal.style('background', 'rgba(0,0,0,0.8)')
+                modal.style('position', 'fixed')
+                modal.style('top', '0')
+                modal.style('left', '0')
+                modal.style('width', '100%')
+                modal.style('height', '100%')
+                modal.style('display', 'flex')
+                modal.style('justify-content', 'center')
+                modal.style('align-items', 'center')
+                modal.style('z-index', '1000')
+                modal.style('transition', 'transform 0.3s ease')
+                modal.id(idMap.modal);
+                modal.attribute('role', 'document')
+                modal.attribute('tabindex', '0')
+        
+                const modalContent = createDiv('')
+                modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%);')
+                modalContent.style('padding', '20px')
+                modalContent.style('border-radius', '20px')
+                modalContent.style('text-align', 'center')
+                modalContent.style('width', '80%')
+                modalContent.style('max-width', '500px')
+                modalContent.style('position', 'relative')
+                modalContent.style('touch-action', 'none')
+                modalContent.style('transition', 'transform 0.5s ease')
+                modalContent.style('bottom', '0')
+                modalContent.style('transform', 'translateY(0)')
+                modalContent.id(idMap.modalContent);
+                modalContent.attribute('role', 'document')
+        
+                const swipeIndicator = createDiv('')
+                swipeIndicator.style('width', '40px')
+                swipeIndicator.style('height', '4px')
+                swipeIndicator.style('background-color', 'rgb(205 205 205)')
+                swipeIndicator.style('border-radius', '2px')
+                swipeIndicator.style('margin', '0 auto 15px auto')
+        
+                // Deteksi mode gelap
+                const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 
-                  initAudio();
-                  birthdayAudio.play().catch(error => {
-                      console.log('Audio playback failed:', error);
-                  });
-              } else {
-                  alert("Pastikan nomor WA dimulai dengan 62.");
+                // Gunakan fieldset dan legend untuk form semantik
+                const form = createDiv('');
+                form.style('width', '100%');
+                form.style('text-align', 'left');
+                
+                // Tambahkan judul form sebagai header, bukan sebagai label terpisah
+                const title = createP('Siapa yang ulang tahun?')
+                title.attribute('role', 'text')
+                title.style('font-size', '18px')
+                title.style('font-weight', 'bold')
+                title.style('text-align', 'center')
+                title.style('margin-bottom', '20px')
+                
+                // Input nama dengan ukuran minimal untuk label
+                const nameFieldset = createDiv('')
+                nameFieldset.style('margin', '0 auto')
+                nameFieldset.style('width', '80%')
+                
+                const inputName = createInput('')
+                inputName.id(idMap.inputName);
+                inputName.attribute('aria-label', 'Nama yang Ulang Tahun')
+                inputName.attribute('name', 'name')
+                inputName.attribute('autocomplete', 'name')
+                inputName.attribute('required', 'true')
+                inputName.style('padding', '10px')
+                inputName.style('width', '100%')
+                inputName.style('border', '1px solid #ddd')
+                inputName.style('border-radius', '5px')
+                inputName.style('font-size', '16px')
+                inputName.style('margin-bottom', '15px')
+                inputName.attribute('placeholder', 'Nama yang Ulang Tahun')
+                
+                // Input nomor WA dengan ukuran minimal untuk label
+                const phoneFieldset = createDiv('')
+                phoneFieldset.style('margin', '0 auto')
+                phoneFieldset.style('width', '80%')
+                
+                const inputPhone = createInput('')
+                inputPhone.id(idMap.inputPhone);
+                inputPhone.attribute('name', 'phone')
+                inputPhone.attribute('autocomplete', 'tel')
+                inputPhone.attribute('pattern', '\\+62[0-9]{9,}')
+                inputPhone.style('padding', '10px')
+                inputPhone.style('width', '100%')
+                inputPhone.style('border', '1px solid #ddd')
+                inputPhone.style('border-radius', '5px')
+                inputPhone.style('font-size', '16px')
+                inputPhone.style('margin-bottom', '15px')
+                inputPhone.attribute('placeholder', 'Nomor WA (dimulai dengan 62)')
+                
+                // Autofocus pada elemen pertama
+                inputName.attribute('autofocus', 'true')
+        
+                const button = createButton('OK')
+                button.style('margin', '10px auto')
+                button.style('display', 'block')
+                button.style('padding', '10px 30px')
+                button.style('background', 'rgb(52 127 56)')
+                button.attribute('accesskey','n')
+                button.attribute('type','submit')
+                button.attribute('role','button')
+                if (!isDragging) {
+                    startButton.hide()
+                }
+                button.style('border', 'none')
+                button.style('border-radius', '5px')
+                button.style('cursor', 'pointer')
+                button.style('font-size', '16px')
+        
+                button.mousePressed(() => submitName())
+                modalContent.child(swipeIndicator)
+                modalContent.child(title)
+                
+                nameFieldset.child(inputName)
+                phoneFieldset.child(inputPhone)
+                
+                form.child(nameFieldset)
+                form.child(phoneFieldset)
+                form.child(button)
+                
+                modalContent.child(form)
+                modal.child(modalContent)
+                
+                let modalContentElem = select(`#${idMap.modalContent}`).elt;
+                
+                modalContentElem.addEventListener('touchstart', handleTouchStart, false)
+                modalContentElem.addEventListener('touchmove', handleTouchMove, false)
+                modalContentElem.addEventListener('touchend', handleTouchEnd, false)
+                if (window.innerWidth <= 768) {
+                    modalContent.style('position', 'absolute');
+                    modalContent.style('bottom', '10px');
+                    swipeIndicator.style('display', 'block');
+                } else {
+                    swipeIndicator.style('display', 'none');
+                }
+                
+                // Update styles for dark/light mode
+                if (isDarkMode) {
+                    modal.style('background', 'rgba(0,0,0,0.8)');
+                    modalContent.style('backgroundColor', '#1e1e1e');
+                    modalContent.style('color', '#ffffff');
+                    swipeIndicator.style('backgroundColor', '#333');
+                    button.style('background', 'rgb(52 127 56)')
+                    inputName.style('background', '#2c2c2c')
+                    inputName.style('color', '#ffffff')
+                    inputName.style('border', '1px solid #444')
+                    inputPhone.style('background', '#2c2c2c')
+                    inputPhone.style('color', '#ffffff')
+                    inputPhone.style('border', '1px solid #444')
+                    
+                    // Add placeholder style
+                    let style = document.createElement('style');
+                    style.innerHTML = `
+                        #${idMap.inputName}::placeholder, #${idMap.inputPhone}::placeholder {
+                            color: rgba(255,255,255,0.5);
+                            opacity: 1;
+                            font-size: 14px;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                } else {
+                    modal.style('background', 'rgba(255, 246, 246, 0.8)');
+                    modalContent.style('background', 'radial-gradient(100% 193.51% at 100% 0%, #EDF4F8 0%, #EFF2FA 16.92%, #FAEFF6 34.8%, #FAE6F2 48.8%, #FAF0F7 63.79%, #F1F1FB 81.34%, #F0F4F8 100%)');
+                    modalContent.style('color', '#000000');
+                    button.style('background', 'rgb(115 235 121)')
+                    swipeIndicator.style('backgroundColor', 'rgb(205 205 205)');
+                    inputName.style('background', '#ffffff')
+                    inputName.style('color', '#000000')
+                    inputPhone.style('background', '#ffffff')
+                    inputPhone.style('color', '#000000')
+                    
+                    // Add placeholder style
+                    let style = document.createElement('style');
+                    style.innerHTML = `
+                        #${idMap.inputName}::placeholder, #${idMap.inputPhone}::placeholder {
+                            color: rgba(0,0,0,0.5);
+                            opacity: 1;
+                            font-size: 14px;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                // Menambahkan efek setelah modal dibuat
+                modal.style('opacity', '0');
+                modalContent.style('opacity', '0');
+                
+                // Render terlebih dahulu, lalu tambahkan efek transisi
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        modal.style('opacity', '1');
+                        modalContent.style('opacity', '1');
+                        modalContent.style('transform', 'translateY(0)');
+                    });
+                });
+                
+                function submitName() {
+                  userName = inputName.value();
+                  nomorWA = inputPhone.value();
+              
+                  if (userName.trim() !== '' && nomorWA.startsWith('62')) {
+                      showModal = false;
+                      clicked = true;
+                      select(`#${idMap.modal}`).remove();
+                      startButton.remove();
+    
+                      const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+                      updateOGMetadata(userName, randomWish);
+                      
+                      // Generate the shareable URL
+                      const shareableUrl = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(userName)}`;
+                      window.shareableUrl = shareableUrl;  
+                    
+                      initAudio();
+                      birthdayAudio.play().catch(error => {
+                          console.log('Audio playback failed:', error);
+                      });
+                  } else {
+                      alert("Pastikan nomor WA dimulai dengan 62.");
+                  }
               }
-          }
-        }, 500); // Reduced timeout for faster appearance
+            }, 300); // Reduced timeout for faster appearance
+        }
     }
 }
 
