@@ -312,26 +312,32 @@ jobs:
 
       # Step 4: Build gem
       - name: Build Gem
-        run: gem build hbd.gemspec
+        run: |
+          gem build hbd.gemspec
+          ls *.gem  # Verifikasi file gem terbuild
 
-      # Step 5: Setup credentials
-      - name: Setup Credentials
+      - name: Configure RubyGems
         run: |
           mkdir -p ~/.gem
-          echo ":github: Bearer ${{ secrets.GH_TOKEN }}" > ~/.gem/credentials
-          chmod 0600 ~/.gem/credentials
+          echo ":github: Bearer ${{ secrets.GITHUB_TOKEN }}" > ~/.gem/credentials
+          chmod 600 ~/.gem/credentials
+          
+          # Konfigurasi host khusus untuk GitHub Packages
+          gem env add_sources https://rubygems.pkg.github.com/4211421036
 
-      # Step 6: Publish to GitHub Packages
       - name: Publish to GitHub Packages
-        run: gem push --key github --host https://rubygems.pkg.github.com/${{ github.repository_owner }} *.gem
+        run: |
+          gem push --key github \
+            --host https://rubygems.pkg.github.com/4211421036/hbd/ \
+            $(ls hbd-*.gem | head -n 1)
         env:
-          GEM_HOST_API_KEY: ${{ secrets.GH_TOKEN }}
+          GEM_HOST_API_KEY: "Bearer ${{ secrets.GITHUB_TOKEN }}"
 
-      # Step 7: Commit changes (optional)
       - name: Commit Changes
+        if: success()
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git commit -m "Recreate and publish HBD gem" || echo "No changes to commit"
-          git push || echo "No changes to push"
+          git commit -m "Publish gem v$(grep -E "VERSION = " lib/hbd/version.rb | cut -d'"' -f2)" || echo "No changes"
+          git push
