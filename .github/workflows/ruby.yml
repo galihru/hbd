@@ -210,7 +210,7 @@ jobs:
           Tambahkan baris berikut ke dalam `Gemfile` aplikasi Anda:
           
           ```ruby
-          source "https://rubygems.pkg.github.com/${{ github.repository_owner }}" do
+          source "https://rubygems.pkg.github.com/${{ github.repository_owner }}/hbd" do
           gem "hbd"
           end
           ```
@@ -314,12 +314,6 @@ jobs:
         run: |
           cat ~/.gemrc || echo "No .gemrc file found"
 
-      # Step 4: Build gem
-      - name: Build Gem
-        run: |
-          gem build hbd.gemspec
-          ls *.gem  # Verifikasi file gem terbuild
-
       - name: Configure RubyGems
         run: |
           mkdir -p ~/.gem
@@ -327,12 +321,12 @@ jobs:
           chmod 600 ~/.gem/credentials
           
           # Konfigurasi host khusus untuk GitHub Packages
-          gem env add_sources https://rubygems.pkg.github.com/4211421036
+          gem env add_sources https://rubygems.pkg.github.com/4211421036/hbd
 
       - name: Publish to GitHub Packages
         run: |
           gem push --key github \
-            --host https://rubygems.pkg.github.com/4211421036/ \
+            --host https://rubygems.pkg.github.com/4211421036/hbd \
             $(ls hbd-*.gem | head -n 1)
         env:
           GEM_HOST_API_KEY: "Bearer ${{ secrets.GITHUB_TOKEN }}"
