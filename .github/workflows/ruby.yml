@@ -22,6 +22,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1.6' # Sesuaikan dengan versi Ruby yang Anda gunakan
+          bundler-cache: true
 
       # Step 3: Remove old files and create new structure
       - name: Remove Old Files and Create New Structure
@@ -309,6 +310,15 @@ jobs:
           LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
           OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
           SOFTWARE.' > LICENSE.txt
+
+      - name: Check Gem Configuration
+        run: |
+          cat ~/.gemrc || echo "No .gemrc file found"
+
+      - name: Install Dependencies
+        run: |
+          gem install bundler
+          bundle install
 
       # Step 4: Build gem
       - name: Build Gem
