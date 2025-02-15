@@ -21,15 +21,15 @@ jobs:
           
       - name: Create Gem Files
         run: |
-          # Create directories
+          # Pastikan direktori sudah ada
           mkdir -p lib/hbd/assets/javascripts
           
-          # Create version file
+          # Buat ulang file version.rb (pastikan path benar)
           echo 'module HBD
             VERSION = "0.1.0"
           end' > lib/hbd/version.rb
           
-          # Create main lib file
+          # Buat ulang file utama hbd.rb (pastikan path benar)
           echo 'require "hbd/version"
 
           module HBD
@@ -44,7 +44,7 @@ jobs:
             end
           end' > lib/hbd.rb
           
-          # Create fireworks.js
+          # Buat ulang file fireworks.js
           echo 'let fireworks = [];
           let gravity;
 
@@ -75,7 +75,7 @@ jobs:
             }
           }' > lib/hbd/assets/javascripts/fireworks.js
           
-          # Create gemspec
+          # Buat ulang file gemspec
           echo 'lib = File.expand_path("lib", __dir__)
           $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
           require "hbd/version"
@@ -98,7 +98,7 @@ jobs:
               "github_repo" => "ssh://github.com/${{ github.repository }}"
             }
             
-            spec.files = Dir[
+            spec.files = Dir[ 
               "lib/**/*",
               "README.md",
               "LICENSE.txt"
@@ -108,11 +108,11 @@ jobs:
             spec.add_development_dependency "rspec", "~> 3.0"
           end' > hbd.gemspec
           
-          # Create Gemfile
+          # Buat ulang Gemfile
           echo 'source "https://rubygems.org"
           gemspec' > Gemfile
           
-          # Create README
+          # Buat ulang README
           echo '# HBD Gem
 
           Ruby gem for birthday animation.
@@ -134,7 +134,7 @@ jobs:
           <script src="/assets/javascripts/fireworks.js"></script>
           ```' > README.md
           
-          # Create License
+          # Buat ulang License
           echo 'MIT License
 
           Copyright (c) 2024 ${{ github.repository_owner }}
@@ -156,6 +156,9 @@ jobs:
           LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
           OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
           SOFTWARE.' > LICENSE.txt
+
+          # Pastikan semua file benar-benar dibuat
+          ls -R lib/
 
       - name: Build Gem
         run: |
