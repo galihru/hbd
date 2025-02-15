@@ -8,7 +8,6 @@ include:
 plugins:
   - jekyll-content-security-policy-generator
 
-# Konfigurasi untuk jekyll-content-security-policy-generator
 content_security_policy:
   enabled: true
   mode: enforce
