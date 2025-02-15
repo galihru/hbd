@@ -76,7 +76,9 @@ jobs:
           }' > lib/hbd/assets/javascripts/fireworks.js
           
           # Create gemspec
-          echo 'require_relative "lib/hbd/version"
+          echo 'lib = File.expand_path("lib", __dir__)
+          $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+          require "hbd/version"
 
           Gem::Specification.new do |spec|
             spec.name = "hbd"
