@@ -316,7 +316,6 @@ jobs:
 
       - name: Configure RubyGems
         run: |
-          mkdir -p ~/.gem
           echo ":github: Bearer ${{ secrets.GH_TOKEN }}" > ~/.gem/credentials
           chmod 600 ~/.gem/credentials
           
