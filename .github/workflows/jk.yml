@@ -3,35 +3,45 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
 permissions:
   contents: write
   pages: write
   id-token: write
+
 concurrency:
   group: "pages"
   cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.1.6
+          ruby-version: '3.1.6'
           bundler-cache: true
           
       - name: Install dependencies
-        run: bundle install
-
+        run: |
+          npm ci
+          bundle install
+          
       - name: Build Jekyll site
-        run: JEKYLL_ENV=production bundle exec jekyll build --trace
-
-      - name: Debug CSP
-        run: cat _site/index.html | grep "Content-Security-Policy" || echo "CSP tidak ditemukan"
-        
+        run: |
+          JEKYLL_ENV=production bundle exec jekyll build --trace
+          
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
