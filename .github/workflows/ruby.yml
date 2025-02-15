@@ -163,7 +163,8 @@ jobs:
           #### Output:
           - Vektor kecepatan dengan komponen `x` dan `y`:
           
-          $$\text{vel} = \{ x: \text{xVel}, y: -\text{yVel} \}$$
+          $$\text{vel} = \{ x: \text{xVel},$$
+          $$\text{vel} = \{ y: -\text{yVel} \}$$
           
           ---
           
@@ -264,7 +265,7 @@ jobs:
           year = {2025},
           howpublished = {\url{https://github.com/4211421036/hbd}},
           note = {GitHub repository},
-          }
+          }```
           ---
           
           Dibuat dengan ❤️ oleh Galih Ridho Utomo. Selamat menggunakan HBD Gem!
