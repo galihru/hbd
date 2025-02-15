@@ -30,7 +30,7 @@ jobs:
         run: JEKYLL_ENV=production bundle exec jekyll build --trace
 
       - name: Debug CSP
-        run: cat _site/index.html | grep "Content-Security-Policy" || echo "CSP tidak ditemukan coba lagi"
+        run: cat _site/index.html | grep "Content-Security-Policy" || echo "CSP tidak ditemukan"
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
