@@ -314,11 +314,6 @@ jobs:
         run: |
           cat ~/.gemrc || echo "No .gemrc file found"
 
-      - name: Install Dependencies
-        run: |
-          gem install bundler
-          bundle install
-
       # Step 4: Build gem
       - name: Build Gem
         run: |
