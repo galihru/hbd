@@ -107,8 +107,20 @@ bundle install
 
 Atau instal secara manual menggunakan:
 
+Cari module package yang anda ingin install
+
 ```bash
-gem install hbd
+gem search hbd --source https://rubygems.pkg.github.com/4211421036
+```
+
+Pilih module tersebut dengan cara menginstall
+
+```bash
+gem install rl_hiya_hbd --version "0.0.2"
+```
+
+```bash
+gem install my_string_extend_hbd --version "0.0.1"
 ```
 
 ## Penggunaan
