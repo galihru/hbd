@@ -1,0 +1,204 @@
+name: Setup Ruby Gem
+on:
+  workflow_dispatch:
+    inputs:
+      gem_name:
+        description: 'Name of the gem'
+        required: true
+        default: 'my_gem'
+      author_name:
+        description: 'Author name'
+        required: true
+      author_email:
+        description: 'Author email'
+        required: true
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1.6'
+          
+      - name: Create Gem Structure
+        run: |
+          # Create base directories
+          mkdir -p lib/${{ github.event.inputs.gem_name }}
+          mkdir -p spec
+          mkdir -p bin
+          
+          # Create version.rb
+          cat > lib/${{ github.event.inputs.gem_name }}/version.rb << 'EOL'
+          # frozen_string_literal: true
+
+          module ${{ github.event.inputs.gem_name | capitalize }}
+            VERSION = "0.1.0"
+          end
+          EOL
+          
+          # Create main lib file
+          cat > lib/${{ github.event.inputs.gem_name }}.rb << 'EOL'
+          # frozen_string_literal: true
+
+          require_relative "${{ github.event.inputs.gem_name }}/version"
+
+          module ${{ github.event.inputs.gem_name | capitalize }}
+            class Error < StandardError; end
+            # Your code goes here...
+          end
+          EOL
+          
+          # Create gemspec
+          cat > ${{ github.event.inputs.gem_name }}.gemspec << EOL
+          # frozen_string_literal: true
+
+          require_relative "lib/${{ github.event.inputs.gem_name }}/version"
+
+          Gem::Specification.new do |spec|
+            spec.name = "${{ github.event.inputs.gem_name }}"
+            spec.version = ${{ github.event.inputs.gem_name | capitalize }}::VERSION
+            spec.authors = ["${{ github.event.inputs.author_name }}"]
+            spec.email = ["${{ github.event.inputs.author_email }}"]
+
+            spec.summary = "Write a short summary"
+            spec.description = "Write a longer description"
+            spec.homepage = "https://github.com/${{ github.repository }}"
+            spec.license = "MIT"
+            spec.required_ruby_version = ">= 3.1.0"
+
+            spec.metadata["allowed_push_host"] = "https://rubygems.pkg.github.com/${{ github.repository_owner }}"
+            spec.metadata["homepage_uri"] = spec.homepage
+            spec.metadata["source_code_uri"] = spec.homepage
+            spec.metadata["changelog_uri"] = "\#{spec.homepage}/blob/main/CHANGELOG.md"
+
+            spec.files = Dir["lib/**/*", "LICENSE.txt", "README.md"]
+            spec.require_paths = ["lib"]
+
+            spec.add_development_dependency "rake", "~> 13.0"
+            spec.add_development_dependency "rspec", "~> 3.0"
+            spec.add_development_dependency "rubocop", "~> 1.21"
+          end
+          EOL
+          
+          # Create Gemfile
+          cat > Gemfile << 'EOL'
+          # frozen_string_literal: true
+
+          source "https://rubygems.org"
+
+          gemspec
+          EOL
+          
+          # Create Rakefile
+          cat > Rakefile << 'EOL'
+          # frozen_string_literal: true
+
+          require "bundler/gem_tasks"
+          require "rspec/core/rake_task"
+
+          RSpec::Core::RakeTask.new(:spec)
+
+          task default: :spec
+          EOL
+          
+          # Create README
+          cat > README.md << EOL
+          # ${{ github.event.inputs.gem_name | capitalize }}
+
+          Welcome to your new gem! This gem is being built with GitHub Actions.
+
+          ## Installation
+
+          Add this line to your application's Gemfile:
+
+          \`\`\`ruby
+          source "https://rubygems.pkg.github.com/${{ github.repository_owner }}" do
+            gem "${{ github.event.inputs.gem_name }}"
+          end
+          \`\`\`
+
+          ## Usage
+
+          TODO: Write usage instructions here
+
+          ## Development
+
+          After checking out the repo, run \`bin/setup\` to install dependencies.
+
+          ## Contributing
+
+          Bug reports and pull requests are welcome on GitHub at https://github.com/${{ github.repository }}.
+
+          ## License
+
+          The gem is available as open source under the terms of the MIT License.
+          EOL
+          
+          # Create bin/setup
+          cat > bin/setup << 'EOL'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          IFS=$'\n\t'
+          set -vx
+
+          bundle install
+          EOL
+          
+          # Create bin/console
+          cat > bin/console << 'EOL'
+          #!/usr/bin/env ruby
+          # frozen_string_literal: true
+
+          require "bundler/setup"
+          require "${{ github.event.inputs.gem_name }}"
+
+          require "irb"
+          IRB.start(__FILE__)
+          EOL
+          
+          # Make bin files executable
+          chmod +x bin/setup bin/console
+          
+          # Create basic spec file
+          mkdir -p spec/${{ github.event.inputs.gem_name }}
+          cat > spec/spec_helper.rb << 'EOL'
+          # frozen_string_literal: true
+
+          require "${{ github.event.inputs.gem_name }}"
+
+          RSpec.configure do |config|
+            config.example_status_persistence_file_path = ".rspec_status"
+            config.disable_monkey_patching!
+            config.expect_with :rspec do |c|
+              c.syntax = :expect
+            end
+          end
+          EOL
+          
+          # Create .gitignore
+          cat > .gitignore << 'EOL'
+          /.bundle/
+          /.yardoc
+          /_yardoc/
+          /coverage/
+          /doc/
+          /pkg/
+          /spec/reports/
+          /tmp/
+          .rspec_status
+          Gemfile.lock
+          EOL
+
+      - name: Initial Commit
+        run: |
+          git config --local user.email "${{ github.event.inputs.author_email }}"
+          git config --local user.name "${{ github.event.inputs.author_name }}"
+          git add .
+          git commit -m "Initial gem setup"
+          git push
