@@ -1,7 +1,7 @@
 {
   "name": "hbd",
   "version": "1.0.0",
-  "description": "Selamat Ulang Tahun!",
+  "description": "Selamat Ulang Tahun",
   "main": "sc.js",
   "scripts": {
     "start": "node sc.js",
