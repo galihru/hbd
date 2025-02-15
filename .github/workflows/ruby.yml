@@ -22,7 +22,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1.6' # Sesuaikan dengan versi Ruby yang Anda gunakan
-          bundler-cache: true
 
       # Step 3: Remove old files and create new structure
       - name: Remove Old Files and Create New Structure
