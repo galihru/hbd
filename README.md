@@ -33,21 +33,28 @@ Metode ini menghitung vektor kecepatan kembang api berdasarkan posisi target.
 2. **`xDir`**: Jarak horizontal antara target dan posisi awal (`target.x - startingX`).
 3. **`yDir`**: Jarak vertikal antara target dan posisi awal (`target.y - window.innerHeight`).
 4. **`scale`**: Faktor skala untuk menormalkan vektor kecepatan:
+
 $$
 \text{scale} = \frac{(\text{xDir}^2 + \text{yDir}^2)}{\text{vel}^2}
 $$
+
 5. **`xVel`**: Komponen kecepatan horizontal:
+
    $$
    \text{xVel} = \sqrt{\frac{\text{xDir}^2}{\text{scale}}}
    $$
+
 6. **`yVel`**: Komponen kecepatan vertikal:
+
    $$
    \text{yVel} = \sqrt{\frac{\text{yDir}^2}{\text{scale}}}
    $$
+
 7. Jika `xDir < 0`, arah horizontal dibalik (`xVel *= -1`).
 
 #### Output:
 - Vektor kecepatan dengan komponen `x` dan `y`:
+  
   $$
   \text{vel} = \{ x: \text{xVel}, y: -\text{yVel} \}
   $$
@@ -60,6 +67,7 @@ Metode ini mengupdate posisi kembang api dan menangani ledakan.
 #### Logika:
 1. Jika posisi kembang api (`pos.y`) masih di atas target (`target.y`):
    - Update posisi kembang api:
+  
      $$
      \text{pos.x} += \text{vel.x}
      $$
@@ -67,11 +75,13 @@ Metode ini mengupdate posisi kembang api dan menangani ledakan.
      $$
      \text{pos.y} += \text{vel.y}
      $$
+   
    - Gambar titik kembang api dengan warna dan ketebalan tertentu.
 
 2. Jika kembang api mencapai atau melewati target:
    - Jika belum meledak (`exploded == false`), panggil metode `explode()`.
    - Update posisi dan kecepatan partikel ledakan:
+   
      $$
      \text{particle.x} += \text{particle.velX}
      $$
@@ -83,6 +93,7 @@ Metode ini mengupdate posisi kembang api dan menangani ledakan.
      $$
      \text{particle.velY} += 0.05 \quad (\text{gravitasi})
      $$
+   
    - Hapus partikel jika keluar dari layar.
 
 ## Instalasi
