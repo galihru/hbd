@@ -3,14 +3,14 @@ on:
   workflow_dispatch:
     inputs:
       gem_name:
-        description: 'Name of the gem'
+        description: 'HBD'
         required: true
-        default: 'my_gem'
+        default: 'HBD'
       author_name:
-        description: 'Author name'
+        description: 'GALIH RIDHO UTOMO'
         required: true
       author_email:
-        description: 'Author email'
+        description: 'g4lihru@students.unnes.ac.id'
         required: true
 
 jobs:
