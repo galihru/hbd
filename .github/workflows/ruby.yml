@@ -1,4 +1,4 @@
-name: Publish Ruby Gem HBD
+name: Ruby Gem
 on:
   push:
     branches: [ main ]
@@ -21,17 +21,30 @@ jobs:
           
       - name: Create Gem Files
         run: |
-          # Set gem name and create directories
-          GEM_NAME="hbd_animation"
-          mkdir -p lib/${GEM_NAME}/assets/javascripts
-          mkdir -p lib/${GEM_NAME}/assets/stylesheets
+          # Create directories
+          mkdir -p lib/hbd/assets/javascripts
           
           # Create version file
-          echo 'module HbdAnimation
+          echo 'module HBD
             VERSION = "0.1.0"
-          end' > lib/${GEM_NAME}/version.rb
+          end' > lib/hbd/version.rb
           
-          # Create main JavaScript file
+          # Create main lib file
+          echo 'require "hbd/version"
+
+          module HBD
+            class Error < StandardError; end
+            
+            def self.root
+              File.expand_path "../..", __FILE__
+            end
+            
+            def self.assets_path
+              File.join root, "assets"
+            end
+          end' > lib/hbd.rb
+          
+          # Create fireworks.js
           echo 'let fireworks = [];
           let gravity;
 
@@ -60,140 +73,19 @@ jobs:
                 fireworks.splice(i, 1);
               }
             }
-          }
-
-          class Particle {
-            constructor(x, y, hu, firework) {
-              this.pos = createVector(x, y);
-              this.firework = firework;
-              this.lifespan = 255;
-              this.hu = hu;
-              
-              if (this.firework) {
-                this.vel = createVector(0, random(-16, -8));
-              } else {
-                this.vel = p5.Vector.random2D();
-                this.vel.mult(random(2, 10));
-              }
-              
-              this.acc = createVector(0, 0);
-            }
-
-            applyForce(force) {
-              this.acc.add(force);
-            }
-            
-            update() {
-              if (!this.firework) {
-                this.vel.mult(0.9);
-                this.lifespan -= 4;
-              }
-              
-              this.vel.add(this.acc);
-              this.pos.add(this.vel);
-              this.acc.mult(0);
-            }
-            
-            done() {
-              return this.lifespan < 0;
-            }
-            
-            show() {
-              colorMode(HSB);
-              
-              if (!this.firework) {
-                strokeWeight(2);
-                stroke(this.hu, 255, 255, this.lifespan);
-              } else {
-                strokeWeight(4);
-                stroke(this.hu, 255, 255);
-              }
-              
-              point(this.pos.x, this.pos.y);
-            }
-          }
-
-          class Firework {
-            constructor() {
-              this.hu = random(255);
-              this.firework = new Particle(random(width), height, this.hu, true);
-              this.exploded = false;
-              this.particles = [];
-            }
-            
-            done() {
-              return this.exploded && this.particles.length === 0;
-            }
-            
-            update() {
-              if (!this.exploded) {
-                this.firework.applyForce(gravity);
-                this.firework.update();
-                
-                if (this.firework.vel.y >= 0) {
-                  this.exploded = true;
-                  this.explode();
-                }
-              }
-              
-              for (let i = this.particles.length - 1; i >= 0; i--) {
-                this.particles[i].applyForce(gravity);
-                this.particles[i].update();
-                
-                if (this.particles[i].done()) {
-                  this.particles.splice(i, 1);
-                }
-              }
-            }
-            
-            explode() {
-              for (let i = 0; i < 100; i++) {
-                const p = new Particle(this.firework.pos.x, this.firework.pos.y, this.hu, false);
-                this.particles.push(p);
-              }
-            }
-            
-            show() {
-              if (!this.exploded) {
-                this.firework.show();
-              }
-              
-              for (let i = 0; i < this.particles.length; i++) {
-                this.particles[i].show();
-              }
-            }
-          }' > lib/${GEM_NAME}/assets/javascripts/fireworks.js
-          
-          # Create main Ruby file
-          echo 'require "hbd_animation/version"
-
-          module HbdAnimation
-            class Error < StandardError; end
-            
-            def self.assets_path
-              File.expand_path("../hbd_animation/assets", __FILE__)
-            end
-            
-            def self.javascript_path
-              File.join(assets_path, "javascripts")
-            end
-            
-            def self.stylesheets_path
-              File.join(assets_path, "stylesheets")
-            end
-          end' > lib/${GEM_NAME}.rb
+          }' > lib/hbd/assets/javascripts/fireworks.js
           
           # Create gemspec
-          echo 'require_relative "lib/hbd_animation/version"
+          echo 'require_relative "lib/hbd/version"
 
           Gem::Specification.new do |spec|
-            spec.name = "hbd_animation"
-            spec.version = HbdAnimation::VERSION
+            spec.name = "hbd"
+            spec.version = HBD::VERSION
             spec.authors = ["${{ github.actor }}"]
             spec.email = ["${{ github.actor }}@users.noreply.github.com"]
             
             spec.summary = "HBD Animation with Fireworks"
-            spec.description = "A Ruby gem that provides a beautiful fireworks animation for birthday celebrations"
+            spec.description = "A Ruby gem that provides birthday fireworks animation"
             spec.homepage = "https://github.com/${{ github.repository }}"
             spec.license = "MIT"
             spec.required_ruby_version = ">= 3.1.0"
@@ -210,47 +102,58 @@ jobs:
               "LICENSE.txt"
             ]
             
-            spec.require_paths = ["lib"]
-            
             spec.add_development_dependency "rake", "~> 13.0"
             spec.add_development_dependency "rspec", "~> 3.0"
-          end' > ${GEM_NAME}.gemspec
+          end' > hbd.gemspec
           
           # Create Gemfile
           echo 'source "https://rubygems.org"
           gemspec' > Gemfile
           
           # Create README
-          echo '# HBD Animation
+          echo '# HBD Gem
 
-          A Ruby gem that provides beautiful fireworks animation for birthday celebrations using p5.js.
+          Ruby gem for birthday animation.
 
           ## Installation
 
-          Add this line to your application'\''s Gemfile:
-
           ```ruby
           source "https://rubygems.pkg.github.com/${{ github.repository_owner }}" do
-            gem "hbd_animation"
+            gem "hbd"
           end
           ```
 
           ## Usage
 
-          Add this to your HTML:
+          Add to your HTML:
 
           ```html
           <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
           <script src="/assets/javascripts/fireworks.js"></script>
-          ```
+          ```' > README.md
+          
+          # Create License
+          echo 'MIT License
 
-          ## Development
+          Copyright (c) 2024 ${{ github.repository_owner }}
 
-          After checking out the repo, run `bundle install` to install dependencies.
+          Permission is hereby granted, free of charge, to any person obtaining a copy
+          of this software and associated documentation files (the "Software"), to deal
+          in the Software without restriction, including without limitation the rights
+          to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+          copies of the Software, and to permit persons to whom the Software is
+          furnished to do so, subject to the following conditions:
 
-          ## License
+          The above copyright notice and this permission notice shall be included in all
+          copies or substantial portions of the Software.
 
-          The gem is available as open source under the terms of the MIT License.' > README.md
+          THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+          IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+          FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+          AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+          LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+          OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+          SOFTWARE.' > LICENSE.txt
 
       - name: Build Gem
         run: |
@@ -273,5 +176,5 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git commit -m "Create and publish HBD animation gem" || echo "No changes to commit"
+          git commit -m "Create and publish HBD gem" || echo "No changes to commit"
           git push || echo "No changes to push"
