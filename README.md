@@ -165,7 +165,9 @@ title = {HBD Package Gem Ruby: Animasi Kembang Api untuk Ulang Tahun},
 year = {2025},
 howpublished = {\url{https://github.com/4211421036/hbd}},
 note = {GitHub repository},
-}```
+}
+```
+
 ---
 
 Dibuat dengan ❤️ oleh Galih Ridho Utomo. Selamat menggunakan HBD Gem!
