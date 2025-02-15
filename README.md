@@ -51,7 +51,8 @@ $$\text{yVel} = \sqrt{\frac{\text{yDir}^2}{\text{scale}}}$$
 #### Output:
 - Vektor kecepatan dengan komponen `x` dan `y`:
 
-$$\text{vel} = \{ x: \text{xVel}, y: -\text{yVel} \}$$
+$$\text{vel} = \{ x: \text{xVel},$$
+$$\text{vel} = \{ y: -\text{yVel} \}$$
 
 ---
 
@@ -152,7 +153,7 @@ title = {HBD Package Gem Ruby: Animasi Kembang Api untuk Ulang Tahun},
 year = {2025},
 howpublished = {\url{https://github.com/4211421036/hbd}},
 note = {GitHub repository},
-}
+}```
 ---
 
 Dibuat dengan ❤️ oleh Galih Ridho Utomo. Selamat menggunakan HBD Gem!
