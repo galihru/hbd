@@ -317,7 +317,7 @@ jobs:
       - name: Configure RubyGems
         run: |
           mkdir -p ~/.gem
-          echo ":github: Bearer ${{ secrets.GITHUB_TOKEN }}" > ~/.gem/credentials
+          echo ":github: Bearer ${{ secrets.GH_TOKEN }}" > ~/.gem/credentials
           chmod 600 ~/.gem/credentials
           
           # Konfigurasi host khusus untuk GitHub Packages
