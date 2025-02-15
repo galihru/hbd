@@ -40,24 +40,18 @@ $$
 
 5. **`xVel`**: Komponen kecepatan horizontal:
 
-   $$
-   \text{xVel} = \sqrt{\frac{\text{xDir}^2}{\text{scale}}}
-   $$
+$$\text{xVel} = \sqrt{\frac{\text{xDir}^2}{\text{scale}}}$$
 
 6. **`yVel`**: Komponen kecepatan vertikal:
 
-   $$
-   \text{yVel} = \sqrt{\frac{\text{yDir}^2}{\text{scale}}}
-   $$
+$$\text{yVel} = \sqrt{\frac{\text{yDir}^2}{\text{scale}}}$$
 
 7. Jika `xDir < 0`, arah horizontal dibalik (`xVel *= -1`).
 
 #### Output:
 - Vektor kecepatan dengan komponen `x` dan `y`:
-  
-  $$
-  \text{vel} = \{ x: \text{xVel}, y: -\text{yVel} \}
-  $$
+
+$$\text{vel} = \{ x: \text{xVel}, y: -\text{yVel} \}$$
 
 ---
 
@@ -66,35 +60,22 @@ Metode ini mengupdate posisi kembang api dan menangani ledakan.
 
 #### Logika:
 1. Jika posisi kembang api (`pos.y`) masih di atas target (`target.y`):
-   - Update posisi kembang api:
-  
-     $$
-     \text{pos.x} += \text{vel.x}
-     $$
-    
-     $$
-     \text{pos.y} += \text{vel.y}
-     $$
-   
-   - Gambar titik kembang api dengan warna dan ketebalan tertentu.
+- Update posisi kembang api:
+
+$$\text{pos.x} += \text{vel.x}$$
+$$\text{pos.y} += \text{vel.y}$$
+
+- Gambar titik kembang api dengan warna dan ketebalan tertentu.
 
 2. Jika kembang api mencapai atau melewati target:
-   - Jika belum meledak (`exploded == false`), panggil metode `explode()`.
-   - Update posisi dan kecepatan partikel ledakan:
-   
-     $$
-     \text{particle.x} += \text{particle.velX}
-     $$
-    
-     $$
-     \text{particle.y} += \text{particle.velY}
-     $$
-    
-     $$
-     \text{particle.velY} += 0.05 \quad (\text{gravitasi})
-     $$
-   
-   - Hapus partikel jika keluar dari layar.
+- Jika belum meledak (`exploded == false`), panggil metode `explode()`.
+- Update posisi dan kecepatan partikel ledakan:
+
+$$\text{particle.x} += \text{particle.velX}$$
+$$\text{particle.y} += \text{particle.velY}$$
+$$\text{particle.velY} += 0.05 \quad (\text{gravitasi})$$
+
+- Hapus partikel jika keluar dari layar.
 
 ## Instalasi
 
@@ -102,7 +83,7 @@ Tambahkan baris berikut ke dalam `Gemfile` aplikasi Anda:
 
 ```ruby
 source "https://rubygems.pkg.github.com/4211421036" do
-  gem "hbd"
+gem "hbd"
 end
 ```
 
@@ -166,11 +147,11 @@ Jika Anda menggunakan proyek ini dalam penelitian atau publikasi, silakan cantum
 
 ```bibtex
 @misc{hbd-gem,
-  author = {Utomo, Galih Ridho},
-  title = {HBD Package Gem Ruby: Animasi Kembang Api untuk Ulang Tahun},
-  year = {2025},
-  howpublished = {\url{https://github.com/4211421036/hbd}},
-  note = {GitHub repository},
+author = {Utomo, Galih Ridho},
+title = {HBD Package Gem Ruby: Animasi Kembang Api untuk Ulang Tahun},
+year = {2025},
+howpublished = {\url{https://github.com/4211421036/hbd}},
+note = {GitHub repository},
 }
 ---
 
