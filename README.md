@@ -1,23 +1,20 @@
-# MyExampleGem
+# HBD Gem
 
-Welcome to your new gem! This gem was created using GitHub Actions.
+Ruby gem for birthday animation.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
 ```ruby
-gem 'my_example_gem'
+source "https://rubygems.pkg.github.com/4211421036" do
+  gem "hbd"
+end
 ```
 
 ## Usage
 
-TODO: Write usage instructions here
+Add to your HTML:
 
-## Development
-
-After checking out the repo, run `bundle install` to install dependencies.
-
-## License
-
-The gem is available as open source under the terms of the MIT License.
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+<script src="/assets/javascripts/fireworks.js"></script>
+```
