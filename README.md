@@ -58,6 +58,7 @@ $$\text{yVel} = \sqrt{\frac{\text{yDir}^2}{\text{scale}}}$$
 - Vektor kecepatan dengan komponen `x` dan `y`:
 
 $$\text{vel}_{x} = \{ x: \text{xVel}\},$$
+
 $$\text{vel}_{y} = \{ y: -\text{yVel} \}$$
 
 ---
