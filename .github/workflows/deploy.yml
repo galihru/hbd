@@ -19,7 +19,6 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
         
-      # Install dependencies if needed (if your project uses npm, yarn, etc.)
       - name: Install dependencies
         run: npm install
 
