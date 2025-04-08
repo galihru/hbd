@@ -1,4 +1,4 @@
-name: Deploy Jekyll with Security Headers
+name: Deploy Jekyll Site with Custom Headers
 
 on:
   push:
@@ -16,29 +16,46 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04 # Explicitly use older Ubuntu version for compatibility
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2 # Downgraded to v2 for compatibility
+        uses: actions/checkout@v4
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.0' # Using slightly older Ruby version
+          ruby-version: '3.1'
           bundler-cache: true
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v1 # Downgraded to v1
+      - name: Fix Gemfile for Jekyll
+        run: |
+          # Backup original Gemfile
+          cp Gemfile Gemfile.original
+          
+          # Create basic Gemfile if not exists
+          if [ ! -f "Gemfile" ]; then
+            echo "source 'https://rubygems.org'" > Gemfile
+            echo "gem 'jekyll', '~> 4.3'" >> Gemfile
+            echo "gem 'github-pages', group: :jekyll_plugins" >> Gemfile
+          else
+            # Remove gemspec reference if exists
+            sed -i '/gemspec/d' Gemfile
+            # Add required gems if not present
+            grep -q "gem 'jekyll'" Gemfile || echo "gem 'jekyll', '~> 4.3'" >> Gemfile
+            grep -q "gem 'github-pages'" Gemfile || echo "gem 'github-pages', group: :jekyll_plugins" >> Gemfile
+          fi
+
+          # Remove problematic gemspec if exists
+          rm -f *.gemspec || true
+
+      - name: Install dependencies
+        run: bundle install
 
       - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./
-          destination: ./_site
+        run: bundle exec jekyll build --destination ./_site
 
       - name: Create _headers file
         run: |
-          # Create in root then move to avoid permission issues
           cat << 'EOF' > ./_headers
           /*
             Content-Security-Policy: default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; frame-ancestors 'self'; style-src 'self' 'unsafe-inline' *; img-src 'self' data: blob: *; font-src 'self' *; connect-src 'self' *; media-src 'self' *; frame-src 'self' *; worker-src 'self' blob: *; form-action 'self' *
@@ -54,15 +71,15 @@ jobs:
           cat _site/_headers
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v0 # Using v0 which is most stable for older runners
+        uses: actions/upload-pages-artifact@v2
 
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v0 # Using v0 for compatibility
+        uses: actions/deploy-pages@v3
