@@ -1,62 +1,44 @@
-name: Deploy Jekyll Site with Custom Headers
+name: Deploy Jekyll Site with Security Headers
 
 on:
   push:
     branches: ["main"]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
   build:
-    runs-on: ubuntu-20.04 # Explicitly use older Ubuntu version
+    runs-on: ubuntu-18.04 # Use older Ubuntu version for maximum compatibility
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2 # Use v2 instead of v4
+        uses: actions/checkout@v2
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1 # Older version of Ruby setup
         with:
-          ruby-version: '3.0' # Slightly older Ruby version
-          bundler-cache: true
-
-      - name: Fix Gemfile for Jekyll
-        run: |
-          # Backup original Gemfile
-          cp Gemfile Gemfile.original
+          ruby-version: '2.7' # Use older Ruby version
           
-          # Create basic Gemfile if not exists
+      - name: Fix Gemfile
+        run: |
+          # Create basic Gemfile if needed
           if [ ! -f "Gemfile" ]; then
             echo "source 'https://rubygems.org'" > Gemfile
-            echo "gem 'jekyll', '~> 4.2'" >> Gemfile
-            echo "gem 'github-pages', group: :jekyll_plugins" >> Gemfile
-          else
-            # Remove gemspec reference if exists
-            sed -i '/gemspec/d' Gemfile
-            # Add required gems if not present
-            grep -q "gem 'jekyll'" Gemfile || echo "gem 'jekyll', '~> 4.2'" >> Gemfile
-            grep -q "gem 'github-pages'" Gemfile || echo "gem 'github-pages', group: :jekyll_plugins" >> Gemfile
+            echo "gem 'jekyll', '~> 4.1'" >> Gemfile
           fi
-
           # Remove problematic gemspec if exists
           rm -f *.gemspec || true
-
+          
       - name: Install dependencies
-        run: bundle install
+        run: |
+          gem install bundler -v '~> 2.1'
+          bundle install
 
       - name: Build with Jekyll
-        run: bundle exec jekyll build --destination ./_site
+        run: |
+          bundle exec jekyll build --destination ./_site
 
       - name: Create _headers file
         run: |
-          cat << 'EOF' > ./_headers
+          mkdir -p _site
+          cat << 'EOF' > _site/_headers
           /*
             Content-Security-Policy: default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; frame-ancestors 'self'; style-src 'self' 'unsafe-inline' *; img-src 'self' data: blob: *; font-src 'self' *; connect-src 'self' *; media-src 'self' *; frame-src 'self' *; worker-src 'self' blob: *; form-action 'self' *
             Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
@@ -66,20 +48,9 @@ jobs:
             Referrer-Policy: strict-origin-when-cross-origin
             Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
           EOF
-          mv _headers _site/
-          echo "Generated _headers file:"
-          cat _site/_headers
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1 # Use v1 instead of v2
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-20.04
-    needs: build
-    steps:
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1 # Use v1 instead of v3
+        uses: peaceiris/actions-gh-pages@v2 # Alternative deployment action
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
