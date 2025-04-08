@@ -19,16 +19,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1' # Sesuaikan dengan versi yang digunakan Jekyll Anda
+          ruby-version: '3.1'
           bundler-cache: true
 
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v2
 
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
@@ -36,27 +36,25 @@ jobs:
           source: ./
           destination: ./_site
 
-      - name: Create _headers file
+      - name: Create and move _headers file
         run: |
-          # Membuat file _headers sementara di root direktori
-          echo "/*" > _headers
-          echo "  Content-Security-Policy: default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; frame-ancestors 'self'; style-src 'self' 'unsafe-inline' *; img-src 'self' data: blob: *; font-src 'self' *; connect-src 'self' *; media-src 'self' *; frame-src 'self' *; worker-src 'self' blob: *; form-action 'self' *" >> _headers
-          echo "  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload" >> _headers
-          echo "  Cross-Origin-Opener-Policy: same-origin" >> _headers
-          echo "  X-Frame-Options: DENY" >> _headers
-          echo "  X-Content-Type-Options: nosniff" >> _headers
-          echo "  Referrer-Policy: strict-origin-when-cross-origin" >> _headers
-          echo "  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()" >> _headers
-          
-          # Memindahkan file ke _site
+          # Create _headers in root then move to _site
+          cat <<EOF > _headers
+          /*
+            Content-Security-Policy: default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; frame-ancestors 'self'; style-src 'self' 'unsafe-inline' *; img-src 'self' data: blob: *; font-src 'self' *; connect-src 'self' *; media-src 'self' *; frame-src 'self' *; worker-src 'self' blob: *; form-action 'self' *
+            Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+            Cross-Origin-Opener-Policy: same-origin
+            X-Frame-Options: DENY
+            X-Content-Type-Options: nosniff
+            Referrer-Policy: strict-origin-when-cross-origin
+            Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+          EOF
           mv _headers _site/
-          
-          # Verifikasi file
-          echo "Isi _headers:"
+          echo "Headers file content:"
           cat _site/_headers
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v1
 
   deploy:
     environment:
@@ -67,4 +65,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v1
