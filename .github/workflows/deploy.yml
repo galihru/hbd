@@ -1,43 +1,50 @@
-name: Deploy Jekyll Site with Security Headers
+name: Deploy Jekyll with Security Headers
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages-${{ github.ref }}"
+  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Set up Ruby
-        uses: actions/setup-ruby@v1 # Older version of Ruby setup
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7' # Use older Ruby version
-          
-      - name: Fix Gemfile
+          ruby-version: '3.0'
+          bundler-cache: true
+
+      - name: Clean up gemspec
         run: |
+          # Remove problematic gemspec if exists
+          rm -f *.gemspec || true
           # Create basic Gemfile if needed
           if [ ! -f "Gemfile" ]; then
             echo "source 'https://rubygems.org'" > Gemfile
-            echo "gem 'jekyll', '~> 4.1'" >> Gemfile
+            echo "gem 'jekyll', '~> 4.2'" >> Gemfile
           fi
-          # Remove problematic gemspec if exists
-          rm -f *.gemspec || true
-          
+
       - name: Install dependencies
-        run: |
-          gem install bundler -v '~> 2.1'
-          bundle install
+        run: bundle install
 
       - name: Build with Jekyll
-        run: |
-          bundle exec jekyll build --destination ./_site
+        run: bundle exec jekyll build --destination ./_site
 
-      - name: Create _headers file
+      - name: Generate security headers
         run: |
-          mkdir -p _site
           cat << 'EOF' > _site/_headers
           /*
             Content-Security-Policy: default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; frame-ancestors 'self'; style-src 'self' 'unsafe-inline' *; img-src 'self' data: blob: *; font-src 'self' *; connect-src 'self' *; media-src 'self' *; frame-src 'self' *; worker-src 'self' blob: *; form-action 'self' *
@@ -49,8 +56,21 @@ jobs:
             Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
           EOF
 
+      - name: Verify files
+        run: |
+          ls -la _site/
+          cat _site/_headers
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v2 # Alternative deployment action
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
+        id: deployment
+        uses: actions/deploy-pages@v2
