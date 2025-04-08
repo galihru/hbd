@@ -1,26 +1,21 @@
 # Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
-
+name: Deploy Jekyll with Security Headers
 on:
   # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
-
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
-
 jobs:
   # Build job
   build:
@@ -37,14 +32,23 @@ jobs:
           destination: ./_site
       - name: Change ownership of _site directory
         run: sudo chown -R $USER:$USER _site
-      - name: Add Custom Headers
+      - name: Add Security Headers
         run: |
-          echo "/  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload" > _site/_headers
-      - name: Copy _headers file
-        run: cp _headers _site/_headers
+          cat << 'EOF' > _site/_headers
+          /*
+            Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';
+            Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+            X-Content-Type-Options: nosniff
+            X-Frame-Options: DENY
+            Referrer-Policy: strict-origin-when-cross-origin
+            Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+          EOF
+      - name: Verify headers file
+        run: |
+          ls -la _site/
+          cat _site/_headers
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
-
   # Deployment job
   deploy:
     environment:
