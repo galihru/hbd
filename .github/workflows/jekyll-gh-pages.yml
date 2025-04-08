@@ -77,19 +77,6 @@ jobs:
           EOF
           echo "netlify.toml file created"
       
-      # Tambahkan meta CSP ke semua file HTML secara langsung
-      - name: Inject CSP to HTML files
-        run: |
-          find _site -name "*.html" -type f -exec sed -i '/<head>/a \
-          <meta http-equiv="Content-Security-Policy" content="default-src '\''self'\''; script-src '\''self'\'' '\''unsafe-inline'\''; style-src '\''self'\'' '\''unsafe-inline'\''; img-src '\''self'\'' data:; font-src '\''self'\''; connect-src '\''self'\''; media-src '\''self'\''; frame-src '\''none'\''; object-src '\''none'\''; base-uri '\''self'\''; form-action '\''self'\''; frame-ancestors '\''none'\'';">\
-          <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload">\
-          <meta http-equiv="X-Content-Type-Options" content="nosniff">\
-          <meta http-equiv="X-Frame-Options" content="DENY">\
-          <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">\
-          <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">\
-          <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=()">' {} \;
-          echo "Injected CSP to HTML files"
-      
       - name: List _site directory contents
         run: |
           echo "Listing _site directory contents:"
