@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { minify } from 'html-minifier';
-import { minify as minifyJs } from 'terser'; // Import Terser untuk minify JS
+import { minify as minifyJs } from 'terser';
 
 function generateNonce() {
   return crypto.randomBytes(16).toString('base64');
