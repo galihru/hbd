@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04 # Use older Ubuntu version for maximum compatibility
+    runs-on: ubuntu-18.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
