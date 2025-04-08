@@ -3,24 +3,29 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
+
 concurrency:
   group: "pages-${{ github.ref }}"
   cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.0'
           bundler-cache: true
+      
       - name: Clean up gemspec
         run: |
           # Remove problematic gemspec if exists
@@ -30,12 +35,16 @@ jobs:
             echo "source 'https://rubygems.org'" > Gemfile
             echo "gem 'jekyll', '~> 4.2'" >> Gemfile
           fi
+      
       - name: Install dependencies
         run: bundle install
+      
       - name: Build with Jekyll
-        run: bundle exec jekyll build --destination ./_site
+        run: bundle exec jekyll build
+      
       - name: Generate security headers
         run: |
+          mkdir -p _site
           cat << 'EOF' > _site/_headers
           /*
             Content-Security-Policy: default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src 'self' 'unsafe-inline' *; img-src 'self' data: blob: *; font-src 'self' *; connect-src 'self' *; media-src 'self' *; frame-src 'self' *; worker-src 'self' blob: *; form-action 'self' *
@@ -46,14 +55,21 @@ jobs:
             Referrer-Policy: strict-origin-when-cross-origin
             Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
           EOF
+      
       - name: Verify files
         run: |
           ls -la _site/
           cat _site/_headers
+      
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v3
+      
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v2
         with:
-          path: ./_site
+          path: '_site'
+  
   deploy:
     environment:
       name: github-pages
