@@ -16,19 +16,19 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04 # Explicitly use older Ubuntu version for compatibility
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2 # Downgraded to v2 for compatibility
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1'
+          ruby-version: '3.0' # Using slightly older Ruby version
           bundler-cache: true
 
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v1 # Downgraded to v1
 
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
@@ -36,10 +36,10 @@ jobs:
           source: ./
           destination: ./_site
 
-      - name: Create and move _headers file
+      - name: Create _headers file
         run: |
-          # Create _headers in root then move to _site
-          cat <<EOF > _headers
+          # Create in root then move to avoid permission issues
+          cat << 'EOF' > ./_headers
           /*
             Content-Security-Policy: default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; frame-ancestors 'self'; style-src 'self' 'unsafe-inline' *; img-src 'self' data: blob: *; font-src 'self' *; connect-src 'self' *; media-src 'self' *; frame-src 'self' *; worker-src 'self' blob: *; form-action 'self' *
             Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
@@ -50,19 +50,19 @@ jobs:
             Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
           EOF
           mv _headers _site/
-          echo "Headers file content:"
+          echo "Generated _headers file:"
           cat _site/_headers
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v0 # Using v0 which is most stable for older runners
 
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v0 # Using v0 for compatibility
