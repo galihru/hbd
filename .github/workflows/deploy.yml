@@ -30,9 +30,11 @@ jobs:
           source: ./
           destination: ./_site
       
+      - name: Fix permissions
+        run: sudo chown -R $USER:$USER _site
+      
       - name: Create _headers file
         run: |
-          # Membuat file _headers dengan format yang benar
           echo "/*" > _site/_headers
           echo "  Content-Security-Policy: default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; frame-ancestors 'self'; style-src 'self' 'unsafe-inline' *; img-src 'self' data: blob: *; font-src 'self' *; connect-src 'self' *; media-src 'self' *; frame-src 'self' *; worker-src 'self' blob: *; form-action 'self' *" >> _site/_headers
           echo "  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload" >> _site/_headers
