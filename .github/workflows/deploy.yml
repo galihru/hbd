@@ -1,37 +1,61 @@
-name: Auto Deployment
+name: Deploy Jekyll dengan Header Keamanan
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
-        
-      # Set up Git configuration (user info)
-      - name: Set up Git config
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+      
+      - name: Create _headers file
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-        
-      - name: Install dependencies
-        run: npm install
-
-      # Stage changes (e.g., package-lock.json)
-      - name: Stage changes
-        run: git add .
-
-      # Commit the changes if there are any changes to commit
-      - name: Commit changes
+          # Membuat file _headers dengan format yang benar
+          echo "/*" > _site/_headers
+          echo "  Content-Security-Policy: default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; frame-ancestors 'self'; style-src 'self' 'unsafe-inline' *; img-src 'self' data: blob: *; font-src 'self' *; connect-src 'self' *; media-src 'self' *; frame-src 'self' *; worker-src 'self' blob: *; form-action 'self' *" >> _site/_headers
+          echo "  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload" >> _site/_headers
+          echo "  Cross-Origin-Opener-Policy: same-origin" >> _site/_headers
+          echo "  X-Frame-Options: DENY" >> _site/_headers
+          echo "  X-Content-Type-Options: nosniff" >> _site/_headers
+          echo "  Referrer-Policy: strict-origin-when-cross-origin" >> _site/_headers
+          echo "  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()" >> _site/_headers
+      
+      - name: Verify _headers file
         run: |
-          git commit -m "Automatic deployment commit" || echo "No changes to commit"
-        continue-on-error: true  # In case there's nothing to commit, continue without error
+          cat _site/_headers
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
 
-      # Push the changes back to the repository
-      - name: Push changes
-        run: git push origin main
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
