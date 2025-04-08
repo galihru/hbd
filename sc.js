@@ -185,6 +185,7 @@ async function generateHtml() {
       `style-src 'self' 'nonce-${nonce}' 'unsafe-inline' https://4211421036.github.io http://4211421036.github.io`,
       "object-src 'none'",
       "base-uri 'self'",
+      "frame-ancestors 'self'",
       "img-src 'self' data: https://4211421036.github.io http://4211421036.github.io",
       "default-src 'self' https://4211421036.github.io http://4211421036.github.io",
       `script-src 'self' 'unsafe-inline' 'nonce-${nonce}' 'strict-dynamic' ${hashedJsFiles
