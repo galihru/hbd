@@ -11,6 +11,12 @@ export default {
     const nonce = crypto.randomUUID();
     const githubUrl = new URL(url.pathname, githubBaseUrl);
 
+    // Reject requests whose normalized path escapes the intended base path
+    // (mitigates path traversal via "../" sequences in the request pathname).
+    if (!githubUrl.pathname.startsWith(new URL(githubBaseUrl).pathname)) {
+      return new Response('Forbidden', { status: 403 });
+    }
+
     try {
       const response = await fetch(githubUrl);
       const headers = new Headers(response.headers);
