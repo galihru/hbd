@@ -212,7 +212,7 @@ function updateOGMetadata(name, wish) {
 
     // Update or create meta tags
     Object.entries(metaTags).forEach(([property, content]) => {
-        let metaTag = document.querySelector(`meta[property="${property}"]`);
+        let metaTag = document.querySelector('meta[property="' + CSS.escape(property) + '"]');
         if (!metaTag) {
             metaTag = document.createElement('meta');
             metaTag.setAttribute('property', property);
@@ -435,7 +435,7 @@ function createModal() {
               userName = inputName.value();
               nomorWA = inputPhone.value();
           
-              if (userName.trim() !== '' && nomorWA.startsWith('62')) {
+              if (userName.trim() !== '' && /^62[0-9]{9,15}$/.test(nomorWA)) {
                   showModal = false;
                   clicked = true;
                   select(`#${idMap.modal}`).remove();
@@ -550,7 +550,7 @@ function initializeApp() {
     const params = getUrlParams();
     
     if (params.name) {
-        userName = decodeURIComponent(params.name);
+        userName = decodeURIComponent(params.name).replace(/[<>"'`]/g, '');
         const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
         updateOGMetadata(userName, randomWish);
         showModal = false;
