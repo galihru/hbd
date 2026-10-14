@@ -212,7 +212,7 @@ function updateOGMetadata(name, wish) {
 
     // Update or create meta tags
     Object.entries(metaTags).forEach(([property, content]) => {
-        let metaTag = document.querySelector(`meta[property="${property}"]`);
+        let metaTag = document.querySelector('meta[property="' + property + '"]');
         if (!metaTag) {
             metaTag = document.createElement('meta');
             metaTag.setAttribute('property', property);
@@ -280,7 +280,7 @@ function createModal() {
             
             // Input untuk nama dengan label sebagai pengganti placeholder
             const nameLabel = createDiv('')
-            nameLabel.html('Nama yang Ulang Tahun')
+            nameLabel.elt.textContent = 'Nama yang Ulang Tahun'
             nameLabel.style('margin-top', '10px')
             nameLabel.style('font-size', '14px')
             nameLabel.style('text-align', 'left')
@@ -302,7 +302,7 @@ function createModal() {
             
             // Input label untuk nomor WhatsApp
             const phoneLabel = createDiv('')
-            phoneLabel.html('Nomor WA (dimulai dengan 62)')
+            phoneLabel.elt.textContent = 'Nomor WA (dimulai dengan 62)'
             phoneLabel.style('margin-top', '10px')
             phoneLabel.style('font-size', '14px')
             phoneLabel.style('text-align', 'left')
